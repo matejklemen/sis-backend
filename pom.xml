@@ -47,10 +47,28 @@
                 <artifactId>kumuluzee-core</artifactId>
                 <version>${kumuluzee.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.kumuluz.ee/kumuluzee-servlet-jetty -->
+            <dependency>
+                <groupId>com.kumuluz.ee</groupId>
+                <artifactId>kumuluzee-servlet-jetty</artifactId>
+                <version>${kumuluzee.version}</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/com.kumuluz.ee/kumuluzee-jpa-eclipselink -->
             <dependency>
                 <groupId>com.kumuluz.ee</groupId>
                 <artifactId>kumuluzee-jpa-eclipselink</artifactId>
+                <version>${kumuluzee.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.kumuluz.ee/kumuluzee-cdi-weld -->
+            <dependency>
+                <groupId>com.kumuluz.ee</groupId>
+                <artifactId>kumuluzee-cdi-weld</artifactId>
+                <version>${kumuluzee.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.kumuluz.ee/kumuluzee-jta-narayana -->
+            <dependency>
+                <groupId>com.kumuluz.ee</groupId>
+                <artifactId>kumuluzee-jta-narayana</artifactId>
                 <version>${kumuluzee.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
