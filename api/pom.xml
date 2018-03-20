@@ -16,6 +16,15 @@
             <groupId>si.fri.tpo</groupId>
             <artifactId>services</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-servlet-jetty</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
