@@ -18,12 +18,27 @@
         </dependency>
 
         <dependency>
+            <groupId>si.fri.tpo</groupId>
+            <artifactId>entities</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-servlet-jetty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-jax-rs-jersey</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kumuluz.ee.cors</groupId>
+            <artifactId>kumuluzee-cors</artifactId>
+            <version>${kumuluzee-cors.version}</version>
         </dependency>
     </dependencies>
 

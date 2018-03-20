@@ -14,6 +14,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <kumuluzee.version>2.5.2</kumuluzee.version>
         <postgresql.version>42.2.2</postgresql.version>
+        <kumuluzee-cors.version>1.0.2</kumuluzee-cors.version>
     </properties>
 
     <modules>
@@ -24,6 +25,14 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.kumuluz.ee</groupId>
+                <artifactId>kumuluzee-bom</artifactId>
+                <version>${kumuluzee.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!-- modules-->
             <dependency>
                 <groupId>si.fri.tpo</groupId>
@@ -41,36 +50,6 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- https://mvnrepository.com/artifact/com.kumuluz.ee/kumuluzee-core -->
-            <dependency>
-                <groupId>com.kumuluz.ee</groupId>
-                <artifactId>kumuluzee-core</artifactId>
-                <version>${kumuluzee.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.kumuluz.ee/kumuluzee-servlet-jetty -->
-            <dependency>
-                <groupId>com.kumuluz.ee</groupId>
-                <artifactId>kumuluzee-servlet-jetty</artifactId>
-                <version>${kumuluzee.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.kumuluz.ee/kumuluzee-jpa-eclipselink -->
-            <dependency>
-                <groupId>com.kumuluz.ee</groupId>
-                <artifactId>kumuluzee-jpa-eclipselink</artifactId>
-                <version>${kumuluzee.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.kumuluz.ee/kumuluzee-cdi-weld -->
-            <dependency>
-                <groupId>com.kumuluz.ee</groupId>
-                <artifactId>kumuluzee-cdi-weld</artifactId>
-                <version>${kumuluzee.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.kumuluz.ee/kumuluzee-jta-narayana -->
-            <dependency>
-                <groupId>com.kumuluz.ee</groupId>
-                <artifactId>kumuluzee-jta-narayana</artifactId>
-                <version>${kumuluzee.version}</version>
-            </dependency>
             <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
             <dependency>
                 <groupId>org.postgresql</groupId>
@@ -79,6 +58,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 
     <build>
         <plugins>
