@@ -1,0 +1,16 @@
+kumuluzee:
+  name: sis
+  version: 1.0.0
+  env:
+    name: dev
+  datasources:
+    - jndi-name: jdbc/sisTestDB
+      connection-url: jdbc:postgresql://192.168.99.100:5432/sis
+      username: postgres
+      password: postgres
+      max-pool-size: 10
+    - jndi-name: jdbc/sisProdDB
+      connection-url: jdbc:postgresql://ec2-54-75-239-237.eu-west-1.compute.amazonaws.com/d8rjea1rtaq2ri
+      username: smwnhhbguodhpk
+      password: a143c638b0a69998f9bc30e513696ee34b800dfdef4889ff41b5f48715d1c95b
+      max-pool-size: 20
