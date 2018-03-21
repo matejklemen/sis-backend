@@ -4,7 +4,8 @@ import java.io.Serializable;
 @Entity(name = "UserLogin")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "UserLogin.getAll", query = "SELECT ul FROM UserLogin ul")
+                @NamedQuery(name = "UserLogin.getAllUserLogins", query = "SELECT ul FROM UserLogin ul"),
+                @NamedQuery(name = "UserLogin.getSaltAndPasswordByUsername", query = "SELECT ul FROM UserLogin ul WHERE ul.username = :username")
         }
 )
 public class UserLogin implements Serializable {
