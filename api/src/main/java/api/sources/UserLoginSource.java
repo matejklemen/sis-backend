@@ -2,7 +2,6 @@ package api.sources;
 
 import beans.crud.UserLoginBean;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
-import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import entities.UserLogin;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,7 +23,6 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("login")
-@CrossOrigin(allowOrigin = "http://localhost:3000", supportedMethods = "GET, POST, PUT, DELETE, HEAD, OPTIONS")
 @ApplicationScoped
 public class UserLoginSource {
     private Logger log = Logger.getLogger(getClass().getSimpleName());

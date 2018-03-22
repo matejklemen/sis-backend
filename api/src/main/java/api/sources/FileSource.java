@@ -1,7 +1,6 @@
 package api.sources;
 
 import beans.logic.StudentImport;
-import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import pojo.FileData;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -18,7 +17,6 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
-@CrossOrigin(allowOrigin = "http://localhost:3000", supportedMethods = "GET, POST, HEAD, OPTIONS, DELETE, PUT")
 public class FileSource {
 
     private Logger log = Logger.getLogger(getClass().getSimpleName());
@@ -40,3 +38,4 @@ public class FileSource {
         }
     }
 }
+
