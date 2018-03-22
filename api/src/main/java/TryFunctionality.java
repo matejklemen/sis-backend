@@ -1,15 +1,17 @@
-
-import beans.UserLoginBean;
-import pojo.UserLogin;
+import beans.crud.UserLoginBean;
+import entities.UserLogin;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.logging.Logger;
+
 @WebServlet("/servlet")
 public class TryFunctionality extends HttpServlet {
     private static final Logger log = Logger.getLogger("JPAServlet");
@@ -28,7 +30,7 @@ public class TryFunctionality extends HttpServlet {
 
         for(UserLogin u : userlogins) {
             writer.append(String.format("IDuser: %d\nUsername: %s\nPassword: %s\nRole: %s\nSalt: %d\n----\n",
-                    u.getIdUser(), u.getUsername(), u.getPassword(), u.getRole(), u.getSalt()));
+                    u.getId(), u.getUsername(), u.getPassword(), u.getRole(), u.getSalt()));
         }
         writer.close();
     }

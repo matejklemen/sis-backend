@@ -16,6 +16,7 @@
             <groupId>si.fri.tpo</groupId>
             <artifactId>entities</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-jta-narayana</artifactId>
@@ -27,6 +28,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+            <version>1.11</version>
         </dependency>
 
     </dependencies>

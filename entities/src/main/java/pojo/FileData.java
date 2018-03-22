@@ -1,6 +1,6 @@
 package pojo;
 
-public class File {
+public class FileData {
 
     private String fileData;
 

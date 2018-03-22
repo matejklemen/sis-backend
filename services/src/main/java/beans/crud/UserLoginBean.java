@@ -1,7 +1,7 @@
-package beans;
+package beans.crud;
 
+import entities.UserLogin;
 import org.apache.commons.codec.digest.DigestUtils;
-import pojo.UserLogin;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -38,7 +38,7 @@ public class UserLoginBean {
 
     public List<UserLogin> getAllUserLoginInfo() {
         try {
-            Query q = em.createNamedQuery("UserLogin.getAllUserLogins");
+            Query q = em.createNamedQuery("UserLogin.getAll");
             return (List<UserLogin>) (q.getResultList());
         }
         catch (Exception e) {
