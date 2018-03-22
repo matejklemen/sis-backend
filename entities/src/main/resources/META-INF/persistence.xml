@@ -3,7 +3,7 @@
     <persistence-unit name="sis-jpa" transaction-type="JTA">
         <jta-data-source>jdbc/sisTestDB</jta-data-source>
 
-        <class>UserLogin</class>
+        <class>pojo.UserLogin</class>
 
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>

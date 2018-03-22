@@ -1,3 +1,5 @@
+package pojo;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
