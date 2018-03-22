@@ -1,16 +1,18 @@
+package entities;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "UserLogin")
+@Entity(name = "login")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "UserLogin.getAll", query = "SELECT ul FROM UserLogin ul")
+                @NamedQuery(name = "UserLogin.getAll", query = "SELECT ul FROM login ul")
         }
 )
 public class UserLogin implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idUser;
+    private int id;
     @Column(unique = true, nullable = false)
     private String username;
     @Column(length = 128, nullable = false)
@@ -20,12 +22,12 @@ public class UserLogin implements Serializable {
     @Column(nullable = false)
     private int salt;
 
-    public int getIdUser() {
-        return idUser;
+    public int getId() {
+        return id;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {

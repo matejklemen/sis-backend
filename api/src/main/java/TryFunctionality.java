@@ -1,4 +1,7 @@
 
+import Beans.CRUD.UserLoginBean;
+import entities.UserLogin;
+
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,9 +23,9 @@ public class TryFunctionality extends HttpServlet {
 
         for(UserLogin u : userlogins) {
             log.info(String.format("IDuser: %d\nUsername: %s\nPassword: %s\nRole: %s\nSalt: %d\n",
-                    u.getIdUser(), u.getUsername(), u.getPassword(), u.getRole(), u.getSalt()));
+                    u.getId(), u.getUsername(), u.getPassword(), u.getRole(), u.getSalt()));
             writer.append(String.format("IDuser: %d\nUsername: %s\nPassword: %s\nRole: %s\nSalt: %d\n",
-                    u.getIdUser(), u.getUsername(), u.getPassword(), u.getRole(), u.getSalt()));
+                    u.getId(), u.getUsername(), u.getPassword(), u.getRole(), u.getSalt()));
         }
         writer.close();
     }

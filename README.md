@@ -14,7 +14,7 @@ A student information system made for a software engineering course.
 	5.  Password: postgres
 	6.  Test Connection
 * In `api/src/main/resources/config.yaml`, update jdbc/sisTestDB `connection-url` parameter's IP to match your docker IP.
-
+* (Create all tables id db)[doc/databaseTables.md] and assign data source (Persistence Tab)
 ## Development cycle:
 1.  docker start postgres-jdbc  
 2.  maven package 
