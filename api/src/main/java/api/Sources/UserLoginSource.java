@@ -59,8 +59,9 @@ public class UserLoginSource {
         Map<String, String> responseBody = new HashMap<String, String>();
         responseBody.put("username", user.getUsername());
         responseBody.put("role", user.getRole());
+        responseBody.put("token", jwtToken);
 
-        return Response.ok().header(AUTHORIZATION, "Bearer " + jwtToken).entity(responseBody).build();
+        return Response.ok().entity(responseBody).build();
     }
 
     private String issueJWTToken(UserLogin user) {
