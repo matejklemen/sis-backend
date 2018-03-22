@@ -1,3 +1,4 @@
+import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -5,6 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -15,6 +18,22 @@ public class UserLoginBean {
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
+
+    private final SecureRandom rng = initSecureRandom();
+    private final String serverSecret = ConfigurationUtil.getInstance().get("auth.server-secret").orElse("");
+
+    private SecureRandom initSecureRandom() {
+        SecureRandom sr = null;
+
+        try {
+            sr = SecureRandom.getInstance("SHA1PRNG");
+        } catch (NoSuchAlgorithmException e) {
+            log.severe("Number generator could not be initialized due to a missing RNG implementation!");
+            log.severe(e.getMessage());
+        }
+
+        return sr;
+    }
 
     public List<UserLogin> getAllUserLoginInfo() {
         try {
@@ -32,9 +51,11 @@ public class UserLoginBean {
     public UserLogin insertUserLoginSingle(String username, String password, String role) {
         UserLogin newUser = new UserLogin();
 
+        int generatedSalt = rng.nextInt();
+
         newUser.setUsername(username);
-        newUser.setPassword(password); // TODO: SHA-512 hash
-        newUser.setSalt(123); // TODO: salt generation
+        newUser.setPassword(DigestUtils.sha512Hex(password.concat(String.valueOf(generatedSalt))));
+        newUser.setSalt(generatedSalt);
         newUser.setRole(role);
 
         try {
@@ -58,15 +79,19 @@ public class UserLoginBean {
      * @param actualPassword user's actual (hashed and salted) password
      * @return true if entered password matches actual password and false otherwise.
      */
-    public boolean isPasswordCorrect(String inputPassword, int salt, String actualPassword) {
+    private boolean isPasswordCorrect(String inputPassword, int salt, String actualPassword) {
         String inputPasswordSaltedHashed = DigestUtils.sha512Hex(inputPassword.concat(String.valueOf(salt)));
         return actualPassword.equals(inputPasswordSaltedHashed);
     }
 
-    /*
-        NOTE: will probably be changed so that the method returns a JWT.
+
+    /**
+     * Authenticates user.
+     * @param username
+     * @param inputPassword
+     * @return user login details (UserLogin object) if authenthication is successful and null otherwise.
      */
-    public boolean authenticateUser(String username, String inputPassword) {
+    public UserLogin authenticateUser(String username, String inputPassword) {
         Query q = em.createNamedQuery("UserLogin.getSaltAndPasswordByUsername");
         q.setParameter("username", username);
 
@@ -78,13 +103,10 @@ public class UserLoginBean {
             retrievedUser = ul.get(0);
         else {
             log.info(String.format("User %s could not be found in database!", username));
-            return false;
+            return null;
         }
 
-        boolean isPasswordCorrect = isPasswordCorrect(inputPassword, retrievedUser.getSalt(), retrievedUser.getPassword());
-
-        // TODO: generate JWT
-
-        return isPasswordCorrect;
+        return (isPasswordCorrect(inputPassword, retrievedUser.getSalt(), retrievedUser.getPassword())) ? retrievedUser : null;
     }
+
 }
