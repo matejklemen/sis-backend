@@ -14,6 +14,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
@@ -53,7 +55,12 @@ public class UserLoginSource {
 
         String jwtToken = issueJWTToken(user);
 
-        return Response.ok().header(AUTHORIZATION, "Bearer " + jwtToken).build();
+        // build a Map instead of creating a class for response
+        Map<String, String> responseBody = new HashMap<String, String>();
+        responseBody.put("username", user.getUsername());
+        responseBody.put("role", user.getRole());
+
+        return Response.ok().header(AUTHORIZATION, "Bearer " + jwtToken).entity(responseBody).build();
     }
 
     private String issueJWTToken(UserLogin user) {
