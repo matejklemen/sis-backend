@@ -14,3 +14,5 @@ kumuluzee:
       username: smwnhhbguodhpk
       password: a143c638b0a69998f9bc30e513696ee34b800dfdef4889ff41b5f48715d1c95b
       max-pool-size: 20
+auth:
+  server-secret: testSecret

@@ -40,6 +40,11 @@
             <artifactId>kumuluzee-cors</artifactId>
             <version>${kumuluzee-cors.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

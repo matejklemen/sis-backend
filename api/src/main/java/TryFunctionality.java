@@ -1,4 +1,7 @@
 
+import beans.UserLoginBean;
+import pojo.UserLogin;
+
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,19 +21,12 @@ public class TryFunctionality extends HttpServlet {
         PrintWriter writer = resp.getWriter();
 
         ulB.insertUserLoginSingle("newUser",
-                "5c531afb2e4106cc78f99ff895ef99d2fa587f7272a91f82244f06caddf89176c299afc0ef4a447d6c5042dff4690e271a3d09aabf97465faba20591f818ab27",
+                "1234",
                 "admin");
 
         List<UserLogin> userlogins = ulB.getAllUserLoginInfo();
 
-        boolean couldUserLogin = ulB.authenticateUser("newUser", "1234");
-
-        writer.append("Could user newUser potentially log in?" + couldUserLogin);
-
-
         for(UserLogin u : userlogins) {
-            log.info(String.format("IDuser: %d\nUsername: %s\nPassword: %s\nRole: %s\nSalt: %d\n",
-                    u.getIdUser(), u.getUsername(), u.getPassword(), u.getRole(), u.getSalt()));
             writer.append(String.format("IDuser: %d\nUsername: %s\nPassword: %s\nRole: %s\nSalt: %d\n----\n",
                     u.getIdUser(), u.getUsername(), u.getPassword(), u.getRole(), u.getSalt()));
         }

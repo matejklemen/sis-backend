@@ -1,5 +1,7 @@
-import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
+package beans;
+
 import org.apache.commons.codec.digest.DigestUtils;
+import pojo.UserLogin;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -20,7 +22,6 @@ public class UserLoginBean {
     private EntityManager em;
 
     private final SecureRandom rng = initSecureRandom();
-    private final String serverSecret = ConfigurationUtil.getInstance().get("auth.server-secret").orElse("");
 
     private SecureRandom initSecureRandom() {
         SecureRandom sr = null;
@@ -41,7 +42,7 @@ public class UserLoginBean {
             return (List<UserLogin>) (q.getResultList());
         }
         catch (Exception e) {
-            log.severe("Something went wrong when trying to obtain all UserLogin info!");
+            log.severe("Something went wrong when trying to obtain all pojo.UserLogin info!");
             log.severe(e.getMessage());
             return new ArrayList<>();
         }
@@ -66,7 +67,7 @@ public class UserLoginBean {
             return newUser;
         }
         catch (Exception e) {
-            log.severe("Something went wrong when trying to insert new UserLogin!");
+            log.severe("Something went wrong when trying to insert new pojo.UserLogin!");
             log.severe(e.getMessage());
             return null;
         }
