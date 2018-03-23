@@ -74,3 +74,7 @@ Contains login role definitions. Example names: *Administrator*, *Student*, *Pro
 id SERIAL PRIMARY KEY,
 name VARCHAR(20) NOT NULL
 ```
+
+# Other notes
+
+If primary key in `entities` is annotated with `@XmlID` and `@XmlElement`, and the same foreign key is annotated with `@XmlIDREF`, only the ID of the object will be passed, not whole object (see `UserLogin.id` and `Student.loginData` for an example).
