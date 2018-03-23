@@ -2,6 +2,7 @@
 
 **Notes:**
 * use `snake_case` for table and attribute names
+* **If IntelliJ makes warnings about *Cannot resolve columns...* or *Unable to resolve...* but it compiles and runs successfuly, all you have to do is synchronize your database in IntelliJ! (no need to "Add x to data source...")**
 
 ### `student`
 Contains student's personal data.
@@ -17,14 +18,14 @@ id_study_program FOREIGN KEY,
 id_study_year FOREIGN KEY
 ```
 
-### `login_data`
+### `user_login`
 Contains data for logins for everyone that can access the system (students and employees)
 ```sql
 id SERIAL PRIMARY KEY,
 username VARCHAR(10) UNIQUE NOT NULL,
 password VARCHAR(128),
 salt INTEGER NOT NULL,
-id_login_role FOREIGN KEY
+id_user_role FOREIGN KEY
 ```
 
 ### `enrolment`
@@ -67,7 +68,7 @@ id SERIAL PRIMARY KEY,
 name VARCHAR(60) NOT NULL
 ```
 
-### `login_role`
+### `user_role`
 Contains login role definitions. Example names: *Administrator*, *Student*, *Professor*
 ```sql
 id SERIAL PRIMARY KEY,
