@@ -30,7 +30,7 @@ id_user_role FOREIGN KEY
 
 ### `enrolment`
 Contains data about enrolment students have made.
-TODO: make seperate table for enrolment types? (example types *redni*, *izredni*)
+TODO: make seperate table for enrolment types? (example types *prvi vpis*, *ponovni vpis*, *absolvent*)
 ```sql
 id PRIMARY KEY,
 id_student FOREIGN KEY,
