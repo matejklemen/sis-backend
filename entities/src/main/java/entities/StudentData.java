@@ -22,7 +22,7 @@ public class StudentData implements Serializable {
     @Column(length = 60, nullable = false)
     private String email;
     @Column(nullable = false, name = "student_id")
-    private int studentId;
+    private String studentId;
     @Column(name = "login_id")
     private int loginId;
 
@@ -66,11 +66,11 @@ public class StudentData implements Serializable {
         this.email = email;
     }
 
-    public int getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
     public int getLoginId() {
