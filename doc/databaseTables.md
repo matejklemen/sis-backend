@@ -1,17 +1,75 @@
-## Create all tables in postgres:
+# Database structure
 
-`NOTE: use snake case`
+**Notes:**
+* use `snake_case` for table and attribute names
 
-1. student_data (All personal data of students -> init at data import)
+### `student`
+Contains student's personal data.
+TODO: add home address and temporary address
 ```sql
-CREATE TABLE public.student_data
-(
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(30) NOT NULL,
-  surname VARCHAR(30) NOT NULL,
-  course VARCHAR(7) NOT NULL,
-  email VARCHAR(60) NOT NULL,
-  student_id INT NOT NULL,
-  login_id INT NOT NULL
-);
+id SERIAL PRIMARY KEY,
+register_number VARCHAR(8) UNIQUE NOT NULL,
+name VARCHAR(30) NOT NULL,
+surname VARCHAR(60) NOT NULL,
+email VARCHAR(80) NOT NULL,
+id_login FOREIGN KEY,
+id_study_program FOREIGN KEY,
+id_study_year FOREIGN KEY
+```
+
+### `login_data`
+Contains data for logins for everyone that can access the system (students and employees)
+```sql
+id SERIAL PRIMARY KEY,
+username VARCHAR(10) UNIQUE NOT NULL,
+password VARCHAR(128),
+salt INTEGER NOT NULL,
+id_login_role FOREIGN KEY
+```
+
+### `enrolment`
+Contains data about enrolment students have made.
+TODO: make seperate table for enrolment types? (example types *redni*, *izredni*)
+```sql
+id PRIMARY KEY,
+id_student FOREIGN KEY,
+id_study_year FOREIGN KEY,
+id_study_program FOREIGN KEY,
+year INTEGER,
+type VARCHAR(20),
+confirmed BOOLEAN NOT NULL
+```
+
+### `token`
+Contains data about enrolment tokens availiable to students. (TODO: describe here the relation between `token` and `enrolment`?)
+```sql
+id PRIMARY KEY,
+id_student FOREIGN KEY,
+id_study_year FOREIGN KEY,
+id_study_program FOREIGN KEY,
+year INTEGER,
+used BOOLEAN NOT NULL
+```
+
+### `study_program`
+Contains data about study programs.
+Example names: *Računalništvo in informatika (UNI)*, *Računalništvo in informatika (VSŠ)*, *Računalništvo in matematika*
+```sql
+id SERIAL PRIMARY KEY,
+name VARCHAR(120) NOT NULL
+```
+
+### `study_year`
+Contains data about study years.
+Example names: *2017/2018*, *2016/2017*
+```sql
+id SERIAL PRIMARY KEY,
+name VARCHAR(60) NOT NULL
+```
+
+### `login_role`
+Contains login role definitions. Example names: *Administrator*, *Student*, *Professor*
+```sql
+id SERIAL PRIMARY KEY,
+name VARCHAR(20) NOT NULL
 ```
