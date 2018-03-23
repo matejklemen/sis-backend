@@ -5,7 +5,9 @@
 * **If IntelliJ makes warnings about *Cannot resolve columns...* or *Unable to resolve...* but it compiles and runs successfuly, all you have to do is synchronize your database in IntelliJ! (no need to "Add x to data source...")**
 
 ### `student`
+
 Contains student's personal data.
+
 TODO: add home address and temporary address
 ```sql
 id SERIAL PRIMARY KEY,
@@ -19,6 +21,7 @@ id_study_year FOREIGN KEY NUT NULL
 ```
 
 ### `user_login`
+
 Contains data for logins for everyone that can access the system (students and employees)
 ```sql
 id SERIAL PRIMARY KEY,
@@ -29,8 +32,12 @@ id_user_role FOREIGN KEY
 ```
 
 ### `enrolment`
+
 Contains data about enrolment students have made.
-TODO: make seperate table for enrolment types? (example types *prvi vpis*, *ponovni vpis*, *absolvent*)
+
+TODO: make seperate table for enrolment types? (example types: *prvi vpis*, *ponovni vpis*, *absolvent*).
+
+TODO: also add enrolment kinds (example kinds: *redni*, *izredni*)
 ```sql
 id PRIMARY KEY,
 id_student FOREIGN KEY,
@@ -42,7 +49,10 @@ confirmed BOOLEAN NOT NULL
 ```
 
 ### `token`
-Contains data about enrolment tokens availiable to students. (TODO: describe here the relation between `token` and `enrolment`?)
+
+Contains data about enrolment tokens availiable to students.
+
+(TODO: describe here the relation between `token` and `enrolment`?)
 ```sql
 id PRIMARY KEY,
 id_student FOREIGN KEY,
@@ -53,7 +63,9 @@ used BOOLEAN NOT NULL
 ```
 
 ### `study_program`
+
 Contains data about study programs.
+
 Example names: *Računalništvo in informatika (UNI)*, *Računalništvo in informatika (VSŠ)*, *Računalništvo in matematika*
 ```sql
 id SERIAL PRIMARY KEY,
@@ -61,7 +73,9 @@ name VARCHAR(120) NOT NULL
 ```
 
 ### `study_year`
+
 Contains data about study years.
+
 Example names: *2017/2018*, *2016/2017*
 ```sql
 id SERIAL PRIMARY KEY,
@@ -69,7 +83,10 @@ name VARCHAR(60) NOT NULL
 ```
 
 ### `user_role`
-Contains login role definitions. Example names: *Administrator*, *Student*, *Professor*
+
+Contains login role definitions.
+
+Example names: *Administrator*, *Student*, *Professor*
 ```sql
 id SERIAL PRIMARY KEY,
 name VARCHAR(20) NOT NULL
