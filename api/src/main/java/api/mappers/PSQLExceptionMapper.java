@@ -1,6 +1,5 @@
 package api.mappers;
 
-import org.eclipse.persistence.exceptions.DatabaseException;
 import org.postgresql.util.PSQLException;
 
 import javax.ws.rs.core.MediaType;

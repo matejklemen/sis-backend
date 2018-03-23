@@ -1,6 +1,5 @@
 package beans.crud;
 
-import entities.StudyProgram;
 import entities.StudyYear;
 
 import javax.enterprise.context.ApplicationScoped;

@@ -1,10 +1,8 @@
 package beans.logic;
 
 import beans.crud.*;
-import entities.StudyProgram;
-import entities.UserLogin;
 import entities.Student;
-import entities.UserRole;
+import entities.UserLogin;
 import pojo.StudentProfile;
 
 import javax.enterprise.context.ApplicationScoped;

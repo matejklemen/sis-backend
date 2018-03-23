@@ -1,10 +1,8 @@
 import beans.crud.UserLoginBean;
 import beans.crud.UserRoleBean;
 import entities.UserLogin;
-import entities.UserRole;
 
 import javax.inject.Inject;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

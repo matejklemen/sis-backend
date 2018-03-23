@@ -1,7 +1,6 @@
 package beans.crud;
 
 import entities.StudyProgram;
-import entities.UserRole;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
