@@ -3,6 +3,7 @@ package entities;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 
 @Entity(name = "user_login")
@@ -49,6 +50,7 @@ public class UserLogin implements Serializable {
         this.username = username;
     }
 
+    @XmlTransient
     public String getPassword() {
         return password;
     }
@@ -57,6 +59,7 @@ public class UserLogin implements Serializable {
         this.password = password;
     }
 
+    @XmlTransient
     public int getSalt() {
         return salt;
     }
@@ -65,6 +68,7 @@ public class UserLogin implements Serializable {
         this.salt = salt;
     }
 
+    @XmlTransient
     public UserRole getRole() {
         return role;
     }

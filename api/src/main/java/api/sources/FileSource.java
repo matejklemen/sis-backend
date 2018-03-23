@@ -1,8 +1,8 @@
 package api.sources;
 
 import beans.logic.StudentImport;
+import entities.Student;
 import pojo.FileData;
-import pojo.StudentProfile;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -29,7 +29,7 @@ public class FileSource {
     @PUT
     public Response putFile(FileData file){
         try {
-            List<StudentProfile> sp = si.ParseStudentData(file.getFileData());
+            List<Student> sp = si.ParseStudentData(file.getFileData());
             return Response.status(Response.Status.OK).entity(sp).build();
         }
         catch (Exception ex){

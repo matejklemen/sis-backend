@@ -30,7 +30,7 @@ public class Student implements Serializable {
     @Column(length = 80, nullable = false)
     private String email;
 
-    @XmlIDREF // JSON pass only ID, not whole object
+    //@XmlIDREF // if enabled, JSON has only ID, not whole userlogin object
     @OneToOne
     @JoinColumn(name = "id_login")
     private UserLogin loginData;

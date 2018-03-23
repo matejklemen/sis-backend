@@ -3,7 +3,6 @@ package beans.logic;
 import beans.crud.*;
 import entities.Student;
 import entities.UserLogin;
-import pojo.StudentProfile;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -29,32 +28,32 @@ public class StudentImport {
     private StudyYearBean syb;
 
 
-    public List<StudentProfile> ParseStudentData(String studentData){
+    public List<Student> ParseStudentData(String studentData){
         List<String> lines = Arrays.asList(studentData.split(System.getProperty("line.separator")));
         Iterator<String> iter = lines.iterator();
 
-        List<StudentProfile> listOfStudents = new ArrayList<>();
+        List<Student> listOfStudents = new ArrayList<>();
 
         while(iter.hasNext()){
-            Student sd = new Student();
-            sd.setName(iter.next());
-            sd.setSurname(iter.next());
-            sd.setStudyProgram(spb.getOrCreateStudyProgram(iter.next()));
-            sd.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
-            sd.setRegisterNumber(GenerateNewStudentId());
-            sd.setEmail(iter.next());
+            Student stu = new Student();
+            stu.setName(iter.next());
+            stu.setSurname(iter.next());
+            stu.setStudyProgram(spb.getOrCreateStudyProgram(iter.next()));
+            stu.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
+            stu.setRegisterNumber(GenerateNewStudentId());
+            stu.setEmail(iter.next());
 
             UserLogin ul = new UserLogin();
-            ul.setUsername(GenerateUsername(sd));
-            ul.setPassword(GeneratePassword(ul, sd));
+            ul.setUsername(GenerateUsername(stu));
+            ul.setPassword(GeneratePassword(ul, stu));
             ul.setRole(urb.getRoleByName("Student"));
 
             ul = ulb.insertUserLoginSingle(ul.getUsername(), ul.getPassword(), ul.getRole());
 
-            sd.setLoginData(ul); //setLoginId(ul.getId());
-            sdb.putStudent(sd);
+            stu.setLoginData(ul); //setLoginId(ul.getId());
+            sdb.putStudent(stu);
 
-            listOfStudents.add(StudentProfile.setStudentProfile(sd, ul, GeneratePassword(ul,sd)));
+            listOfStudents.add(stu);
         }
 
         return listOfStudents;
