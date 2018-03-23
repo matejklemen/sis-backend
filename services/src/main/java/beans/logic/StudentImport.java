@@ -51,9 +51,9 @@ public class StudentImport {
         }
     }
 
-    private int GenerateNewStudentId(){
+    private String GenerateNewStudentId(){
         nextStudentId++;
-        return 63150000 + nextStudentId;
+        return String.valueOf(63150000 + nextStudentId);
     }
 
     private String GeneratePassword(StudentData sd){
