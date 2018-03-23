@@ -2,6 +2,7 @@ package beans.crud;
 
 import entities.UserLogin;
 import entities.UserRole;
+import exceptions.UserBlacklistedException;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -11,13 +12,16 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 @ApplicationScoped
 public class UserLoginBean {
     private final Logger log = Logger.getLogger(this.getClass().getName());
+    private Map<String, Integer> ipLoginMapping = new HashMap<String, Integer>(); /* {IP: number of login attempts}*/
+    private Map<String, Date> ipBlacklist = new HashMap<String, Date>(); /* {IP: date when the lock expires} */
+    private final int MAX_UNSUCCESSFUL_ATTEMPTS = 5;
+    private final int BLOCK_IP_MINS = 1;
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
@@ -43,7 +47,7 @@ public class UserLoginBean {
             return q.getResultList();
         }
         catch (Exception e) {
-            log.severe("Something went wrong when trying to obtain all pojo.UserLogin info!");
+            log.severe("Something went wrong when trying to obtain all UserLogin info!");
             log.severe(e.getMessage());
             return new ArrayList<>();
         }
@@ -68,7 +72,7 @@ public class UserLoginBean {
             return newUser;
         }
         catch (Exception e) {
-            log.severe("Something went wrong when trying to insert new pojo.UserLogin!");
+            log.severe("Something went wrong when trying to insert new UserLogin!");
             log.severe(e.getMessage());
             return null;
         }
@@ -86,14 +90,15 @@ public class UserLoginBean {
         return actualPassword.equals(inputPasswordSaltedHashed);
     }
 
-
     /**
      * Authenticates user.
+     * @param ip IP address of caller
      * @param username
      * @param inputPassword
      * @return user login details (UserLogin object) if authenthication is successful and null otherwise.
+     * @throws UserBlacklistedException if user with IP 'ip' is on the blacklist.
      */
-    public UserLogin authenticateUser(String username, String inputPassword) {
+    public UserLogin authenticateUser(String ip, String username, String inputPassword) throws UserBlacklistedException {
         TypedQuery<UserLogin> q = em.createNamedQuery("UserLogin.getSaltAndPasswordByUsername", UserLogin.class);
         q.setParameter("username", username);
 
@@ -105,10 +110,69 @@ public class UserLoginBean {
             retrievedUser = ul.get(0);
         else {
             log.info(String.format("User %s could not be found in database!", username));
+
+            // user is not allowed to make any more login attempts for the next BLOCK_IP_MINS minutes
+            if(!trackUserLoginRequest(ip))
+                throw new UserBlacklistedException(BLOCK_IP_MINS);
+
             return null;
         }
 
-        return (isPasswordCorrect(inputPassword, retrievedUser.getSalt(), retrievedUser.getPassword())) ? retrievedUser : null;
+        if(isPasswordCorrect(inputPassword, retrievedUser.getSalt(), retrievedUser.getPassword()))
+            return retrievedUser;
+        else {
+            // user is not allowed to make any more login attempts for the next BLOCK_IP_MINS minutes
+            if(!trackUserLoginRequest(ip))
+                throw new UserBlacklistedException(BLOCK_IP_MINS);
+
+            return null;
+        }
     }
 
+    /**
+     * Keeps track of unsuccessful login attempts and (if needed) blacklists user.
+     * @param ip IP of caller
+     * @return true if user is allowed to continue and false otherwise (user blacklisted).
+     */
+    public boolean trackUserLoginRequest(String ip) {
+        Integer numLoginsCurrentUser = ipLoginMapping.get(ip);
+
+        // first login attempt
+        if(numLoginsCurrentUser == null)
+            numLoginsCurrentUser = 0;
+
+        numLoginsCurrentUser++;
+
+        // check if user is on blacklist
+        Date blacklistExpirationDate = ipBlacklist.get(ip);
+        if(blacklistExpirationDate != null) {
+            Date currDate = new Date();
+
+            // if the penalty is over, remove user from blacklist
+            if(currDate.after(blacklistExpirationDate)) {
+                ipBlacklist.remove(ip);
+                ipLoginMapping.remove(ip);
+                log.info(String.format("Removed %s from blacklist!\n", ip));
+            }
+            else
+                return false;
+        }
+
+        ipLoginMapping.put(ip, numLoginsCurrentUser);
+
+        // if user unsuccessfully tries to login many times, add the user to blacklist
+        if(numLoginsCurrentUser > MAX_UNSUCCESSFUL_ATTEMPTS) {
+            Date currDate = new Date();
+            Date expirationDate = new Date(currDate.getTime() + BLOCK_IP_MINS * 60 * 1000);
+
+            ipBlacklist.put(ip, expirationDate);
+            ipLoginMapping.remove(ip);
+
+            log.info(String.format("Added %s to blacklist with expiration at %s!\n", ip, expirationDate.toString()));
+
+            return false;
+        }
+
+        return true;
+    }
 }
