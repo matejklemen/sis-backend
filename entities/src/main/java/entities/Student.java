@@ -36,11 +36,11 @@ public class Student implements Serializable {
     private UserLogin loginData;
 
     @ManyToOne
-    @JoinColumn(name = "id_study_program")
+    @JoinColumn(name = "id_study_program", nullable = false)
     private StudyProgram studyProgram;
 
     @ManyToOne
-    @JoinColumn(name = "id_study_year")
+    @JoinColumn(name = "id_study_year", nullable = false)
     private StudyYear studyYear;
 
     public int getId() {

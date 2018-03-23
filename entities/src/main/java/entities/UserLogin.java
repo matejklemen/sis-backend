@@ -20,7 +20,7 @@ public class UserLogin implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(length = 10, unique = true, nullable = false)
+    @Column(length = 64, unique = true, nullable = false)
     private String username;
 
     @Column(length = 128, nullable = false)

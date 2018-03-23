@@ -35,7 +35,6 @@ public class TryFunctionality extends HttpServlet {
         for(UserLogin u : userlogins) {
             writer.append(String.format("IDuser: %d\nUsername: %s\nPassword: %s\nRole: %s\nSalt: %d\n----\n",
                     u.getId(), u.getUsername(), u.getPassword(), u.getRole().getName(), u.getSalt()));
-            // TODO: getRole().getName() is null... why?
         }
 
         writer.close();

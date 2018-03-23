@@ -1,8 +1,6 @@
 package beans.logic;
 
-import beans.crud.StudentBean;
-import beans.crud.UserLoginBean;
-import beans.crud.UserRoleBean;
+import beans.crud.*;
 import entities.StudyProgram;
 import entities.UserLogin;
 import entities.Student;
@@ -23,12 +21,14 @@ public class StudentImport {
 
     @Inject
     private StudentBean sdb;
-
     @Inject
     private UserLoginBean ulb;
-
     @Inject
     private UserRoleBean urb;
+    @Inject
+    private StudyProgramBean spb;
+    @Inject
+    private StudyYearBean syb;
 
 
     public List<StudentProfile> ParseStudentData(String studentData){
@@ -41,7 +41,8 @@ public class StudentImport {
             Student sd = new Student();
             sd.setName(iter.next());
             sd.setSurname(iter.next());
-            sd.setStudyProgram(new StudyProgram()); iter.next();
+            sd.setStudyProgram(spb.getOrCreateStudyProgram(iter.next()));
+            sd.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
             sd.setRegisterNumber(GenerateNewStudentId());
             sd.setEmail(iter.next());
 

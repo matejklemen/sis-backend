@@ -14,15 +14,15 @@ name VARCHAR(30) NOT NULL,
 surname VARCHAR(60) NOT NULL,
 email VARCHAR(80) NOT NULL,
 id_login FOREIGN KEY,
-id_study_program FOREIGN KEY,
-id_study_year FOREIGN KEY
+id_study_program FOREIGN KEY NOT NULL,
+id_study_year FOREIGN KEY NUT NULL
 ```
 
 ### `user_login`
 Contains data for logins for everyone that can access the system (students and employees)
 ```sql
 id SERIAL PRIMARY KEY,
-username VARCHAR(10) UNIQUE NOT NULL,
+username VARCHAR(64) UNIQUE NOT NULL,
 password VARCHAR(128),
 salt INTEGER NOT NULL,
 id_user_role FOREIGN KEY
