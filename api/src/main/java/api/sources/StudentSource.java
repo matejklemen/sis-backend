@@ -1,7 +1,7 @@
 package api.sources;
 
-import beans.crud.StudentDataBean;
-import entities.StudentData;
+import beans.crud.StudentBean;
+import entities.Student;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ public class StudentSource {
     private Logger log = Logger.getLogger(getClass().getSimpleName());
 
     @Inject
-    private StudentDataBean sdB;
+    private StudentBean sdB;
 
     /*
         Returns:
@@ -30,14 +30,14 @@ public class StudentSource {
     @Path("{id}")
     @GET
     public Response getStudentById(@PathParam("id") int id) {
-        StudentData sd = sdB.getStudentById(id);
+        Student sd = sdB.getStudentById(id);
         return Response.ok(sd).build();
     }
 
-    @Path("s/{sid}")
+    @Path("s/{regno}")
     @GET
-    public Response getStudentByStudentId(@PathParam("sid") String sid) {
-        StudentData sd = sdB.getStudentByStudentId(sid);
+    public Response getStudentByStudentId(@PathParam("regno") String regno) {
+        Student sd = sdB.getStudentByRegisterNumber(regno);
         return Response.ok(sd).build();
     }
 

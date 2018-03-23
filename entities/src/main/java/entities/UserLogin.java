@@ -1,6 +1,8 @@
 package entities;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 import java.io.Serializable;
 
 @Entity(name = "user_login")
@@ -11,17 +13,25 @@ import java.io.Serializable;
         }
 )
 public class UserLogin implements Serializable {
+
+    @XmlID
+    @XmlElement
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(unique = true, nullable = false)
+
+    @Column(length = 10, unique = true, nullable = false)
     private String username;
+
     @Column(length = 128, nullable = false)
     private String password;
-    @Column(length = 20)
-    private String role;
+
     @Column(nullable = false)
     private int salt;
+
+    @ManyToOne
+    @JoinColumn(name = "id_user_role")
+    private UserRole role;
 
     public int getId() {
         return id;
@@ -47,14 +57,6 @@ public class UserLogin implements Serializable {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public int getSalt() {
         return salt;
     }
@@ -62,4 +64,13 @@ public class UserLogin implements Serializable {
     public void setSalt(int salt) {
         this.salt = salt;
     }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
 }

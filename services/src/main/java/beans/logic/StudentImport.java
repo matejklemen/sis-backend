@@ -1,9 +1,12 @@
 package beans.logic;
 
-import beans.crud.StudentDataBean;
+import beans.crud.StudentBean;
 import beans.crud.UserLoginBean;
-import entities.StudentData;
+import beans.crud.UserRoleBean;
+import entities.StudyProgram;
 import entities.UserLogin;
+import entities.Student;
+import entities.UserRole;
 import pojo.StudentProfile;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -19,10 +22,13 @@ public class StudentImport {
     private static  int nextStudentId = 0;
 
     @Inject
-    private StudentDataBean sdb;
+    private StudentBean sdb;
 
     @Inject
     private UserLoginBean ulb;
+
+    @Inject
+    private UserRoleBean urb;
 
 
     public List<StudentProfile> ParseStudentData(String studentData){
@@ -32,22 +38,21 @@ public class StudentImport {
         List<StudentProfile> listOfStudents = new ArrayList<>();
 
         while(iter.hasNext()){
-            StudentData sd = new StudentData();
+            Student sd = new Student();
             sd.setName(iter.next());
             sd.setSurname(iter.next());
-            sd.setCourse(iter.next());
-            sd.setStudentId(GenerateNewStudentId());
+            sd.setStudyProgram(new StudyProgram()); iter.next();
+            sd.setRegisterNumber(GenerateNewStudentId());
             sd.setEmail(iter.next());
-
 
             UserLogin ul = new UserLogin();
             ul.setUsername(GenerateUsername(sd));
             ul.setPassword(GeneratePassword(ul, sd));
-            ul.setRole("student");
+            ul.setRole(urb.getRoleByName("Student"));
 
             ul = ulb.insertUserLoginSingle(ul.getUsername(), ul.getPassword(), ul.getRole());
 
-            sd.setLoginId(ul.getId());
+            sd.setLoginData(ul); //setLoginId(ul.getId());
             sdb.putStudent(sd);
 
             listOfStudents.add(StudentProfile.setStudentProfile(sd, ul, GeneratePassword(ul,sd)));
@@ -61,14 +66,14 @@ public class StudentImport {
         return String.valueOf(63150000 + nextStudentId);
     }
 
-    private String GeneratePassword(UserLogin ul, StudentData sd){
+    private String GeneratePassword(UserLogin ul, Student sd){
         String prefix = ul.getUsername().substring(0,2);
-        return prefix + "_" + sd.getStudentId();
+        return prefix + "_" + sd.getRegisterNumber();
     }
 
-    private String GenerateUsername(StudentData sd){
+    private String GenerateUsername(Student sd){
         String prefix = sd.getName().substring(0,1) + sd.getSurname().substring(0,1);
-        String[] idNumbers = Integer.toString(sd.getStudentId()).split("");
+        String[] idNumbers = sd.getRegisterNumber().split("");
         String uniqueId = idNumbers[3] + idNumbers[5] + idNumbers[6] + idNumbers[7];
         String suffix = "@student.uni-lj.si";
         return prefix.toLowerCase()  + uniqueId + suffix;

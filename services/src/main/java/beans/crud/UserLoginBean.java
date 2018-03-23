@@ -1,12 +1,14 @@
 package beans.crud;
 
 import entities.UserLogin;
+import entities.UserRole;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -38,8 +40,8 @@ public class UserLoginBean {
 
     public List<UserLogin> getAllUserLoginInfo() {
         try {
-            Query q = em.createNamedQuery("UserLogin.getAll");
-            return (List<UserLogin>) (q.getResultList());
+            TypedQuery<UserLogin> q = em.createNamedQuery("UserLogin.getAll", UserLogin.class);
+            return q.getResultList();
         }
         catch (Exception e) {
             log.severe("Something went wrong when trying to obtain all pojo.UserLogin info!");
@@ -49,7 +51,7 @@ public class UserLoginBean {
     }
 
     @Transactional
-    public UserLogin insertUserLoginSingle(String username, String password, String role) {
+    public UserLogin insertUserLoginSingle(String username, String password, UserRole role) {
         UserLogin newUser = new UserLogin();
 
         int generatedSalt = rng.nextInt();
@@ -93,7 +95,7 @@ public class UserLoginBean {
      * @return user login details (UserLogin object) if authenthication is successful and null otherwise.
      */
     public UserLogin authenticateUser(String username, String inputPassword) {
-        Query q = em.createNamedQuery("UserLogin.getSaltAndPasswordByUsername");
+        TypedQuery<UserLogin> q = em.createNamedQuery("UserLogin.getSaltAndPasswordByUsername", UserLogin.class);
         q.setParameter("username", username);
 
         List<UserLogin> ul = q.getResultList();

@@ -28,8 +28,8 @@ public class UserLoginSource {
     private Logger log = Logger.getLogger(getClass().getSimpleName());
     private final String serverSecret = ConfigurationUtil.getInstance().get("auth.server-secret").orElse("");
 
-    private final String TOKEN_ISSUER = "sis";
-    private final int TOKEN_VALIDITY_MINS = 15;
+    private static final String TOKEN_ISSUER = "sis";
+    private static final int TOKEN_VALIDITY_MINS = 15;
 
     @Inject
     private UserLoginBean ulB;
@@ -57,7 +57,7 @@ public class UserLoginSource {
         // build a Map instead of creating a class for response
         Map<String, String> responseBody = new HashMap<String, String>();
         responseBody.put("username", user.getUsername());
-        responseBody.put("role", user.getRole());
+        responseBody.put("role", user.getRole().getName());
         responseBody.put("token", jwtToken);
 
         return Response.ok().entity(responseBody).build();

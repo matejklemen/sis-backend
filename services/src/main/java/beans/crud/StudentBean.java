@@ -1,6 +1,6 @@
 package beans.crud;
 
-import entities.StudentData;
+import entities.Student;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -12,13 +12,15 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-public class StudentDataBean {
+public class StudentBean {
+
+    private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
     @Transactional
-    public StudentData putStudent(StudentData st){
+    public Student putStudent(Student st){
         log.info("Putting: " + st.toString());
         em.persist(st);
         em.flush();
@@ -26,27 +28,27 @@ public class StudentDataBean {
     }
 
     @Transactional
-    public StudentData getStudentById(int id) {
+    public Student getStudentById(int id) {
         log.info("Getting by id: " + id);
-        StudentData sd = em.find(StudentData.class, id);
+        Student sd = em.find(Student.class, id);
         if(sd == null) throw new NoResultException("No student by this id");
         return sd;
     }
 
     @Transactional
-    public StudentData getStudentByStudentId(String sid) {
-        log.info("Getting by student_id: " + sid);
+    public Student getStudentByRegisterNumber(String regno) {
+        log.info("Getting by student_id: " + regno);
 
-        Query q = em.createQuery("SELECT st FROM student_data st WHERE st.studentId = :sid");
-        q.setParameter("sid", sid);
+        Query q = em.createNamedQuery("Student.getByRegisterNumber");
+        q.setParameter("regno", regno);
 
-        return (StudentData) q.getSingleResult();
+        return (Student) q.getSingleResult();
     }
 
     @Transactional
     public List searchStudents(String query) {
         log.info("Searching: " + query);
-        Query q = em.createQuery("SELECT st FROM student_data st WHERE st.studentId LIKE :sq OR st.name LIKE :sq OR st.surname LIKE :sq");
+        Query q = em.createNamedQuery("Student.searchStudents");
         q.setMaxResults(50);
         q.setParameter("sq", "%" + query + "%");
         return q.getResultList();

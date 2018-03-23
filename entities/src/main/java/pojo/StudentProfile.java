@@ -1,7 +1,7 @@
 package pojo;
 
-import entities.StudentData;
 import entities.UserLogin;
+import entities.Student;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -22,7 +22,7 @@ public class StudentProfile {
     @XmlElement(required = true)
     private String course;
     @XmlElement(required = true)
-    private int studentId;
+    private String studentId;
     @XmlElement(required = true)
     private String username;
     @XmlElement(required = true)
@@ -60,11 +60,11 @@ public class StudentProfile {
         this.course = course;
     }
 
-    public int getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 
@@ -84,16 +84,18 @@ public class StudentProfile {
         this.password = password;
     }
 
-    public static StudentProfile setStudentProfile(StudentData sd, UserLogin ul, String password){
+
+    public static StudentProfile setStudentProfile(Student sd, UserLogin ul, String password){
         StudentProfile sp = new StudentProfile();
         sp.setName(sd.getName());
         sp.setSurname(sd.getSurname());
         sp.setEmail(sd.getEmail());
-        sp.setCourse(sd.getCourse());
-        sp.setStudentId(sd.getStudentId());
+        sp.setCourse(sd.getStudyProgram().getName());
+        sp.setStudentId(sd.getRegisterNumber());
         sp.setPassword(password);
         sp.setUsername(ul.getUsername());
 
         return sp;
     }
+
 }
