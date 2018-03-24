@@ -4,6 +4,7 @@ import beans.crud.UserLoginBean;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import entities.UserLogin;
 import exceptions.UserBlacklistedException;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import pojo.UserLoginRequest;
@@ -11,15 +12,13 @@ import pojo.UserLoginRequest;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -32,7 +31,8 @@ public class UserLoginSource {
     private final String serverSecret = ConfigurationUtil.getInstance().get("auth.server-secret").orElse("");
 
     private static final String TOKEN_ISSUER = "sis";
-    private static final int TOKEN_VALIDITY_MINS = 15;
+    private static final int TOKEN_VALIDITY_MINS_LOGIN = 15;
+    private static final int TOKEN_VALIDITY_MINS_RESET_PASSWORD = 1;
 
     @Inject
     private UserLoginBean ulB;
@@ -65,7 +65,7 @@ public class UserLoginSource {
         if(user == null)
             return Response.status(Response.Status.FORBIDDEN).build();
 
-        String jwtToken = issueJWTToken(user);
+        String jwtToken = issueJWTToken(user, TOKEN_VALIDITY_MINS_LOGIN);
 
         // build a Map instead of creating a class for response
         Map<String, String> responseBody = new HashMap<String, String>();
@@ -76,10 +76,10 @@ public class UserLoginSource {
         return Response.ok().entity(responseBody).build();
     }
 
-    private String issueJWTToken(UserLogin user) {
+    private String issueJWTToken(UserLogin user, int duration) {
         Date issuedDate = new Date();
 
-        Date expiredDate = new Date(issuedDate.getTime() + TOKEN_VALIDITY_MINS * 60 * 1000);
+        Date expiredDate = new Date(issuedDate.getTime() + TOKEN_VALIDITY_MINS_LOGIN * 60 * 1000);
 
         String jwtToken = Jwts.builder()
                 .setSubject(user.getUsername())
@@ -91,5 +91,76 @@ public class UserLoginSource {
                 .compact();
 
         return jwtToken;
+    }
+
+    /**
+     * Extracts claims ("properties") from jwtToken.
+     * NOTE: get claims by using <Claim-object>.get(<claim-name>).
+     * @param jwtToken
+     * @return set of claims
+     * @throws Exception if an error occured during the parsing of JWT token.
+     */
+    private Claims extractClaimsFromJWT(String jwtToken) throws Exception {
+        return Jwts.parser().setSigningKey(serverSecret).parseClaimsJws(jwtToken).getBody();
+    }
+
+    @POST
+    @Path("reset-password")
+    /*
+        Returns:
+        - OK (200) in every situation because we do not want to give out any hints about existing/non-existing usernames
+        (front end should say something like "If the entered mail is valid, you should have a reset token waiting in your inbox. Enter it here: ...")
+     */
+    public Response sendResetMail(UserLoginRequest ulreq) {
+
+        if(ulreq.getUsername() == null)
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        List<UserLogin> ul = ulB.getUserLoginInfoByUsername(ulreq.getUsername());
+
+        if(ul.size() > 0)
+            ulB.sendToken(ulreq.getUsername(), issueJWTToken(ul.get(0), TOKEN_VALIDITY_MINS_RESET_PASSWORD));
+        else
+            log.severe(String.format("User %s could not be found, therefore I am not sending a password reset mail.\n", ulreq.getUsername()));
+
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Path("change-password")
+    /*
+        Returns:
+        - OK (200) if password change was successful,
+        - BAD_REQUEST (400) otherwise
+        NOTE: the JWT token is in request body because this endpoint will be used for:
+        - changing password of authenticated users and
+        - changing the password of users that want to reset their password (not authenticated).
+    */
+    public Response changePassword(UserLoginRequest ulreq) {
+
+        if(ulreq.getJwtToken() == null || ulreq.getNewPassword() == null || ulreq.getNewPassword().length() == 0) {
+            log.severe("Either the JWT token is missing OR new password is missing OR new password is an empty string.");
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Claims userClaims = null;
+
+        try {
+            userClaims = extractClaimsFromJWT(ulreq.getJwtToken());
+        }
+        catch (Exception e) {
+            log.severe("Encountered an invalid JWT token in request to change password!");
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        String username = userClaims.getSubject();
+
+        // check if reset token is still valid
+        if(new Date().after(userClaims.getExpiration()))
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        boolean success = ulB.changePassword(username, ulreq.getNewPassword());
+
+        return success ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 }

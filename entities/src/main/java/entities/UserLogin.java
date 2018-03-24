@@ -10,7 +10,7 @@ import java.io.Serializable;
 @NamedQueries(
         value = {
                 @NamedQuery(name = "UserLogin.getAll", query = "SELECT ul FROM user_login ul"),
-                @NamedQuery(name = "UserLogin.getSaltAndPasswordByUsername", query = "SELECT ul FROM user_login ul WHERE ul.username = :username")
+                @NamedQuery(name = "UserLogin.getUserLoginInfoByUsername", query = "SELECT ul FROM user_login ul WHERE ul.username = :username")
         }
 )
 public class UserLogin implements Serializable {

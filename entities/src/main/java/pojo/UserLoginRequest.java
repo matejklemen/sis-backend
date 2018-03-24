@@ -11,10 +11,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class UserLoginRequest {
-    @XmlElement(required = true)
+
     private String username;
-    @XmlElement(required = true)
     private String password;
+    private String newPassword; /* used when requesting password change */
+    private String jwtToken; /* for changing or resetting password */
 
     public String getUsername() {
         return username;
@@ -30,5 +31,21 @@ public class UserLoginRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getJwtToken() {
+        return jwtToken;
+    }
+
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 }

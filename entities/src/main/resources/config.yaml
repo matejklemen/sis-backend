@@ -16,3 +16,7 @@ kumuluzee:
       max-pool-size: 20
 auth:
   server-secret: testSecret
+contact-mail:
+  name: "Budget Studis"
+  address: "siscontact1@gmail.com"
+  password: "1stud2is3"
