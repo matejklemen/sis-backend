@@ -1,9 +1,15 @@
 package beans.crud;
 
+import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import entities.UserLogin;
 import entities.UserRole;
 import exceptions.UserBlacklistedException;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.simplejavamail.email.Email;
+import org.simplejavamail.email.EmailBuilder;
+import org.simplejavamail.mailer.Mailer;
+import org.simplejavamail.mailer.MailerBuilder;
+import org.simplejavamail.mailer.config.TransportStrategy;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -22,6 +28,9 @@ public class UserLoginBean {
     private Map<String, Date> ipBlacklist = new HashMap<String, Date>(); /* {IP: date when the lock expires} */
     private final int MAX_UNSUCCESSFUL_ATTEMPTS = 5;
     private final int BLOCK_IP_MINS = 1;
+    private final String SENDER_NAME = ConfigurationUtil.getInstance().get("contact-mail.name").orElse("");
+    private final String SENDER_MAIL = ConfigurationUtil.getInstance().get("contact-mail.address").orElse("");
+    private final String SENDER_PASSWORD = ConfigurationUtil.getInstance().get("contact-mail.password").orElse("");
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
@@ -51,6 +60,13 @@ public class UserLoginBean {
             log.severe(e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    public List<UserLogin> getUserLoginInfoByUsername(String username) {
+        TypedQuery<UserLogin> q = em.createNamedQuery("UserLogin.getUserLoginInfoByUsername", UserLogin.class);
+        q.setParameter("username", username);
+
+        return q.getResultList();
     }
 
     @Transactional
@@ -99,10 +115,7 @@ public class UserLoginBean {
      * @throws UserBlacklistedException if user with IP 'ip' is on the blacklist.
      */
     public UserLogin authenticateUser(String ip, String username, String inputPassword) throws UserBlacklistedException {
-        TypedQuery<UserLogin> q = em.createNamedQuery("UserLogin.getSaltAndPasswordByUsername", UserLogin.class);
-        q.setParameter("username", username);
-
-        List<UserLogin> ul = q.getResultList();
+        List<UserLogin> ul = getUserLoginInfoByUsername(username);
         UserLogin retrievedUser = null;
 
         // usernames are unique, so we will always get 0 results (if user doesn't exist) or 1 result.
@@ -173,6 +186,55 @@ public class UserLoginBean {
             return false;
         }
 
+        return true;
+    }
+
+    public void sendToken(String receiverAddress, String message) {
+        final Email email = EmailBuilder.startingBlank()
+                .from(SENDER_NAME, SENDER_MAIL)
+                .to(receiverAddress, receiverAddress)
+                .withSubject("Password change request from sis")
+                .withHTMLText(String.format("<b>[RESET TOKEN]</b> %s", message))
+                .buildEmail();
+
+        Mailer mailer = MailerBuilder
+                .withSMTPServer("smtp.gmail.com", 25, SENDER_MAIL, SENDER_PASSWORD)
+                .withTransportStrategy(TransportStrategy.SMTP_TLS)
+                .buildMailer();
+
+        mailer.sendMail(email);
+        log.info(String.format("Sent mail to %s!\n", receiverAddress));
+    }
+
+    /**
+     * Changes password for a specified user to 'newPassword'.
+     * @param username
+     * @param newPassword
+     * @return true if password was changed successfully and false otherwise
+     */
+    @Transactional
+    public boolean changePassword(String username, String newPassword) {
+
+        List<UserLogin> ul = getUserLoginInfoByUsername(username);
+
+        // user does not exist
+        if(ul.size() == 0)
+            return false;
+
+        UserLogin user = ul.get(0);
+
+        // generate new salt for changed password
+        int generatedSalt = rng.nextInt();
+        user.setPassword(DigestUtils.sha512Hex(newPassword.concat(String.valueOf(generatedSalt))));
+        user.setSalt(generatedSalt);
+
+        try {
+            em.merge(user);
+        }
+        catch (Exception e) {
+            log.severe("An error occurred when trying to update user password!");
+            log.severe(e.getMessage());
+        }
         return true;
     }
 }
