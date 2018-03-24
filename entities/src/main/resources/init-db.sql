@@ -13,4 +13,7 @@ INSERT INTO study_year (name) VALUES ('2016/2017'), ('2017/2018');
 INSERT INTO study_program (name) VALUES ('Računalništvo in informatika (UNI)'), ('Računalništvo in informatika (VSŠ)'), ('Računalništvo in matematika');
 
 -- student
-INSERT INTO student (register_number, name, surname, email, id_login, id_study_program, id_study_year) VALUES ('63180001', 'Janez', 'Novak', 'janez.novak@gmail.com', 1, 1, 1), ('63180002', 'Miha', 'Kopač', 'miha21kopac@gmail.com', 1, 2, 1), ('63180003', 'Marta', 'Veljak', 'marta.veljak0000@gmail.com', 1, 3, 2);
+INSERT INTO student (register_number, name, surname, email, id_login) VALUES ('63180001', 'Janez', 'Novak', 'janez.novak@gmail.com', 1), ('63180002', 'Miha', 'Kopač', 'miha21kopac@gmail.com', 1), ('63180003', 'Marta', 'Veljak', 'marta.veljak0000@gmail.com', 1);
+
+-- enrolments
+INSERT INTO enrolment (id_student, id_study_year, id_study_program, year, type, kind, confirmed) VALUES (1, 1, 1, 1, 'prvi vpis', 'redni', true), (1, 2, 1, 2, 'prvi vpis', 'redni', true), (2, 2, 2, 1, 'prvi vpis', 'redni', true)

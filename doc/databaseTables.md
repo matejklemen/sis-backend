@@ -37,7 +37,7 @@ Contains data about enrolment students have made.
 
 TODO: make seperate table for enrolment types? (example types: *prvi vpis*, *ponovni vpis*, *absolvent*).
 
-TODO: also add enrolment kinds (example kinds: *redni*, *izredni*)
+TODO: make seperate table for enrolment kinds? (example kinds: *redni*, *izredni*)
 ```sql
 id PRIMARY KEY,
 id_student FOREIGN KEY,
@@ -45,6 +45,7 @@ id_study_year FOREIGN KEY,
 id_study_program FOREIGN KEY,
 year INTEGER,
 type VARCHAR(20),
+kind VARCHAR(20),
 confirmed BOOLEAN NOT NULL
 ```
 

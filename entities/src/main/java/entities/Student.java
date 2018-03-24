@@ -1,8 +1,11 @@
 package entities;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(name = "student")
 @NamedQueries(
@@ -14,6 +17,8 @@ import java.io.Serializable;
 )
 public class Student implements Serializable {
 
+    @XmlID
+    @XmlElement
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -35,13 +40,8 @@ public class Student implements Serializable {
     @JoinColumn(name = "id_login")
     private UserLogin loginData;
 
-    @ManyToOne
-    @JoinColumn(name = "id_study_program", nullable = false)
-    private StudyProgram studyProgram;
-
-    @ManyToOne
-    @JoinColumn(name = "id_study_year", nullable = false)
-    private StudyYear studyYear;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.PERSIST)
+    private List<Enrolment> enrolments;
 
     public int getId() {
         return id;
@@ -91,20 +91,11 @@ public class Student implements Serializable {
         this.loginData = loginData;
     }
 
-    public StudyProgram getStudyProgram() {
-        return studyProgram;
+    public List<Enrolment> getEnrolments() {
+        return enrolments;
     }
 
-    public void setStudyProgram(StudyProgram studyProgram) {
-        this.studyProgram = studyProgram;
+    public void setEnrolments(List<Enrolment> enrolments) {
+        this.enrolments = enrolments;
     }
-
-    public StudyYear getStudyYear() {
-        return studyYear;
-    }
-
-    public void setStudyYear(StudyYear studyYear) {
-        this.studyYear = studyYear;
-    }
-
 }

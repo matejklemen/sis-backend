@@ -27,6 +27,12 @@ public class StudentSource {
         - BAD_REQUEST (400)
         - FORBIDDEN (403)
      */
+
+    @GET
+    public Response getStudents() {
+        return Response.ok(sdB.getStudents()).build();
+    }
+
     @Path("{id}")
     @GET
     public Response getStudentById(@PathParam("id") int id) {
@@ -39,6 +45,12 @@ public class StudentSource {
     public Response getStudentByStudentId(@PathParam("regno") String regno) {
         Student sd = sdB.getStudentByRegisterNumber(regno);
         return Response.ok(sd).build();
+    }
+
+    @Path("search")
+    @GET
+    public Response getStudentsWithEmptySearch() {
+        return getStudents();
     }
 
     @Path("search/{query}")

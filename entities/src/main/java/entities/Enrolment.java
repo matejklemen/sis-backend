@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlIDREF;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,9 +17,10 @@ public class Enrolment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany
+    @XmlIDREF // pass by id prevents infinite stack
+    @ManyToOne
     @JoinColumn(name = "id_student")
-    private List<Student> students;
+    private Student student;
 
     @ManyToOne
     @JoinColumn(name = "id_study_year")
@@ -31,7 +33,10 @@ public class Enrolment implements Serializable {
     private int year; // letnik
 
     @Column(length = 20)
-    private String type; // redni / izredni
+    private String type; // prvi vpis, ponovni vpis, absolvent
+
+    @Column(length = 20)
+    private String kind; // redni, izredni
 
     @Column(nullable = false)
     private boolean confirmed;
@@ -44,12 +49,12 @@ public class Enrolment implements Serializable {
         this.id = id;
     }
 
-    public List<Student> getStudents() {
-        return students;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setStudents(List<Student> students) {
-        this.students = students;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public StudyYear getStudyYear() {
@@ -82,6 +87,14 @@ public class Enrolment implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 
     public boolean isConfirmed() {
