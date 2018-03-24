@@ -1,6 +1,7 @@
 package beans.logic;
 
 import beans.crud.*;
+import entities.Enrolment;
 import entities.Student;
 import entities.UserLogin;
 
@@ -26,6 +27,8 @@ public class StudentImport {
     private StudyProgramBean spb;
     @Inject
     private StudyYearBean syb;
+    @Inject
+    private EnrolmentBean enb;
 
 
     public List<Student> ParseStudentData(String studentData){
@@ -38,8 +41,16 @@ public class StudentImport {
             Student stu = new Student();
             stu.setName(iter.next());
             stu.setSurname(iter.next());
-            stu.setStudyProgram(spb.getOrCreateStudyProgram(iter.next()));
-            stu.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
+
+            Enrolment enr = new Enrolment();
+            enr.setStudent(stu);
+            enr.setYear(1);
+            enr.setStudyProgram(spb.getOrCreateStudyProgram(iter.next()));
+            enr.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
+            enr.setConfirmed(false);
+            enr.setKind("redni");
+            enr.setType("prvi vpis");
+
             stu.setRegisterNumber(GenerateNewStudentId());
             stu.setEmail(iter.next());
 
@@ -50,8 +61,16 @@ public class StudentImport {
 
             ul = ulb.insertUserLoginSingle(ul.getUsername(), ul.getPassword(), ul.getRole());
 
-            stu.setLoginData(ul); //setLoginId(ul.getId());
-            sdb.putStudent(stu);
+            stu.setLoginData(ul);
+
+            stu = sdb.putStudent(stu);
+
+            // enrolment has to be persisted after student ?
+            enr = enb.putEnrolment(enr);
+
+            // update enrolment list...
+            stu.getEnrolments().add(enr);
+            stu = sdb.updateStudent(stu);
 
             listOfStudents.add(stu);
         }

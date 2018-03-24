@@ -3,10 +3,7 @@ package beans.crud;
 import entities.Student;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,6 +22,21 @@ public class StudentBean {
         em.persist(st);
         em.flush();
         return st;
+    }
+
+    @Transactional
+    public Student updateStudent(Student st){
+        log.info("Updating: " + st.toString());
+        em.merge(st);
+        em.flush();
+        return st;
+    }
+
+    @Transactional
+    public List<Student> getStudents() {
+        TypedQuery<Student> q = em.createNamedQuery("Student.getAll", Student.class);
+        q.setMaxResults(100);
+        return q.getResultList();
     }
 
     @Transactional
@@ -53,5 +65,4 @@ public class StudentBean {
         q.setParameter("sq", "%" + query + "%");
         return q.getResultList();
     }
-
 }
