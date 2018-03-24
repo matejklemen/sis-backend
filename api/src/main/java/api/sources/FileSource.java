@@ -28,15 +28,8 @@ public class FileSource {
 
     @PUT
     public Response putFile(FileData file){
-        try {
-            List<Student> sp = si.ParseStudentData(file.getFileData());
-            return Response.status(Response.Status.OK).entity(sp).build();
-        }
-        catch (Exception ex){
-            log.info("Error in putFile method. Message: "+ex.toString());
-            ex.printStackTrace();
-            return Response.serverError().build();
-        }
+        List<Student> sp = si.ParseStudentData(file.getFileData());
+        return Response.status(Response.Status.OK).entity(sp).build();
     }
 }
 
