@@ -49,7 +49,11 @@
                 <artifactId>services</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.simplejavamail</groupId>
+                <artifactId>simple-java-mail</artifactId>
+                <version>5.0.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

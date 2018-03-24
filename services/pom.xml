@@ -30,7 +30,10 @@
             <artifactId>commons-codec</artifactId>
             <version>1.11</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.simplejavamail</groupId>
+            <artifactId>simple-java-mail</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
