@@ -21,3 +21,7 @@ A student information system made for a software engineering course.
 ## Development cycle:
 1.  `docker start postgres-jdbc`
 2.  `maven clean package`
+
+## API documentation
+The project uses OpenAPI specification 3. Documentation hosted on:
+http://localhost:8080/api-specs/ui (when running locally)

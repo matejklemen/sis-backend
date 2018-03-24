@@ -7,6 +7,7 @@ import exceptions.UserBlacklistedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.swagger.v3.oas.annotations.Operation;
 import pojo.UserLoginRequest;
 
 import javax.enterprise.context.ApplicationScoped;
