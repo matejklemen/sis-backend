@@ -1,9 +1,14 @@
 package api.sources;
 
+import api.mappers.ResponseError;
 import beans.crud.EnrolmentBean;
 import beans.crud.StudentBean;
 import entities.Enrolment;
 import entities.Student;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,12 +28,20 @@ public class EnrolmentSource {
     @Inject
     private EnrolmentBean enB;
 
-    /*
-        Returns:
-        - OK (200)
-        - BAD_REQUEST (400)
-        - FORBIDDEN (403)
-     */
+    @Operation(description = "Returns an enrolment with specified id.", summary = "Enrolment by id", tags = {"students", "enrolments"}, responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Enrolment by id",
+                    content = @Content(
+                            schema = @Schema(implementation
+                                    = Enrolment.class))
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Enrolment by id doesn't exist",
+                    content = @Content(
+                            schema = @Schema(implementation
+                                    = ResponseError.class))
+            )
+    })
     @Path("{id}")
     @GET
     public Response getEnrolmentById(@PathParam("id") int id) {

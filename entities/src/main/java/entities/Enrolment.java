@@ -17,7 +17,6 @@ public class Enrolment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @XmlIDREF // pass by id prevents infinite stack
     @ManyToOne
     @JoinColumn(name = "id_student")
     private Student student;
@@ -49,6 +48,7 @@ public class Enrolment implements Serializable {
         this.id = id;
     }
 
+    @XmlIDREF // pass by id prevents infinite stack
     public Student getStudent() {
         return student;
     }

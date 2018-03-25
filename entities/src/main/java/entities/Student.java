@@ -17,10 +17,10 @@ import java.util.List;
 )
 public class Student implements Serializable {
 
-    @XmlID
-    @XmlElement
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @XmlID
+    @XmlElement
     private int id;
 
     @Column(name = "register_number", length = 8, nullable = false, unique = true)
