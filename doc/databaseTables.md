@@ -14,6 +14,9 @@ id SERIAL PRIMARY KEY,
 register_number VARCHAR(8) UNIQUE NOT NULL,
 name VARCHAR(30) NOT NULL,
 surname VARCHAR(60) NOT NULL,
+id_address1 FOREIGN KEY,
+id_address2 FOREIGN KEY,
+phone_number VARCHAR(255),
 email VARCHAR(80) NOT NULL,
 id_login FOREIGN KEY,
 id_study_program FOREIGN KEY NOT NULL,
@@ -49,7 +52,7 @@ kind VARCHAR(20),
 confirmed BOOLEAN NOT NULL
 ```
 
-### `token`
+### `enrolment_token`
 
 Contains data about enrolment tokens availiable to students.
 
@@ -60,6 +63,8 @@ id_student FOREIGN KEY,
 id_study_year FOREIGN KEY,
 id_study_program FOREIGN KEY,
 year INTEGER,
+type VARCHAR(20),
+kind VARCHAR(20),
 used BOOLEAN NOT NULL
 ```
 
@@ -91,6 +96,28 @@ Example names: *Administrator*, *Student*, *Professor*
 ```sql
 id SERIAL PRIMARY KEY,
 name VARCHAR(20) NOT NULL
+```
+
+### `address`
+
+Contains people's addresses.
+
+TODO: Make a separate table with countries?
+```sql
+id SERIAL PRIMARY KEY,
+line1 VARCHAR(255) NOT NULL,
+line2 VARCHAR(255),
+id_post_address FOREIGN KEY,
+country VARCHAR(255)
+```
+
+### `post_address`
+
+Contains post number and addresses. **id <=> post number**
+
+```sql
+id PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
 ```
 
 # Other notes

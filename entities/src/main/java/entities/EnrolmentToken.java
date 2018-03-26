@@ -3,15 +3,14 @@ package entities;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlIDREF;
 import java.io.Serializable;
-import java.util.List;
 
-@Entity(name = "enrolment")
+@Entity(name = "enrolment_token")
 @NamedQueries(
         value = {
-                //@NamedQuery(name = "Student.GetAll", query = "SELECT st FROM student_data st")
+
         }
 )
-public class Enrolment implements Serializable {
+public class EnrolmentToken implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +37,7 @@ public class Enrolment implements Serializable {
     private String kind; // redni, izredni
 
     @Column(nullable = false)
-    private boolean confirmed; // potrdi referentka
+    private boolean used; // porabi student
 
     public int getId() {
         return id;
@@ -97,12 +96,12 @@ public class Enrolment implements Serializable {
         this.kind = kind;
     }
 
-    public boolean isConfirmed() {
-        return confirmed;
+    public boolean isUsed() {
+        return used;
     }
 
-    public void setConfirmed(boolean confirmed) {
-        this.confirmed = confirmed;
+    public void setUsed(boolean confirmed) {
+        this.used = confirmed;
     }
 
 }

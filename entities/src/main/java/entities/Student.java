@@ -32,6 +32,17 @@ public class Student implements Serializable {
     @Column(length = 60, nullable = false)
     private String surname;
 
+    @ManyToOne
+    @JoinColumn(name = "id_address1")
+    private Address address1;
+
+    @ManyToOne
+    @JoinColumn(name = "id_address2")
+    private Address address2;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Column(length = 80, nullable = false)
     private String email;
 
@@ -73,6 +84,30 @@ public class Student implements Serializable {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public Address getAddress1() {
+        return address1;
+    }
+
+    public void setAddress1(Address address1) {
+        this.address1 = address1;
+    }
+
+    public Address getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(Address address2) {
+        this.address2 = address2;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {
