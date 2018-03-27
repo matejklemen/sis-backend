@@ -80,7 +80,7 @@ public class StudentImport {
 
     private String GenerateNewStudentId(){
         nextStudentId++;
-        return String.valueOf(63150000 + nextStudentId);
+        return String.valueOf(63180000 + nextStudentId);
     }
 
     private String GeneratePassword(UserLogin ul, Student sd){

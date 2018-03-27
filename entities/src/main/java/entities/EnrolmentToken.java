@@ -104,4 +104,15 @@ public class EnrolmentToken implements Serializable {
         this.used = confirmed;
     }
 
+    public static EnrolmentToken createEnrolmentToken(Enrolment e){
+        EnrolmentToken et = new EnrolmentToken();
+        et.setKind(e.getKind());
+        et.setStudent(e.getStudent());
+        et.setStudyProgram(e.getStudyProgram());
+        et.setStudyYear(e.getStudyYear());
+        et.setType(e.getType());
+        et.setYear(e.getYear());
+        return et;
+    }
+
 }
