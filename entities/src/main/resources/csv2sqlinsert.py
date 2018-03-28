@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import os
 
 def csv2sql(filename):
   fread = open(filename, "r")
@@ -44,27 +45,27 @@ def directsql(filename):
 
   fread.close()
 
+
 # open a file for writing
 fwrite = open("generated.sql", "w")
 fwrite.write("-- This file is generated with python script and probably SHOULD NOT be edited but generated!\n\n")
 
-arguments = sys.argv
-# remove first argument (name of this script)
-del arguments[0]
+# open each csv file and process it
+for file in sorted(os.listdir(".")):
+  if file.endswith(".csv"):
+    print("Processing csv file " + file + "...")
+    csv2sql(file)
+    print("Processing csv file " + file + " done!")
 
-if len(arguments) == 0:
-  print("No files given! As arguments, pass files in order you want them to be in generated SQL file.\n" + 
-  "You can prepand filename with : (colon) to NOT process file as csv and just append it directly to output.\n" + 
-  "Script will generate an generated.sql file.\n\nExample: python csv2sqlinsert some-csv-data.csv anotherone.csv :sqlfiletoalsoappend.sql")
-  quit()
+# open each sql file and append it
+for file in sorted(os.listdir(".")):
+  if file == "generated.sql":
+    continue
 
-# for each argument
-for arg in sys.argv:
-  filename = arg
-
-  if filename.startswith(":"):
-    directsql(filename[1:])
-  else:
-    csv2sql(filename)
+  if file.endswith(".sql"):
+    print("Appending sql file " + file + "...")
+    directsql(file)
+    print("Appending sql file " + file + " done!")
 
 fwrite.close()
+print("--- SQL code has been written into generated.sql ---\nBye!\n")
