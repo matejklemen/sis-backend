@@ -70,12 +70,23 @@ used BOOLEAN NOT NULL
 
 ### `study_program`
 
-Contains data about study programs.
+See csv file for examples (in `entities/src/main/resources/`)
 
-Example names: *Računalništvo in informatika (UNI)*, *Računalništvo in informatika (VSŠ)*, *Računalništvo in matematika*
 ```sql
-id SERIAL PRIMARY KEY,
-name VARCHAR(120) NOT NULL
+id VARCHAR(10) PRIMARY KEY,
+name VARCHAR,
+id_study_degree FOREIGN KEY,
+semesters INTEGER
+evs_code INTEGER
+```
+
+### `study_degree`
+
+See csv file for examples (in `entities/src/main/resources/`)
+
+```sql
+id VARCHAR(3) PRIMARY KEY,
+name VARCHAR,
 ```
 
 ### `study_year`
@@ -100,24 +111,35 @@ name VARCHAR(20) NOT NULL
 
 ### `address`
 
-Contains people's addresses.
+Containts people's addresses.
 
-TODO: Make a separate table with countries?
 ```sql
 id SERIAL PRIMARY KEY,
 line1 VARCHAR(255) NOT NULL,
 line2 VARCHAR(255),
 id_post_address FOREIGN KEY,
-country VARCHAR(255)
+id_country FOREIGN KEY
 ```
 
 ### `post_address`
 
-Contains post number and addresses. **id <=> post number**
+Contains post number and addresses. `id == post number`
 
 ```sql
 id PRIMARY KEY,
 name VARCHAR(255) NOT NULL,
+```
+
+### `country`
+
+Contains countries. `name` is slovene, `name_iso` is international. `id == country code (int)`
+
+```sql
+id INTEGER PRIMARY KEY,
+code2 VARCHAR(2) NOT NULL,
+code3 VARCHAR(3) NOT NULL,
+name VARCHAR,
+name_iso VARCHAR
 ```
 
 # Other notes

@@ -4,10 +4,12 @@
         <jta-data-source>jdbc/sisTestDB</jta-data-source>
 
         <class>entities.Address</class>
+        <class>entities.Country</class>
         <class>entities.Enrolment</class>
         <class>entities.EnrolmentToken</class>
         <class>entities.PostAddress</class>
         <class>entities.Student</class>
+        <class>entities.StudyDegree</class>
         <class>entities.StudyProgram</class>
         <class>entities.StudyYear</class>
         <class>entities.UserLogin</class>
@@ -16,7 +18,7 @@
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
-            <property name="javax.persistence.sql-load-script-source" value="init-db.sql"/>
+            <property name="javax.persistence.sql-load-script-source" value="generated.sql"/>
             <property name="javax.persistence.schema-generation.drop-source" value="metadata"/>
         </properties>
     </persistence-unit>

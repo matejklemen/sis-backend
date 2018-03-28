@@ -25,7 +25,9 @@ public class Address implements Serializable {
     @JoinColumn(name = "id_post_address", nullable = false)
     private PostAddress post;
 
-    private String country;
+    @ManyToOne
+    @JoinColumn(name = "id_country")
+    private Country country;
 
     public int getId() {
         return id;
@@ -59,11 +61,11 @@ public class Address implements Serializable {
         this.post = post;
     }
 
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 }

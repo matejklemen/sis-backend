@@ -9,16 +9,12 @@ INSERT INTO user_login (username, password, id_user_role, salt) VALUES ('joze1',
 -- study years
 INSERT INTO study_year (name) VALUES ('2016/2017'), ('2017/2018');
 
--- study programs
-INSERT INTO study_program (name) VALUES ('Računalništvo in informatika (UNI)'), ('Računalništvo in informatika (VSŠ)'), ('Računalništvo in matematika');
-
 -- address
-INSERT INTO post_address(id, name) VALUES (1, 'Moja dežela');
-INSERT INTO address (line1, line2, id_post_address, country) VALUES ('Kul kraj 15', 'Druga vrstica naslova', 1, 'Slovenija'), ('Nekje 26', '', 1, 'Slovenija');
+INSERT INTO address (line1, line2, id_post_address, id_country) VALUES ('Kul kraj 15', 'Druga vrstica naslova', 1000, 705), ('Nekje 26', '', 8000, 703);
 
 -- student
 INSERT INTO student (register_number, name, surname, id_address1, id_address2, phone_number, email, id_login) VALUES ('63180001', 'Janez', 'Novak', 1, 2, '+386 666 666', 'janez.novak@gmail.com', 1);
 INSERT INTO student (register_number, name, surname, id_address1, email, id_login) VALUES ('63180002', 'Miha', 'Kopač', 1, 'miha21kopac@gmail.com', 1), ('63180003', 'Marta', 'Veljak', 1, 'marta.veljak0000@gmail.com', 1);
 
 -- enrolments
-INSERT INTO enrolment (id_student, id_study_year, id_study_program, year, type, kind, confirmed) VALUES (1, 1, 1, 1, 'prvi vpis', 'redni', true), (1, 2, 1, 2, 'prvi vpis', 'redni', true), (2, 2, 2, 1, 'prvi vpis', 'redni', true)
+INSERT INTO enrolment (id_student, id_study_year, id_study_program, year, type, kind, confirmed) VALUES (1, 1, 'VT', 1, 'prvi vpis', 'redni', true), (1, 2, 'VT', 2, 'prvi vpis', 'redni', true), (2, 2, 'VU', 1, 'prvi vpis', 'redni', true)

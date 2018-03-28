@@ -12,16 +12,25 @@ import java.io.Serializable;
 public class StudyProgram implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(length = 10)
+    private String id;
 
     private String name;
 
-    public int getId() {
+    @ManyToOne
+    @JoinColumn(name = "id_study_degree")
+    private StudyDegree studyDegree;
+
+    private int semesters;
+
+    @Column(name = "evs_code")
+    private int evsCode;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -33,4 +42,27 @@ public class StudyProgram implements Serializable {
         this.name = name;
     }
 
+    public StudyDegree getStudyDegree() {
+        return studyDegree;
+    }
+
+    public void setStudyDegree(StudyDegree studyDegree) {
+        this.studyDegree = studyDegree;
+    }
+
+    public int getSemesters() {
+        return semesters;
+    }
+
+    public void setSemesters(int semesters) {
+        this.semesters = semesters;
+    }
+
+    public int getEvsCode() {
+        return evsCode;
+    }
+
+    public void setEvsCode(int evsCode) {
+        this.evsCode = evsCode;
+    }
 }
