@@ -2,7 +2,6 @@ package api.sources;
 
 import api.mappers.ResponseError;
 import beans.crud.CourseBean;
-import entities.Enrolment;
 import entities.curriculum.Course;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Path("course")
+@Path("courses")
 @ApplicationScoped
 public class CourseSource {
     private Logger log = Logger.getLogger(getClass().getSimpleName());

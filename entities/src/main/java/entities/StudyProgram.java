@@ -6,7 +6,8 @@ import java.io.Serializable;
 @Entity(name = "study_program")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "StudyProgram.getByName", query = "SELECT sp FROM study_program sp WHERE sp.name = :name")
+                @NamedQuery(name = "StudyProgram.getByName", query = "SELECT sp FROM study_program sp WHERE sp.name = :name"),
+                @NamedQuery(name = "StudyProgram.getAll", query = "SELECT sp FROM study_program sp"),
         }
 )
 public class StudyProgram implements Serializable {

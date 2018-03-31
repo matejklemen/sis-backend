@@ -7,6 +7,11 @@ import java.io.Serializable;
 
 @Entity(name = "post_address")
 @Access(AccessType.FIELD)
+@NamedQueries(
+        value = {
+                @NamedQuery(name = "PostAddress.getAll", query = "SELECT pa FROM post_address pa"),
+        }
+)
 public class PostAddress implements Serializable {
 
     @Id

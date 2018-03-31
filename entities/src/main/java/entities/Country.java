@@ -7,6 +7,11 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 
 @Entity(name = "country")
+@NamedQueries(
+        value = {
+                @NamedQuery(name = "Country.getAll", query = "SELECT c FROM country c"),
+        }
+)
 public class Country implements Serializable {
 
     @Id
