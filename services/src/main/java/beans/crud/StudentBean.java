@@ -65,4 +65,12 @@ public class StudentBean {
         q.setParameter("sq", "%" + query + "%");
         return q.getResultList();
     }
+
+    @Transactional
+    public Student getLastStudent(){
+        log.info("Getting last student from table");
+        TypedQuery<Student> q = em.createNamedQuery("Student.getAllReverse", Student.class);
+        q.setMaxResults(1);
+        return q.getSingleResult();
+    }
 }

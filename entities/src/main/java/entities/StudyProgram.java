@@ -8,6 +8,7 @@ import java.io.Serializable;
         value = {
                 @NamedQuery(name = "StudyProgram.getByName", query = "SELECT sp FROM study_program sp WHERE sp.name = :name"),
                 @NamedQuery(name = "StudyProgram.getAll", query = "SELECT sp FROM study_program sp"),
+                @NamedQuery(name = "StudyProgram.getById", query = "SELECT sp FROM study_program sp WHERE sp.id = :id"),
         }
 )
 public class StudyProgram implements Serializable {

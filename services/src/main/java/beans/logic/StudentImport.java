@@ -7,15 +7,17 @@ import entities.UserLogin;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Logger;
+
+import static java.lang.Integer.parseInt;
 
 @ApplicationScoped
 public class StudentImport {
 
-    private static  int nextStudentId = 0;
+    private static Integer nextStudentId = null;
+
+    private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @Inject
     private StudentBean sdb;
@@ -30,13 +32,12 @@ public class StudentImport {
     @Inject
     private EnrolmentBean enb;
 
-
     public List<Student> ParseStudentData(String studentData){
         List<String> lines = Arrays.asList(studentData.split(System.getProperty("line.separator")));
         Iterator<String> iter = lines.iterator();
 
         List<Student> listOfStudents = new ArrayList<>();
-
+        GenerateNewStudentId();
         while(iter.hasNext()){
             Student stu = new Student();
             stu.setName(iter.next());
@@ -45,7 +46,7 @@ public class StudentImport {
             Enrolment enr = new Enrolment();
             enr.setStudent(stu);
             enr.setYear(1);
-            enr.setStudyProgram(spb.getOrCreateStudyProgram(iter.next()));
+            enr.setStudyProgram(spb.getStudyProgramById(iter.next()));
             enr.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
             enr.setConfirmed(false);
             enr.setKind("redni");
@@ -79,8 +80,19 @@ public class StudentImport {
     }
 
     private String GenerateNewStudentId(){
+        if(nextStudentId == null){
+            Student lastStudent = sdb.getLastStudent();
+            if(lastStudent != null){
+                nextStudentId = parseInt(lastStudent.getRegisterNumber());
+            }
+            else{
+                int yearLastTwo = Calendar.getInstance().get(Calendar.YEAR) % 100;
+                nextStudentId = 63000000 + (yearLastTwo * 10000);
+            }
+            log.info("Got last student register number: "+nextStudentId);
+        }
         nextStudentId++;
-        return String.valueOf(63180000 + nextStudentId);
+        return String.valueOf(nextStudentId);
     }
 
     private String GeneratePassword(UserLogin ul, Student sd){

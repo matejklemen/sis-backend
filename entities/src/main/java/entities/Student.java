@@ -12,7 +12,8 @@ import java.util.List;
         value = {
                 @NamedQuery(name = "Student.getAll", query = "SELECT st FROM student st"),
                 @NamedQuery(name = "Student.getByRegisterNumber", query = "SELECT st FROM student st WHERE st.registerNumber = :regno"),
-                @NamedQuery(name = "Student.searchStudents", query = "SELECT st FROM student st WHERE st.registerNumber LIKE :sq OR st.name LIKE :sq OR st.surname LIKE :sq")
+                @NamedQuery(name = "Student.searchStudents", query = "SELECT st FROM student st WHERE st.registerNumber LIKE :sq OR st.name LIKE :sq OR st.surname LIKE :sq"),
+                @NamedQuery(name = "Student.getAllReverse", query = "SELECT st FROM student st ORDER BY st.id DESC")
         }
 )
 public class Student implements Serializable {
