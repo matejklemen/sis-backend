@@ -8,7 +8,7 @@ import java.util.List;
 @Entity(name = "enrolment")
 @NamedQueries(
         value = {
-                //@NamedQuery(name = "Student.GetAll", query = "SELECT st FROM student_data st")
+                @NamedQuery(name = "Enrolment.getLastByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id ORDER BY e.studyYear.id DESC")
         }
 )
 public class Enrolment implements Serializable {

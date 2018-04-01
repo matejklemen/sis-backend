@@ -1,6 +1,7 @@
 package beans.crud;
 
 import entities.Enrolment;
+import entities.EnrolmentToken;
 import entities.Student;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -36,6 +37,13 @@ public class EnrolmentBean {
         return en;
     }
 
-
+    @Transactional
+    public Enrolment getLastEnrolmentByStudentId(int studentId) {
+        log.info("Getting last enrolment for studint id: " + studentId);
+        return em.createNamedQuery("Enrolment.getLastByStudentId", Enrolment.class)
+                .setParameter("id", studentId)
+                .setMaxResults(1)
+                .getSingleResult();
+    }
 
 }

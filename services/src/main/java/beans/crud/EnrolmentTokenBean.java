@@ -1,6 +1,7 @@
 package beans.crud;
 
 import entities.EnrolmentToken;
+import entities.StudyProgram;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -19,11 +20,39 @@ public class EnrolmentTokenBean {
 
     @Transactional
     public EnrolmentToken putEnrolmentToken(EnrolmentToken et){
-        log.info("Putting: " + et.toString());
+        log.info("Putting enrolment token with student id: " + et.getStudent().getId());
         em.persist(et);
         em.flush();
         return et;
 
     }
 
+    @Transactional
+    public EnrolmentToken getEnrolmentTokenByStudentId(int id){
+        log.info("Geting enrolment token for student id: " + id);
+        return em.createNamedQuery("EnrolmentToken.getByStudentId", EnrolmentToken.class).setParameter("id", id).getSingleResult();
+    }
+
+    @Transactional
+    public EnrolmentToken getEnrolmentTokenById(int id){
+        log.info("Geting enrolment token for id: " + id);
+        return em.createNamedQuery("EnrolmentToken.getById", EnrolmentToken.class).setParameter("id", id).getSingleResult();
+    }
+
+    @Transactional
+    public void deleteEnrolmentToken(int id){
+        log.info("Deleting enrolment token with id: " + id);
+        EnrolmentToken et = em.find(EnrolmentToken.class, id);
+        if(et != null){
+            em.remove(et);
+        }
+    }
+
+    @Transactional
+    public EnrolmentToken updateEnrolmentToken(EnrolmentToken et){
+        log.info("Posting enrolment token with id: " + et.getStudent());
+        em.merge(et);
+        em.flush();
+        return et;
+    }
 }

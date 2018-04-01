@@ -7,7 +7,8 @@ import java.io.Serializable;
 @Entity(name = "enrolment_token")
 @NamedQueries(
         value = {
-
+                @NamedQuery(name = "EnrolmentToken.getByStudentId", query = "SELECT et FROM enrolment_token et WHERE et.student.id = :id"),
+                @NamedQuery(name = "EnrolmentToken.getById", query = "SELECT et FROM enrolment_token et WHERE et.id = :id"),
         }
 )
 public class EnrolmentToken implements Serializable {
