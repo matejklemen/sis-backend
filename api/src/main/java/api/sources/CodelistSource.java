@@ -3,8 +3,13 @@ package api.sources;
 import beans.crud.CountryBean;
 import beans.crud.CourseBean;
 import beans.crud.PostAddressBean;
-import beans.crud.StudyProgramBean;
+import beans.crud.StudyProgramDegreeBean;
 import beans.logic.CodelistBean;
+import entities.Country;
+import entities.PostAddress;
+import entities.StudyDegree;
+import entities.StudyProgram;
+import entities.curriculum.Course;
 import pojo.CodelistsData;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -25,19 +30,19 @@ public class CodelistSource {
     private Logger log = Logger.getLogger(getClass().getSimpleName());
 
     @Inject
-    CodelistBean clB;
+    private CodelistBean clB;
 
     @Inject
-    CountryBean coB;
+    private CountryBean coB;
 
     @Inject
-    PostAddressBean paB;
+    private PostAddressBean paB;
 
     @Inject
-    CourseBean crB;
+    private CourseBean crB;
 
     @Inject
-    StudyProgramBean spB;
+    private StudyProgramDegreeBean spdB;
 
     @GET
     public Response getCodeLists() {
@@ -45,13 +50,14 @@ public class CodelistSource {
         // TODO: this can be optimized
 
         // države
-        cld.add(new CodelistsData("country", "Države", coB.getCountries().size()));
+        cld.add(new CodelistsData("country", "Države", coB.getCountries().size(), new Country().getColumnNames(), new Country().getColumnTypes()));
         // TODO: občine
 
         // pošte
-        cld.add(new CodelistsData("post_address", "Poštne številke", paB.getPostAdresses().size()));
+        cld.add(new CodelistsData("post_address", "Poštne številke", paB.getPostAdresses().size(), new PostAddress().getColumnNames(), new PostAddress().getColumnTypes()));
         // študijski program (+ študijska stopnja)
-        cld.add(new CodelistsData("study_program", "Študijski program", spB.getStudyPrograms().size()));
+        cld.add(new CodelistsData("study_program", "Študijski programi", spdB.getStudyPrograms().size(), new StudyProgram().getColumnNames(), new StudyProgram().getColumnTypes()));
+        cld.add(new CodelistsData("study_degree", "Študijske stopnje", spdB.getStudyDegrees().size(), new StudyDegree().getColumnNames(), new StudyDegree().getColumnTypes()));
         // TODO vrsta študija (KLASIUS SRV)
 
         // TODO vrsta vpisa
@@ -61,7 +67,7 @@ public class CodelistSource {
         // TODO oblika študija
 
         // predmeti
-        cld.add(new CodelistsData("course", "Predmeti", crB.getCourses().size()));
+        cld.add(new CodelistsData("course", "Predmeti", crB.getCourses().size(), new Course().getColumnNames(), new Course().getColumnTypes()));
 
         // TODO predavatelji
 
@@ -80,7 +86,10 @@ public class CodelistSource {
                 return Response.ok(paB.getPostAdresses()).build();
 
             case "study_program":
-                return Response.ok(spB.getStudyPrograms()).build();
+                return Response.ok(spdB.getStudyPrograms()).build();
+
+            case "study_degree":
+                return Response.ok(spdB.getStudyDegrees()).build();
 
             case "course":
                 return Response.ok(crB.getCourses()).build();

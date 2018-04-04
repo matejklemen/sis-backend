@@ -26,7 +26,7 @@ public class StudentImport {
     @Inject
     private UserRoleBean urb;
     @Inject
-    private StudyProgramBean spb;
+    private StudyProgramDegreeBean spb;
     @Inject
     private StudyYearBean syb;
     @Inject

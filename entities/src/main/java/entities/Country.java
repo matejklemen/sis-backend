@@ -1,5 +1,7 @@
 package entities;
 
+import interfaces.Codelistable;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
@@ -12,7 +14,7 @@ import java.io.Serializable;
                 @NamedQuery(name = "Country.getAll", query = "SELECT c FROM country c"),
         }
 )
-public class Country implements Serializable {
+public class Country implements Serializable, Codelistable {
 
     @Id
     @XmlID
@@ -70,5 +72,15 @@ public class Country implements Serializable {
 
     public void setIsoName(String isoName) {
         this.isoName = isoName;
+    }
+
+    @Override
+    public String[] getColumnNames() {
+        return new String[]{"id", "code2", "code3", "name", "name_iso"};
+    }
+
+    @Override
+    public String[] getColumnTypes() {
+        return new String[]{TYPE_NUMBER, TYPE_STRING, TYPE_STRING, TYPE_STRING, TYPE_STRING};
     }
 }

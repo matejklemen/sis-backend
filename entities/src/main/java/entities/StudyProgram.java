@@ -1,5 +1,7 @@
 package entities;
 
+import interfaces.Codelistable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,7 +13,7 @@ import java.io.Serializable;
                 @NamedQuery(name = "StudyProgram.getById", query = "SELECT sp FROM study_program sp WHERE sp.id = :id"),
         }
 )
-public class StudyProgram implements Serializable {
+public class StudyProgram implements Serializable, Codelistable {
 
     @Id
     @Column(length = 10)
@@ -66,5 +68,15 @@ public class StudyProgram implements Serializable {
 
     public void setEvsCode(int evsCode) {
         this.evsCode = evsCode;
+    }
+
+    @Override
+    public String[] getColumnNames() {
+        return new String[]{"id", "name", "id_study_degree", "semesters", "evs_code"};
+    }
+
+    @Override
+    public String[] getColumnTypes() {
+        return new String[]{TYPE_STRING, TYPE_STRING, "study_degree", TYPE_NUMBER, TYPE_NUMBER};
     }
 }

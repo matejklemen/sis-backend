@@ -1,5 +1,7 @@
 package entities;
 
+import interfaces.Codelistable;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
@@ -12,7 +14,7 @@ import java.io.Serializable;
                 @NamedQuery(name = "PostAddress.getAll", query = "SELECT pa FROM post_address pa"),
         }
 )
-public class PostAddress implements Serializable {
+public class PostAddress implements Serializable, Codelistable {
 
     @Id
     @XmlID
@@ -38,4 +40,13 @@ public class PostAddress implements Serializable {
         this.name = name;
     }
 
+    @Override
+    public String[] getColumnNames() {
+        return new String[]{"id", "name"};
+    }
+
+    @Override
+    public String[] getColumnTypes() {
+        return new String[]{TYPE_NUMBER, TYPE_STRING};
+    }
 }
