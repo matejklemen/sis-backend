@@ -6,7 +6,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -39,5 +41,11 @@ public class StudyYearBean {
             return sp;
         }
         return sp;
+    }
+
+    public List<StudyYear> getStudyYears() {
+        TypedQuery<StudyYear> q = em.createNamedQuery("StudyYear.getAll", StudyYear.class);
+        //q.setMaxResults(100);
+        return q.getResultList();
     }
 }

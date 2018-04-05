@@ -1,14 +1,8 @@
 package api.sources;
 
-import beans.crud.CountryBean;
-import beans.crud.CourseBean;
-import beans.crud.PostAddressBean;
-import beans.crud.StudyProgramDegreeBean;
+import beans.crud.*;
 import beans.logic.CodelistBean;
-import entities.Country;
-import entities.PostAddress;
-import entities.StudyDegree;
-import entities.StudyProgram;
+import entities.*;
 import entities.curriculum.Course;
 import pojo.CodelistsData;
 
@@ -44,6 +38,9 @@ public class CodelistSource {
     @Inject
     private StudyProgramDegreeBean spdB;
 
+    @Inject
+    private StudyYearBean syB;
+
     @GET
     public Response getCodeLists() {
         List<CodelistsData> cld = new ArrayList<>();
@@ -55,9 +52,10 @@ public class CodelistSource {
 
         // pošte
         cld.add(new CodelistsData("post_address", "Poštne številke", paB.getPostAdresses().size(), new PostAddress().getColumnNames(), new PostAddress().getColumnTypes()));
-        // študijski program (+ študijska stopnja)
+        // študijski program (+ študijska stopnja) in študijsko leto
         cld.add(new CodelistsData("study_program", "Študijski programi", spdB.getStudyPrograms().size(), new StudyProgram().getColumnNames(), new StudyProgram().getColumnTypes()));
         cld.add(new CodelistsData("study_degree", "Študijske stopnje", spdB.getStudyDegrees().size(), new StudyDegree().getColumnNames(), new StudyDegree().getColumnTypes()));
+        cld.add(new CodelistsData("study_year", "Študijska leta", syB.getStudyYears().size(), new StudyYear().getColumnNames(), new StudyYear().getColumnTypes()));
         // TODO vrsta študija (KLASIUS SRV)
 
         // TODO vrsta vpisa
@@ -90,6 +88,9 @@ public class CodelistSource {
 
             case "study_degree":
                 return Response.ok(spdB.getStudyDegrees()).build();
+
+            case "study_year":
+                return Response.ok(syB.getStudyYears()).build();
 
             case "course":
                 return Response.ok(crB.getCourses()).build();
