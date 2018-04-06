@@ -3,6 +3,8 @@ package api.sources;
 import api.interceptors.annotations.LogApiCalls;
 import beans.logic.StudentImport;
 import entities.Student;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import pojo.FileData;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,16 +16,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Path("files")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 @LogApiCalls
+@Tags(value = @Tag(name = "files"))
 public class FileSource {
-
-    private Logger log = Logger.getLogger(getClass().getSimpleName());
 
     @Inject
     private StudentImport si;

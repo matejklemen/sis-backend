@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,25 +17,23 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("students")
 @ApplicationScoped
 @LogApiCalls
+@Tags(value = @Tag(name = "students"))
 public class StudentSource {
-    private Logger log = Logger.getLogger(getClass().getSimpleName());
 
     @Inject
     private StudentBean sdB;
 
-    @Operation(description = "Returns list of students. Limited (to max 50/see bean implementation).", summary = "List of students", tags = "students", responses = {
+    @Operation(description = "Returns a list of students.", summary = "Get list of students", responses = {
             @ApiResponse(responseCode = "200",
                     description = "List of students",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = Student.class))
+                            schema = @Schema(implementation = Student.class))
             )
     })
     @GET
@@ -41,18 +41,16 @@ public class StudentSource {
         return Response.ok(sdB.getStudents()).build();
     }
 
-    @Operation(description = "Returns a student with specified id.", summary = "Student by id", tags = "students", responses = {
+    @Operation(description = "Returns a student with specified id.", summary = "Get student by id", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Student by id",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = Student.class))
+                            schema = @Schema(implementation = Student.class))
             ),
             @ApiResponse(responseCode = "404",
                     description = "Student by id doesn't exist",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = ResponseError.class))
+                            schema = @Schema(implementation = ResponseError.class))
             )
     })
     @Path("{id}")
@@ -62,18 +60,16 @@ public class StudentSource {
         return Response.ok(sd).build();
     }
 
-    @Operation(description = "Returns a student with specified register number.", summary = "Student by register number", tags = "students", responses = {
+    @Operation(description = "Returns a student with specified register number.", summary = "Get student by register number", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Student by register number",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = Student.class))
+                            schema = @Schema(implementation = Student.class))
             ),
             @ApiResponse(responseCode = "404",
                     description = "Student by register number doesn't exist",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = ResponseError.class))
+                            schema = @Schema(implementation = ResponseError.class))
             )
     })
     @Path("s/{regno}")
@@ -83,12 +79,11 @@ public class StudentSource {
         return Response.ok(sd).build();
     }
 
-    @Operation(description = "Returns list of students (search with no query is same as /students). Limited (to max 50/see bean implementation).", summary = "List of students", tags = "students", responses = {
+    @Operation(description = "Returns a list of students. Same as '/students'.", summary = "Get list of students", responses = {
             @ApiResponse(responseCode = "200",
                     description = "List of students",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = Student.class))
+                            schema = @Schema(implementation = Student.class))
             )
     })
     @Path("search")
@@ -97,7 +92,7 @@ public class StudentSource {
         return getStudents();
     }
 
-    @Operation(description = "Returns a list of students that match the search query. Query can partially match either the register number, name or surname. It's possible that the returned list is empty.", summary = "List of students by search query", tags = "students", responses = {
+    @Operation(description = "Returns a list of students that match the search query. Query can partially match either the register number, name or surname. It's possible that the returned list is empty.", summary = "Get list of students by search query", responses = {
             @ApiResponse(responseCode = "200",
                     description = "List of students by search query",
                     content = @Content(

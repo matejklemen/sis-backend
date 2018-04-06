@@ -24,18 +24,17 @@ import javax.ws.rs.core.Response;
 @Path("courses")
 @ApplicationScoped
 @LogApiCalls
-@Tags(value = @Tag(name = "course"))
+@Tags(value = @Tag(name = "courses"))
 public class CourseSource {
 
     @Inject
     private CourseBean cB;
 
-    @Operation(description = "Returns list of courses.", summary = "List of courses", tags = "course", responses = {
+    @Operation(description = "Returns a list of courses.", summary = "Get list of courses", responses = {
             @ApiResponse(responseCode = "200",
                     description = "List of courses",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = Course.class))
+                            schema = @Schema(implementation = Course.class))
             )
     })
     @GET
@@ -43,18 +42,16 @@ public class CourseSource {
         return Response.ok(cB.getCourses()).build();
     }
 
-    @Operation(description = "Returns a course with specified id.", summary = "Course by id", tags = {"students", "course"}, responses = {
+    @Operation(description = "Returns a course with specified id.", summary = "Get course by id", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Course by id",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = Course.class))
+                            schema = @Schema(implementation = Course.class))
             ),
             @ApiResponse(responseCode = "404",
                     description = "Course by id doesn't exist",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = ResponseError.class))
+                            schema = @Schema(implementation = ResponseError.class))
             )
     })
     @Path("{id}")
@@ -62,7 +59,17 @@ public class CourseSource {
     public Response getEnrolmentById(@PathParam("id") int id) {
         return Response.ok(cB.getCourse(id)).build();
     }
-    
+
+    @Operation(description = "Inserts a new course.", summary = "Insert course", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Insert successful",
+                    content = @Content(
+                            schema = @Schema(implementation = Course.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Insert failed",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)))
+    })
     @PUT
     public Response createCourse(@RequestBody Course c) {
         if(c == null) throw new NoRequestBodyException();
@@ -73,6 +80,12 @@ public class CourseSource {
         return Response.ok().entity(c).build();
     }
 
+    @Operation(description = "Deletes a course with specified id.", summary = "Delete course", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Delete successful",
+                    content = @Content(
+                            schema = @Schema(implementation = Course.class))),
+    })
     @Path("{id}")
     @DELETE
     public Response deleteCourse(@PathParam("id") int id) {
@@ -80,6 +93,16 @@ public class CourseSource {
         return Response.ok().build();
     }
 
+    @Operation(description = "Updates an existing course.", summary = "Update course", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Update successful",
+                    content = @Content(
+                            schema = @Schema(implementation = Course.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Update failed",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)))
+    })
     @POST
     public Response updateCourse(@RequestBody Course c) {
         if(c == null) throw new NoRequestBodyException();

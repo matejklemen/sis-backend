@@ -4,7 +4,6 @@ import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.EnrolmentBean;
 import beans.crud.EnrolmentTokenBean;
-import beans.crud.StudentBean;
 import entities.Enrolment;
 import entities.EnrolmentToken;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.Response;
 @Path("tokens")
 @ApplicationScoped
 @LogApiCalls
+@Tags(value = {@Tag(name = "enrolments"), @Tag(name = "tokens")})
 public class EnrolmentTokenSource {
 
     @Inject
@@ -34,11 +36,7 @@ public class EnrolmentTokenSource {
     @Inject
     private EnrolmentBean eb;
 
-    @Inject
-    private StudentBean esb;
-
-
-    @Operation(description = "Returns newly created enrolment token for given id", summary = "Put enrolment token", tags = {"enrolments", "tokens"}, responses = {
+    @Operation(description = "Returns newly created enrolment token for given id", summary = "Create enrolment token by student id", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Created token for id",
                     content = @Content(
@@ -63,13 +61,13 @@ public class EnrolmentTokenSource {
         return Response.ok().entity(et).build();
     }
 
-    @Operation(description = "Returns enrolment token for student id if existing", summary = "Get enrolment token", tags = {"enrolments", "tokens"},
+    @Operation(description = "Returns enrolment token for student id, if it exists", summary = "Get enrolment token by student id",
             parameters = {
                     @Parameter(name = "studentId", description = "Student id", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
             },
             responses = {
             @ApiResponse(responseCode = "200",
-                    description = "Enrolment token for id",
+                    description = "Enrolment token for student id",
                     content = @Content(
                             schema = @Schema(implementation
                                     = EnrolmentToken.class))
@@ -87,13 +85,13 @@ public class EnrolmentTokenSource {
         return Response.ok().entity(et).build();
     }
 
-    @Operation(description = "Deletes token with given id", summary = "Delete enrolment token", tags = {"enrolments", "tokens"},
+    @Operation(description = "Deletes a token with specified id", summary = "Delete enrolment token",
             responses = {
                     @ApiResponse(responseCode = "204",
-                            description = "Enrolment token was removed"
+                            description = "Delete successful"
                     ),
                     @ApiResponse(responseCode = "404",
-                            description = "No enrolment token with this id",
+                            description = "Delete failed",
                             content = @Content(
                                     schema = @Schema(implementation
                                             = ResponseError.class))
@@ -107,16 +105,16 @@ public class EnrolmentTokenSource {
     }
 
 
-    @Operation(description = "Updates enrolment token", summary = "Post enrolment token", tags = {"enrolments", "tokens"},
+    @Operation(description = "Updates an existing enrolment token.", summary = "Update enrolment token",
             responses = {
                     @ApiResponse(responseCode = "200",
-                            description = "Updated enrolment token",
+                            description = "Update successful",
                             content = @Content(
                                     schema = @Schema(implementation
                                             = EnrolmentToken.class))
                     ),
                     @ApiResponse(responseCode = "404",
-                            description = "No enrolment token with this id to update",
+                            description = "Update failed",
                             content = @Content(
                                     schema = @Schema(implementation
                                             = ResponseError.class))

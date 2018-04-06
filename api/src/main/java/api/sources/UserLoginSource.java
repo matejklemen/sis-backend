@@ -8,6 +8,8 @@ import exceptions.UserBlacklistedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import pojo.UserLoginRequest;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -31,7 +33,9 @@ import java.util.logging.Logger;
 @Path("login")
 @ApplicationScoped
 @LogApiCalls
+@Tags(value = @Tag(name = "authentication"))
 public class UserLoginSource {
+
     private Logger log = Logger.getLogger(getClass().getSimpleName());
     private final String serverSecret = ConfigurationUtil.getInstance().get("auth.server-secret").orElse("");
 

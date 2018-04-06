@@ -1,10 +1,16 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
+import api.mappers.ResponseError;
 import beans.crud.*;
-import beans.logic.CodelistBean;
 import entities.*;
 import entities.curriculum.Course;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import pojo.CodelistsData;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -20,9 +26,9 @@ import java.util.List;
 @Path("codelists")
 @ApplicationScoped
 @LogApiCalls
+@Tags(value = @Tag(name = "codelists"))
 public class CodelistSource {
 
-    @Inject private CodelistBean codelistB;
     @Inject private CountryBean countryB;
     @Inject private PostAddressBean postAddressB;
     @Inject private CourseBean courseB;
@@ -30,6 +36,13 @@ public class CodelistSource {
     @Inject private StudyDegreeBean studyDegreeB;
     @Inject private StudyYearBean studyYearB;
 
+    @Operation(description = "Returns a list of codelists.", summary = "Get list of codelists", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "List of codelists",
+                    content = @Content(
+                            schema = @Schema(implementation = CodelistsData.class))
+            )
+    })
     @GET
     public Response getCodeLists() {
         List<CodelistsData> cld = new ArrayList<>();
@@ -61,6 +74,16 @@ public class CodelistSource {
         return Response.ok(cld).build();
     }
 
+    @Operation(description = "Returns a codelist with specified name - a list of entries. This is the same as calling the codelist's own endpoint (i.e. calling '/codelists/country' is the same as calling '/countries'). Usage of this endpoint is discouraged, use entities' own endpoints instead.", summary = "Get codelist entries by codelist name", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "List of entries in the codelist"
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Codelist by name doesn't exist or is unavailiable",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class))
+            )
+    })
     @Path("{name}")
     @GET
     public Response getCodeList(@PathParam("name") String name) {
