@@ -1,5 +1,6 @@
 package api.sources;
 
+import api.interceptors.annotations.LogApiCalls;
 import beans.crud.UserLoginBean;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import entities.UserLogin;
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("login")
 @ApplicationScoped
+@LogApiCalls
 public class UserLoginSource {
     private Logger log = Logger.getLogger(getClass().getSimpleName());
     private final String serverSecret = ConfigurationUtil.getInstance().get("auth.server-secret").orElse("");

@@ -1,5 +1,6 @@
 package api.sources;
 
+import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.EnrolmentBean;
 import beans.crud.EnrolmentTokenBean;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("tokens")
 @ApplicationScoped
+@LogApiCalls
 public class EnrolmentTokenSource {
 
     @Inject

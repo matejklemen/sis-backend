@@ -1,5 +1,6 @@
 package api.sources;
 
+import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.StudentBean;
 import entities.Student;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("students")
 @ApplicationScoped
+@LogApiCalls
 public class StudentSource {
     private Logger log = Logger.getLogger(getClass().getSimpleName());
 

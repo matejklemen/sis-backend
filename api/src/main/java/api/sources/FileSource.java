@@ -1,5 +1,6 @@
 package api.sources;
 
+import api.interceptors.annotations.LogApiCalls;
 import beans.logic.StudentImport;
 import entities.Student;
 import pojo.FileData;
@@ -19,6 +20,7 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
+@LogApiCalls
 public class FileSource {
 
     private Logger log = Logger.getLogger(getClass().getSimpleName());
