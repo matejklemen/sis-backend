@@ -1,5 +1,6 @@
 package api.sources;
 
+import api.interceptors.annotations.LogApiCalls;
 import beans.crud.*;
 import beans.logic.CodelistBean;
 import entities.*;
@@ -13,33 +14,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("codelists")
 @ApplicationScoped
+@LogApiCalls
 public class CodelistSource {
 
-    private Logger log = Logger.getLogger(getClass().getSimpleName());
-
-    @Inject
-    private CodelistBean clB;
-
-    @Inject
-    private CountryBean coB;
-
-    @Inject
-    private PostAddressBean paB;
-
-    @Inject
-    private CourseBean crB;
-
-    @Inject
-    private StudyProgramDegreeBean spdB;
-
-    @Inject
-    private StudyYearBean syB;
+    @Inject private CodelistBean codelistB;
+    @Inject private CountryBean countryB;
+    @Inject private PostAddressBean postAddressB;
+    @Inject private CourseBean courseB;
+    @Inject private StudyProgramBean studyProgramB;
+    @Inject private StudyDegreeBean studyDegreeB;
+    @Inject private StudyYearBean studyYearB;
 
     @GET
     public Response getCodeLists() {
@@ -47,15 +36,15 @@ public class CodelistSource {
         // TODO: this can be optimized
 
         // države
-        cld.add(new CodelistsData("country", "Države", coB.getCountries().size(), new Country().getColumnNames(), new Country().getColumnTypes()));
+        cld.add(new CodelistsData("country", "Države", "countries", countryB.getCountries().size(), new Country().getColumnNames(), new Country().getColumnTypes()));
         // TODO: občine
 
         // pošte
-        cld.add(new CodelistsData("post_address", "Poštne številke", paB.getPostAdresses().size(), new PostAddress().getColumnNames(), new PostAddress().getColumnTypes()));
+        cld.add(new CodelistsData("post_address", "Poštne številke", "postadresses", postAddressB.getPostAddresses().size(), new PostAddress().getColumnNames(), new PostAddress().getColumnTypes()));
         // študijski program (+ študijska stopnja) in študijsko leto
-        cld.add(new CodelistsData("study_program", "Študijski programi", spdB.getStudyPrograms().size(), new StudyProgram().getColumnNames(), new StudyProgram().getColumnTypes()));
-        cld.add(new CodelistsData("study_degree", "Študijske stopnje", spdB.getStudyDegrees().size(), new StudyDegree().getColumnNames(), new StudyDegree().getColumnTypes()));
-        cld.add(new CodelistsData("study_year", "Študijska leta", syB.getStudyYears().size(), new StudyYear().getColumnNames(), new StudyYear().getColumnTypes()));
+        cld.add(new CodelistsData("study_program", "Študijski programi", "studyprograms", studyProgramB.getStudyPrograms().size(), new StudyProgram().getColumnNames(), new StudyProgram().getColumnTypes()));
+        cld.add(new CodelistsData("study_degree", "Študijske stopnje", "studydegrees", studyDegreeB.getStudyDegrees().size(), new StudyDegree().getColumnNames(), new StudyDegree().getColumnTypes()));
+        cld.add(new CodelistsData("study_year", "Študijska leta", "studyyears", studyYearB.getStudyYears().size(), new StudyYear().getColumnNames(), new StudyYear().getColumnTypes()));
         // TODO vrsta študija (KLASIUS SRV)
 
         // TODO vrsta vpisa
@@ -65,7 +54,7 @@ public class CodelistSource {
         // TODO oblika študija
 
         // predmeti
-        cld.add(new CodelistsData("course", "Predmeti", crB.getCourses().size(), new Course().getColumnNames(), new Course().getColumnTypes()));
+        cld.add(new CodelistsData("course", "Predmeti", "courses", courseB.getCourses().size(), new Course().getColumnNames(), new Course().getColumnTypes()));
 
         // TODO predavatelji
 
@@ -78,22 +67,22 @@ public class CodelistSource {
 
         switch (name) {
             case "country":
-                return Response.ok(coB.getCountries()).build();
+                return Response.ok(countryB.getCountries()).build();
 
             case "post_address":
-                return Response.ok(paB.getPostAdresses()).build();
+                return Response.ok(postAddressB.getPostAddresses()).build();
 
             case "study_program":
-                return Response.ok(spdB.getStudyPrograms()).build();
+                return Response.ok(studyProgramB.getStudyPrograms()).build();
 
             case "study_degree":
-                return Response.ok(spdB.getStudyDegrees()).build();
+                return Response.ok(studyDegreeB.getStudyDegrees()).build();
 
             case "study_year":
-                return Response.ok(syB.getStudyYears()).build();
+                return Response.ok(studyYearB.getStudyYears()).build();
 
             case "course":
-                return Response.ok(crB.getCourses()).build();
+                return Response.ok(courseB.getCourses()).build();
 
             default:
                 throw new NotFoundException("Codelist by this name isn't availiable.");

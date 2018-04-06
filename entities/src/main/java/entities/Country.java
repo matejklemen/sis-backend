@@ -40,7 +40,7 @@ public class Country implements Serializable, Codelistable {
         this.id = id;
     }
 
-    @XmlTransient
+    //@XmlTransient
     public String getCode2() {
         return code2;
     }
@@ -65,7 +65,7 @@ public class Country implements Serializable, Codelistable {
         this.name = name;
     }
 
-    @XmlTransient
+    //@XmlTransient
     public String getIsoName() {
         return isoName;
     }
@@ -76,11 +76,12 @@ public class Country implements Serializable, Codelistable {
 
     @Override
     public String[] getColumnNames() {
-        return new String[]{"id", "code2", "code3", "name", "name_iso"};
+        return new String[]{"id", "code2", "code3", "name", "isoName"};
     }
 
     @Override
     public String[] getColumnTypes() {
         return new String[]{TYPE_NUMBER, TYPE_STRING, TYPE_STRING, TYPE_STRING, TYPE_STRING};
     }
+
 }

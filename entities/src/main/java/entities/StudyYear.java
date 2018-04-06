@@ -37,11 +37,11 @@ public class StudyYear implements Serializable, Codelistable {
 
     @Override
     public String[] getColumnNames() {
-        return new String[]{"id", "name"};
+        return new String[]{"name"};
     }
 
     @Override
     public String[] getColumnTypes() {
-        return new String[]{TYPE_NUMBER, TYPE_STRING};
+        return new String[]{TYPE_STRING};
     }
 }

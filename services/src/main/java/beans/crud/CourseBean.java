@@ -29,9 +29,35 @@ public class CourseBean {
 
     @Transactional
     public Course getCourse(int id) {
-        log.info("Getting by id: " + id);
         Course c = em.find(Course.class, id);
         if(c == null) throw new NoResultException("No course by this id");
+        return c;
+    }
+
+    @Transactional
+    public boolean existsCourse(int id) {
+        return em.find(Course.class, id) != null;
+    }
+
+    @Transactional
+    public Course insertCourse(Course c) {
+        em.persist(c);
+        em.flush();
+        return c;
+    }
+
+    @Transactional
+    public void deleteCourse(int id) {
+        Course c = em.find(Course.class, id);
+        if(c != null){
+            em.remove(c);
+        }
+    }
+
+    @Transactional
+    public Course updateCourse(Course c) {
+        em.merge(c);
+        em.flush();
         return c;
     }
 

@@ -28,9 +28,35 @@ public class CountryBean {
 
     @Transactional
     public Country getCountry(int id) {
-        log.info("Getting by id: " + id);
         Country c = em.find(Country.class, id);
         if(c == null) throw new NoResultException("No country by this id");
+        return c;
+    }
+
+    @Transactional
+    public boolean existsCountry(int id) {
+        return em.find(Country.class, id) != null;
+    }
+
+    @Transactional
+    public Country insertCountry(Country c) {
+        em.persist(c);
+        em.flush();
+        return c;
+    }
+
+    @Transactional
+    public void deleteCountry(int id) {
+        Country c = em.find(Country.class, id);
+        if(c != null){
+            em.remove(c);
+        }
+    }
+
+    @Transactional
+    public Country updateCountry(Country c) {
+        em.merge(c);
+        em.flush();
         return c;
     }
 

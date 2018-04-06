@@ -13,14 +13,9 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 public class StudyYearBean {
-    private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
-
-    public StudyYear getStudyYearById(int id) {
-        return em.find(StudyYear.class, id);
-    }
 
     public StudyYear getStudyYearByName(String name) {
         try {
@@ -43,9 +38,44 @@ public class StudyYearBean {
         return sp;
     }
 
+    @Transactional
     public List<StudyYear> getStudyYears() {
         TypedQuery<StudyYear> q = em.createNamedQuery("StudyYear.getAll", StudyYear.class);
-        //q.setMaxResults(100);
         return q.getResultList();
     }
+
+    @Transactional
+    public StudyYear getStudyYear(int postNumber) {
+        StudyYear pa = em.find(StudyYear.class, postNumber);
+        if(pa == null) throw new NoResultException("No post address by this post number");
+        return pa;
+    }
+
+    @Transactional
+    public boolean existsStudyYear(int id) {
+        return em.find(StudyYear.class, id) != null;
+    }
+
+    @Transactional
+    public StudyYear insertStudyYear(StudyYear e) {
+        em.persist(e);
+        em.flush();
+        return e;
+    }
+
+    @Transactional
+    public void deleteStudyYear(int id) {
+        StudyYear e = em.find(StudyYear.class, id);
+        if(e != null){
+            em.remove(e);
+        }
+    }
+
+    @Transactional
+    public StudyYear updateStudyYear(StudyYear e) {
+        em.merge(e);
+        em.flush();
+        return e;
+    }
+
 }

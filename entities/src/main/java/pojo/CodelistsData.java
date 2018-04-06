@@ -6,9 +6,10 @@ import javax.persistence.AccessType;
 @Access(AccessType.FIELD)
 public class CodelistsData {
 
-    public CodelistsData(String name, String displayName, int entriesCount, String[] columnNames, String[] columnTypes) {
+    public CodelistsData(String name, String displayName, String endpoint, int entriesCount, String[] columnNames, String[] columnTypes) {
         this.name = name;
         this.displayName = displayName;
+        this.endpoint = endpoint;
         this.entriesCount = entriesCount;
         this.columnNames = columnNames;
         this.columnTypes = columnTypes;
@@ -17,6 +18,8 @@ public class CodelistsData {
     public String name;
 
     public String displayName;
+
+    public String endpoint;
 
     public int entriesCount;
 

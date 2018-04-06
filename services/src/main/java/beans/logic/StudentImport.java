@@ -26,7 +26,7 @@ public class StudentImport {
     @Inject
     private UserRoleBean urb;
     @Inject
-    private StudyProgramDegreeBean spb;
+    private StudyProgramBean spb;
     @Inject
     private StudyYearBean syb;
     @Inject
@@ -46,7 +46,7 @@ public class StudentImport {
             Enrolment enr = new Enrolment();
             enr.setStudent(stu);
             enr.setYear(1);
-            enr.setStudyProgram(spb.getStudyProgramById(iter.next()));
+            enr.setStudyProgram(spb.getStudyProgram(iter.next()));
             enr.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
             enr.setConfirmed(false);
             enr.setKind("redni");

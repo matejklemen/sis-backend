@@ -1,12 +1,17 @@
 package api.sources;
 
+import api.exceptions.NoRequestBodyException;
+import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.CourseBean;
 import entities.curriculum.Course;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,8 +24,9 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("courses")
 @ApplicationScoped
+@LogApiCalls
+@Tags(value = @Tag(name = "course"))
 public class CourseSource {
-    private Logger log = Logger.getLogger(getClass().getSimpleName());
 
     @Inject
     private CourseBean cB;
@@ -55,8 +61,31 @@ public class CourseSource {
     @Path("{id}")
     @GET
     public Response getEnrolmentById(@PathParam("id") int id) {
-        Course c = cB.getCourse(id);
-        return Response.ok(c).build();
+        return Response.ok(cB.getCourse(id)).build();
+    }
+    
+    @PUT
+    public Response createCourse(@RequestBody Course c) {
+        if(c == null) throw new NoRequestBodyException();
+        if(cB.existsCourse(c.getId())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+        }
+        cB.insertCourse(c);
+        return Response.ok().entity(c).build();
+    }
+
+    @Path("{id}")
+    @DELETE
+    public Response deleteCourse(@PathParam("id") int id) {
+        cB.deleteCourse(id);
+        return Response.ok().build();
+    }
+
+    @POST
+    public Response updateCourse(@RequestBody Course c) {
+        if(c == null) throw new NoRequestBodyException();
+        cB.updateCourse(c);
+        return Response.ok().entity(c).build();
     }
 
 }
