@@ -5,7 +5,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.util.logging.Logger;
 
 @Provider
 public class PersistenceExceptionMapper implements ExceptionMapper<PersistenceException> {

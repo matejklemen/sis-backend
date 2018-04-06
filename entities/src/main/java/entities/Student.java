@@ -3,7 +3,6 @@ package entities;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
 import java.io.Serializable;
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package beans.crud;
 
-import entities.Enrolment;
 import entities.curriculum.Course;
 
 import javax.enterprise.context.ApplicationScoped;

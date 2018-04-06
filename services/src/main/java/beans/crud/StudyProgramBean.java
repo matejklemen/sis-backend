@@ -1,7 +1,6 @@
 package beans.crud;
 
 import entities.StudyProgram;
-import entities.StudyProgram;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -9,7 +8,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.logging.Logger;
 
 @ApplicationScoped
 public class StudyProgramBean {

@@ -1,7 +1,6 @@
 package beans.crud;
 
 import entities.EnrolmentToken;
-import entities.StudyProgram;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
