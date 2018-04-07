@@ -40,6 +40,9 @@ public class EnrolmentToken implements Serializable {
     @Column(nullable = false)
     private boolean used; // porabi student
 
+    @Column(nullable = false)
+    private boolean freeChoice; // ima prosto izbiro predmetov v 3 letniku
+
     public int getId() {
         return id;
     }
@@ -105,6 +108,14 @@ public class EnrolmentToken implements Serializable {
         this.used = confirmed;
     }
 
+    public boolean isFreeChoice() {
+        return freeChoice;
+    }
+
+    public void setFreeChoice(boolean freeChoice) {
+        this.freeChoice = freeChoice;
+    }
+
     public static EnrolmentToken createEnrolmentToken(Enrolment e){
         EnrolmentToken et = new EnrolmentToken();
         et.setKind(e.getKind());
@@ -113,6 +124,7 @@ public class EnrolmentToken implements Serializable {
         et.setStudyYear(e.getStudyYear());
         et.setType(e.getType());
         et.setYear(e.getYear());
+        et.setFreeChoice(false);
         return et;
     }
 

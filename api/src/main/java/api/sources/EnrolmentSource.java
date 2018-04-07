@@ -5,6 +5,8 @@ import api.mappers.ResponseError;
 import beans.crud.EnrolmentBean;
 import entities.Enrolment;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -47,4 +49,25 @@ public class EnrolmentSource {
         return Response.ok(en).build();
     }
 
+    @Operation(description = "Returns last enrolment for studentId", summary = "Get last enrolment",
+            parameters = {
+                @Parameter(name = "studentId", description = "Student id", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
+            },
+            responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Enrolment",
+                    content = @Content(
+                            schema = @Schema(implementation = Enrolment.class))
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Enrolment for student id doesn't exist",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class))
+            )
+    })
+    @GET
+    public Response getEnrolmentStudentId(@QueryParam("studentId") int studentId) {
+        Enrolment en = enB.getLastEnrolmentByStudentId(studentId);
+        return Response.ok(en).build();
+    }
 }
