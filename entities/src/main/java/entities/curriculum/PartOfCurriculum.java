@@ -6,7 +6,7 @@ import java.io.Serializable;
 @Entity(name = "part_of_curriculum")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "PartOfCurriculum.getByType", query = "SELECT poc FROM part_of_curriculum poc WHERE poc.type = :type")
+                @NamedQuery(name = "PartOfCurriculum.getAll", query = "SELECT poc FROM part_of_curriculum poc")
         }
 )
 public class PartOfCurriculum implements Serializable {

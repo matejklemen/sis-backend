@@ -19,9 +19,8 @@ public class PartOfCurriculumBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
-    // type should be one of {"obv", "mod", "siz", "piz"}. See class PartOfCurriculum for details
-    public List<PartOfCurriculum> getByType(String type) {
-        TypedQuery<PartOfCurriculum> q = em.createNamedQuery("Enrolment.getLastByStudentId", PartOfCurriculum.class);
+    public List<PartOfCurriculum> getAllPOC() {
+        TypedQuery<PartOfCurriculum> q = em.createNamedQuery("PartOfCurriculum.getAll", PartOfCurriculum.class);
 
         return q.getResultList();
     }
