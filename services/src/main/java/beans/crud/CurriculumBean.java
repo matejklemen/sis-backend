@@ -23,7 +23,7 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
-    public List<Curriculum> getCurriculumByStudyProgramId(int studyProgramId) {
+    public List<Curriculum> getCurriculumByStudyProgramId(String studyProgramId) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByStudyProgramId", Curriculum.class);
         q.setParameter("id", studyProgramId);
 
@@ -48,37 +48,37 @@ public class CurriculumBean {
         NOTE: 4 almost same methods created for getting courses, could be merged into 1 method, but they're not because
         encoding for type of course is determined ad-hoc and would probably need to be looked up everytime.
     */
-    public List<Curriculum> getModuleCourses(String studyYear, String idStudyDegree, int yearOfProgram) {
+    public List<Curriculum> getModuleCourses(String studyYear, String idStudyProgram, int yearOfProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getModuleCourses", Curriculum.class);
         q.setParameter("nameStudyYear", studyYear);
-        q.setParameter("idStudyDegree", idStudyDegree);
+        q.setParameter("idStudyProgram", idStudyProgram);
         q.setParameter("yearOfProgram", yearOfProgram);
 
         return q.getResultList();
     }
 
-    public List<Curriculum> getMandatoryCourses(String studyYear, String idStudyDegree, int yearOfProgram) {
+    public List<Curriculum> getMandatoryCourses(String studyYear, String idStudyProgram, int yearOfProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getMandatoryCourses", Curriculum.class);
         q.setParameter("nameStudyYear", studyYear);
-        q.setParameter("idStudyDegree", idStudyDegree);
+        q.setParameter("idStudyProgram", idStudyProgram);
         q.setParameter("yearOfProgram", yearOfProgram);
 
         return q.getResultList();
     }
 
-    public List<Curriculum> getSpecialistElectiveCourses(String studyYear, String idStudyDegree, int yearOfProgram) {
+    public List<Curriculum> getSpecialistElectiveCourses(String studyYear, String idStudyProgram, int yearOfProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getSpecialistElectiveCourses", Curriculum.class);
         q.setParameter("nameStudyYear", studyYear);
-        q.setParameter("idStudyDegree", idStudyDegree);
+        q.setParameter("idStudyProgram", idStudyProgram);
         q.setParameter("yearOfProgram", yearOfProgram);
 
         return q.getResultList();
     }
 
-    public List<Curriculum> getGeneralElectiveCourses(String studyYear, String idStudyDegree, int yearOfProgram) {
+    public List<Curriculum> getGeneralElectiveCourses(String studyYear, String idStudyProgram, int yearOfProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getGeneralElectiveCourses", Curriculum.class);
         q.setParameter("nameStudyYear", studyYear);
-        q.setParameter("idStudyDegree", idStudyDegree);
+        q.setParameter("idStudyProgram", idStudyProgram);
         q.setParameter("yearOfProgram", yearOfProgram);
 
         return q.getResultList();

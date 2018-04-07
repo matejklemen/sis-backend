@@ -24,27 +24,27 @@ import java.io.Serializable;
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.POC.type = \"mod\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
-                                "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
+                                "AND cur.idStudyProgram.id = :idStudyProgram " +
                                 "AND cur.yearOfProgram = :yearOfProgram"),
                 @NamedQuery(name = "Curriculum.getMandatoryCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.POC.type = \"obv\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
-                                "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
+                                "AND cur.idStudyProgram.id = :idStudyProgram " +
                                 "AND cur.yearOfProgram = :yearOfProgram"),
                 /* Note: specialist elective courses = strokovni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getSpecialistElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.POC.type = \"siz\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
-                                "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
+                                "AND cur.idStudyProgram.id = :idStudyProgram " +
                                 "AND cur.yearOfProgram = :yearOfProgram"),
                 /* Note: general elective courses = splošni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getGeneralElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.POC.type = \"piz\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
-                                "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
+                                "AND cur.idStudyProgram.id = :idStudyProgram " +
                                 "AND cur.yearOfProgram = :yearOfProgram")
         }
 )

@@ -16,6 +16,8 @@
         <class>entities.UserRole</class>
 
         <class>entities.curriculum.Course</class>
+        <class>entities.curriculum.PartOfCurriculum</class>
+        <class>entities.curriculum.Curriculum</class>
 
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>

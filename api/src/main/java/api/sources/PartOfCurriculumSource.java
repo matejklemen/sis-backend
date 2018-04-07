@@ -53,6 +53,16 @@ public class PartOfCurriculumSource {
                 Response.status(Response.Status.OK).entity(allPOC).build();
     }
 
+    @Operation(description = "Add new module (name).", summary = "Add module", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Created new module",
+                    content = @Content(
+                            schema = @Schema(implementation = PartOfCurriculum.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Creation of new module failed",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)))
+    })
     @PUT
     public Response insertNewModule(@Parameter(description = "Name of new module", required = true) String moduleName) {
         try {
