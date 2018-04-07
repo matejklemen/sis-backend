@@ -3,10 +3,7 @@ package entities.curriculum;
 import entities.StudyProgram;
 import entities.StudyYear;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlIDREF;
 import java.io.Serializable;
 
@@ -14,6 +11,43 @@ import java.io.Serializable;
     Information about a course that has at some point been or is still being run.
 */
 @Entity(name = "curriculum")
+@NamedQueries(
+        value = {
+                @NamedQuery(name = "Curriculum.getAll", query = "SELECT cur FROM curriculum cur"),
+                @NamedQuery(name = "Curriculum.getByStudyProgramId", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.id = :id"),
+                /* Example use-case: get courses for BUN study program */
+                @NamedQuery(name = "Curriculum.getByStudyProgramName", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.name = :name"),
+                /* Example use-case: get courses for doctorate study degree */
+                @NamedQuery(name = "Curriculum.getByStudyProgramDegreeName", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.studyDegree.name = :name"),
+                /* Example use-case: get module courses for specific year for undergraduate UNI program */
+                @NamedQuery(name = "Curriculum.getModuleCourses",
+                        query = "SELECT cur FROM curriculum cur WHERE " +
+                                "cur.POC.type = \"mod\" " +
+                                "AND cur.studyYear.name = :nameStudyYear " +
+                                "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
+                                "AND cur.idStudyProgram.id = :idStudyProgram"),
+                @NamedQuery(name = "Curriculum.getMandatoryCourses",
+                        query = "SELECT cur FROM curriculum cur WHERE " +
+                                "cur.POC.type = \"obv\" " +
+                                "AND cur.studyYear.name = :nameStudyYear " +
+                                "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
+                                "AND cur.idStudyProgram.id = :idStudyProgram"),
+                /* Note: specialist elective courses = strokovni izbirni predmeti */
+                @NamedQuery(name = "Curriculum.getSpecialistElectiveCourses",
+                        query = "SELECT cur FROM curriculum cur WHERE " +
+                                "cur.POC.type = \"siz\" " +
+                                "AND cur.studyYear.name = :name " +
+                                "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
+                                "AND cur.idStudyProgram.id = :idStudyProgram"),
+                /* Note: general elective courses = splošni izbirni predmeti */
+                @NamedQuery(name = "Curriculum.getGeneralElectiveCourses",
+                        query = "SELECT cur FROM curriculum cur WHERE " +
+                                "cur.POC.type = \"piz\" " +
+                                "AND cur.studyYear.name = :name " +
+                                "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
+                                "AND cur.idStudyProgram.id = :idStudyProgram")
+        }
+)
 public class Curriculum implements Serializable {
     @Id
     private int idCurriculum;
@@ -25,13 +59,12 @@ public class Curriculum implements Serializable {
     @JoinColumn(name = "id_course")
     private Course idCourse;
 
-    @XmlIDREF
     @ManyToOne
     @JoinColumn(name = "id_study_program")
     private StudyProgram idStudyProgram;
 
     @ManyToOne
-    @JoinColumn(name = "study_year")
+    @JoinColumn(name = "id_study_year")
     private StudyYear studyYear;
 
     public int getIdCurriculum() {

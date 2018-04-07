@@ -6,13 +6,15 @@ import java.io.Serializable;
 @Entity(name = "part_of_curriculum")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "PartOfCurriculum.getByType", query = "SELECT poc FROM part_of_curriculum poc WHERE poc.type = :type")
+                @NamedQuery(name = "PartOfCurriculum.getByType", query = "SELECT poc FROM part_of_curriculum poc WHERE poc.type = :type"),
+                @NamedQuery(name = "PartOfCurriculum.getByModuleName", query = "SELECT poc from part_of_curriculum poc WHERE poc.moduleName = :moduleName")
         }
 )
 public class PartOfCurriculum implements Serializable {
     @Id
     @Column(name = "id")
     private int idPOC;
+
     /*
     One of: {obv, siz, piz, mod} where:
     - obv ... obvezni predmet
