@@ -25,27 +25,27 @@ import java.io.Serializable;
                                 "cur.POC.type = \"mod\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
                                 "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
-                                "AND cur.idStudyProgram.id = :idStudyProgram"),
+                                "AND cur.yearOfProgram = :yearOfProgram"),
                 @NamedQuery(name = "Curriculum.getMandatoryCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.POC.type = \"obv\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
                                 "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
-                                "AND cur.idStudyProgram.id = :idStudyProgram"),
+                                "AND cur.yearOfProgram = :yearOfProgram"),
                 /* Note: specialist elective courses = strokovni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getSpecialistElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.POC.type = \"siz\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
                                 "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
-                                "AND cur.idStudyProgram.id = :idStudyProgram"),
+                                "AND cur.yearOfProgram = :yearOfProgram"),
                 /* Note: general elective courses = splošni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getGeneralElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.POC.type = \"piz\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
                                 "AND cur.idStudyProgram.studyDegree.id = :idStudyDegree " +
-                                "AND cur.idStudyProgram.id = :idStudyProgram")
+                                "AND cur.yearOfProgram = :yearOfProgram")
         }
 )
 public class Curriculum implements Serializable {
@@ -66,6 +66,9 @@ public class Curriculum implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_study_year")
     private StudyYear studyYear;
+
+    @Column(name = "year_of_program")
+    private int yearOfProgram; // = letnik
 
     public int getIdCurriculum() {
         return idCurriculum;
