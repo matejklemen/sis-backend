@@ -4,6 +4,7 @@ import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.EnrolmentBean;
 import beans.crud.EnrolmentTokenBean;
+import beans.logic.EnrolmentPolicyBean;
 import entities.Enrolment;
 import entities.EnrolmentToken;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +37,9 @@ public class EnrolmentTokenSource {
     @Inject
     private EnrolmentBean eb;
 
+    @Inject
+    private EnrolmentPolicyBean epb;
+
     @Operation(description = "Returns newly created enrolment token for given id", summary = "Create enrolment token by student id", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Created token for id",
@@ -55,6 +59,8 @@ public class EnrolmentTokenSource {
     public Response putToken(@PathParam("id") int id) {
         Enrolment e = eb.getLastEnrolmentByStudentId(id);
         EnrolmentToken et = EnrolmentToken.createEnrolmentToken(e);
+
+        et.setFreeChoice(epb.hasStudentFreeChoiceOfCurriculum(et.getStudent()));
 
         et = etb.putEnrolmentToken(et);
 
@@ -90,8 +96,8 @@ public class EnrolmentTokenSource {
                     @ApiResponse(responseCode = "204",
                             description = "Delete successful"
                     ),
-                    @ApiResponse(responseCode = "404",
-                            description = "Delete failed",
+                    @ApiResponse(responseCode = "403",
+                            description = "Delete is forbidden because token was used",
                             content = @Content(
                                     schema = @Schema(implementation
                                             = ResponseError.class))
@@ -100,10 +106,14 @@ public class EnrolmentTokenSource {
     @Path("{id}")
     @DELETE
     public Response removeToken(@PathParam("id") int id){
-        etb.deleteEnrolmentToken(id);
-        return Response.noContent().build();
+        if(!etb.getEnrolmentTokenById(id).isUsed()){
+            etb.deleteEnrolmentToken(id);
+            return Response.noContent().build();
+        }
+        else{
+            return Response.status(403).build(); //Forbidden
+        }
     }
-
 
     @Operation(description = "Updates an existing enrolment token.", summary = "Update enrolment token",
             responses = {
@@ -118,13 +128,24 @@ public class EnrolmentTokenSource {
                             content = @Content(
                                     schema = @Schema(implementation
                                             = ResponseError.class))
+                    ),
+                    @ApiResponse(responseCode = "403",
+                            description = "Post is forbidden because token was used",
+                            content = @Content(
+                                    schema = @Schema(implementation
+                                            = ResponseError.class))
                     )
             })
     @POST
     public Response postToken(@RequestBody EnrolmentToken token){
-        token.setStudent(etb.getEnrolmentTokenById(token.getId()).getStudent());
-        EnrolmentToken et = etb.updateEnrolmentToken(token);
-        return Response.ok().entity(et).build();
+        if(!etb.getEnrolmentTokenById(token.getId()).isUsed()) {
+            token.setStudent(etb.getEnrolmentTokenById(token.getId()).getStudent());
+            EnrolmentToken et = etb.updateEnrolmentToken(token);
+            return Response.ok().entity(et).build();
+        }
+        else{
+            return Response.status(403).build(); //Forbidden
+        }
     }
 }
 

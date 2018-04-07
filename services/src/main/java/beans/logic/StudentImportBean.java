@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import static java.lang.Integer.parseInt;
 
 @ApplicationScoped
-public class StudentImport {
+public class StudentImportBean {
 
     private static Integer nextStudentId = null;
 

@@ -1,7 +1,7 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
-import beans.logic.StudentImport;
+import beans.logic.StudentImportBean;
 import entities.Student;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -26,7 +26,7 @@ import java.util.List;
 public class FileSource {
 
     @Inject
-    private StudentImport si;
+    private StudentImportBean si;
 
     @PUT
     public Response putFile(FileData file){

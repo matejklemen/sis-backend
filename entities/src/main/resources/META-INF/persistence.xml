@@ -14,6 +14,7 @@
         <class>entities.StudyYear</class>
         <class>entities.UserLogin</class>
         <class>entities.UserRole</class>
+        <class>entities.Grade</class>
 
         <class>entities.curriculum.Course</class>
 
