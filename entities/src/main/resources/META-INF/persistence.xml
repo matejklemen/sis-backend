@@ -15,6 +15,7 @@
         <class>entities.UserLogin</class>
         <class>entities.UserRole</class>
         <class>entities.Grade</class>
+        <class>entities.Professor</class>
 
         <class>entities.curriculum.Course</class>
         <class>entities.curriculum.PartOfCurriculum</class>
