@@ -4,7 +4,7 @@ import sys
 import os
 
 def csv2sql(filename):
-  fread = open(filename, "r")
+  fread = open(filename, "r", encoding = "utf8")
 
   # first line is table name
   tableName = fread.readline()
@@ -36,7 +36,7 @@ def csv2sql(filename):
   fread.close()
 
 def directsql(filename):
-  fread = open(filename, "r")
+  fread = open(filename, "r", encoding = "utf8")
   
   line = fread.readline()
   while line:
@@ -47,7 +47,7 @@ def directsql(filename):
 
 
 # open a file for writing
-fwrite = open("generated.sql", "w")
+fwrite = open("generated.sql", "w", encoding = "utf8")
 fwrite.write("-- This file is generated with python script and probably SHOULD NOT be edited but generated!\n\n")
 
 # open each csv file and process it
