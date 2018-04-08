@@ -25,13 +25,6 @@ public class Course implements Serializable, Codelistable {
 
     private String semester;
 
-    @ManyToMany
-    @JoinTable(
-            name="course_stprogram",
-            joinColumns=@JoinColumn(name="id_course", referencedColumnName="id"),
-            inverseJoinColumns=@JoinColumn(name="id_study_program", referencedColumnName="id"))
-    private List<StudyProgram> studyPrograms;
-
     public int getId() {
         return id;
     }
@@ -62,14 +55,6 @@ public class Course implements Serializable, Codelistable {
 
     public void setSemester(String semester) {
         this.semester = semester;
-    }
-
-    public List<StudyProgram> getStudyPrograms() {
-        return studyPrograms;
-    }
-
-    public void setStudyPrograms(List<StudyProgram> studyPrograms) {
-        this.studyPrograms = studyPrograms;
     }
 
     @Override

@@ -50,6 +50,8 @@ import java.io.Serializable;
 )
 public class Curriculum implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_curriculum")
     private int idCurriculum;
     @ManyToOne
     @JoinColumn(name = "part_of_curriculum")
