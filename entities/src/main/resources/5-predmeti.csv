@@ -21,7 +21,7 @@ id;name;credit_points;semester
 63278;Programiranje 2 (C);6;poletni
 63706;Programiranje 2 (Java);6;poletni
 63268;Razvoj inteligentnih sistemov;6;poletni
-63263;Računska zahtevnost in hevristično programiranje;NULL;NULL
+63263;Računska zahtevnost in hevristično programiranje;6;zimski
 63739;Robotika in računalniško zaznavanje;6;zimski
 63519;Strojno učenje;6;zimski
 63510;Umetna inteligenca;6;poletni
@@ -99,3 +99,12 @@ id;name;credit_points;semester
 63735;Vzporedni in porazdeljeni sistemi in algoritmi;6;zimski
 63284;Tehnične veščine (Funkcijsko programiranje za splet);3;zimski
 63752;Računalništvo v praksi 1;3;bločni
+63242;Računalništvo v praksi 2;3;bločni
+63202;Osnove matematične analize;6;zimski
+63710;Osnove verjetnosti in statistike;6;zimski
+63213;Verjetnost in statistika;6;zimski
+63207;Linearna algebra;6;poletni
+63205;Fizika;6;zimski
+63248;Ekonomika in podjetništvo;6;poletni
+63281;Diplomski seminar;6;poletni
+63214;Osnove umetne inteligence;6;zimski
