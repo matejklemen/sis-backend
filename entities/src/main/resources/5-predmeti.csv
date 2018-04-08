@@ -3,7 +3,7 @@ id;name;credit_points;semester
 63508;Algoritmi;6;poletni
 63711;Algoritmi in podatkovne strukture 1;6;zimski
 63279;Algoritmi in podatkovne strukture 1;6;zimski
-63723;Algoritmi in podatkovne strukture 2;6;poletni
+63280;Algoritmi in podatkovne strukture 2;6;poletni
 63705;Diskretne strukture;6;zimski
 63203;Diskretne strukture;6;zimski
 63266;Inteligentni sistemi;6;zimski
@@ -97,3 +97,5 @@ id;name;credit_points;semester
 63209;Računalniške komunikacije;6;poletni
 63708;Računalniške komunikacije;6;poletni
 63735;Vzporedni in porazdeljeni sistemi in algoritmi;6;zimski
+63284;Tehnične veščine (Funkcijsko programiranje za splet);3;zimski
+63752;Računalništvo v praksi 1;3;bločni
