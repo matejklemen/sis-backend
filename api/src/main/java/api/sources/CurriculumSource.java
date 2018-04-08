@@ -70,7 +70,7 @@ public class CurriculumSource {
                     content = @Content(
                             schema = @Schema(implementation = Curriculum.class))),
             @ApiResponse(responseCode = "400",
-                    description = "The year is written incorrectly. Make sure it is in format XXXXXX (6 numbers), for example 2005/06 would be written as 200506.",
+                    description = "The year is written incorrectly. Make sure it is in format XXXXXXXX (8 numbers), for example 2005/2006 would be written as 20052006.",
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class)
                     )),
@@ -85,11 +85,11 @@ public class CurriculumSource {
     public Response getAvailableCurriculumForProgramAndYear(@PathParam(value = "study-year") @Parameter(required = true, description = "Study year (for example 2010/11) written without the dash (\"/\"), e.g. \"201011\"") String studyYear,
                                                    @PathParam(value = "study-program-id") String studyProgramId,
                                                    @PathParam(value = "year-of-program") @Parameter(description = "Grade that the student is in") int yearOfProgram) {
-        if (studyYear.length() != 6)
+        if (studyYear.length() != 8)
             return Response.status(Response.Status.BAD_REQUEST).build();
 
-        // input is in format XXXXXX -> convert into XXXX/XX
-        studyYear = String.format("%s/%s", studyYear.substring(0, 4), studyYear.substring(4, 6));
+        // input is in format XXXXXXXX -> convert into XXXX/XXXX
+        studyYear = String.format("%s/%s", studyYear.substring(0, 4), studyYear.substring(4, 8));
 
         List<Curriculum> cModule = cb.getModuleCourses(studyYear, studyProgramId, yearOfProgram);
         List<Curriculum> cMandatory = cb.getMandatoryCourses(studyYear, studyProgramId, yearOfProgram);
