@@ -23,7 +23,7 @@ public class ProfessorBean {
         return q.getResultList();
     }
 
-    public Professor getProfessorById(int id) {
+    public Professor getProfessor(int id) {
         TypedQuery<Professor> q = em.createNamedQuery("Professor.getById", Professor.class);
 
         return q.getSingleResult();
@@ -45,6 +45,11 @@ public class ProfessorBean {
         q.setParameter("lname2", lName2);
 
         return q.getResultList();
+    }
+
+    @Transactional
+    public boolean existsProfessor(int id) {
+        return em.find(Professor.class, id) != null;
     }
 
     @Transactional

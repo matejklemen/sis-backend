@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity(name = "course_organization")
 @NamedQueries(value = {
         @NamedQuery(name = "CourseOrganization.getByCourseId", query = "SELECT co FROM course_organization co WHERE co.course.id = :idCourse"),
-        @NamedQuery(name = "CourseOrganization.getByProfessorId", query = "SELECT co FROM course_organization co WHERE (co.organizer1.idProfessor = :profId OR co.organizer2.idProfessor = :profId OR co.organizer3.idProfessor = :profId)"),
+        @NamedQuery(name = "CourseOrganization.getByProfessorId", query = "SELECT co FROM course_organization co WHERE (co.organizer1.id = :profId OR co.organizer2.id = :profId OR co.organizer3.id = :profId)"),
         @NamedQuery(name = "CourseOrganization.getByStudyYear", query = "SELECT co FROM course_organization co WHERE co.studyYear.name = :studyYear")
 })
 public class CourseOrganization {
