@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Entity(name = "professor")
 @NamedQueries(value = {
         @NamedQuery(name = "Professor.getAllProfessors", query = "SELECT p FROM professor p"),
-        @NamedQuery(name = "Professor.getById", query = "SELECT p FROM professor p WHERE p.id = :id"),
         @NamedQuery(name = "Professor.getByFirstAndLastName", query = "SELECT p FROM professor p WHERE p.firstName = :fname AND (p.lastName1 = :lname OR p.lastName2 = :lname)"),
         /* search professors with 2 surnames */
         @NamedQuery(name = "Professor.getByFirstAndLastName2", query = "SELECT p FROM professor p WHERE p.firstName = :fname AND p.lastName1 = :lname1 AND p.lastName2 = :lname2")

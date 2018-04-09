@@ -77,6 +77,6 @@ public class StudyProgram implements Serializable, Codelistable {
 
     @Override
     public String[] getColumnTypes() {
-        return new String[]{TYPE_STRING, TYPE_STRING, "study_degree", TYPE_NUMBER, TYPE_NUMBER};
+        return new String[]{TYPE_STRING, TYPE_STRING, "studydegrees", TYPE_NUMBER, TYPE_NUMBER};
     }
 }
