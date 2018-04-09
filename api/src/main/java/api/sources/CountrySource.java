@@ -77,7 +77,7 @@ public class CountrySource {
         if(cb.existsCountry(c.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
         }
-        cb.insertCountry(c);
+        c = cb.insertCountry(c);
         return Response.ok().entity(c).build();
     }
 
@@ -107,7 +107,7 @@ public class CountrySource {
     @POST
     public Response updateCountry(@RequestBody Country c) {
         if(c == null) throw new NoRequestBodyException();
-        cb.updateCountry(c);
+        c = cb.updateCountry(c);
         return Response.ok().entity(c).build();
     }
 }

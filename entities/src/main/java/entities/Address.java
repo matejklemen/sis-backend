@@ -2,8 +2,6 @@ package entities;
 
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlID;
 import java.io.Serializable;
 
 @Entity(name = "address")
@@ -11,8 +9,6 @@ public class Address implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @XmlID
-    @XmlElement
     private int id;
 
     @Column(name = "line1", nullable = false)

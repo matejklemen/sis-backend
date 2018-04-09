@@ -7,7 +7,7 @@ INSERT INTO user_login (username, password, id_user_role, salt) VALUES ('joze1',
 INSERT INTO address (line1, line2, id_post_address, id_country) VALUES ('Kul kraj 15', 'Druga vrstica naslova', 1000, 705), ('Nekje 26', '', 8000, 703);
 
 -- student
-INSERT INTO student (register_number, name, surname, id_address1, id_address2, phone_number, email, id_login) VALUES ('63180001', 'Janez', 'Novak', 1, 2, '+386 666 666', 'janez.novak@gmail.com', 1);
+INSERT INTO student (register_number, name, surname, id_address1, id_address2, phone_number, email, id_login) VALUES ('63180001', 'Janez', 'Novak', 1, 2, '+386 666 666', 'janez.novak@gmail.com', 1), ('63180018', 'Štefan', 'Puding', 2, 2, '+386 666 666', 'janez.novak@gmail.com', 1);
 INSERT INTO student (register_number, name, surname, id_address1, email, id_login) VALUES ('63180002', 'Miha', 'Kopač', 1, 'miha21kopac@gmail.com', 1), ('63180003', 'Marta', 'Veljak', 1, 'marta.veljak0000@gmail.com', 1);
 
 -- enrolments

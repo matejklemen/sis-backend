@@ -35,7 +35,7 @@ public class EnrolmentBean {
 
     @Transactional
     public Enrolment getLastEnrolmentByStudentId(int studentId) {
-        log.info("Getting last enrolment for studint id: " + studentId);
+        log.info("Getting last enrolment for student id: " + studentId);
         return em.createNamedQuery("Enrolment.getLastByStudentId", Enrolment.class)
                 .setParameter("id", studentId)
                 .setMaxResults(1)

@@ -3,8 +3,8 @@ package api.sources;
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
-import beans.crud.PostAddressBean;
-import entities.PostAddress;
+import beans.crud.StudyTypeBean;
+import entities.StudyType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,94 +21,93 @@ import javax.ws.rs.core.Response;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Path("postaddresses")
+@Path("studytypes")
 @ApplicationScoped
 @LogApiCalls
-@Tags(value = @Tag(name = "post addresses"))
-public class PostAddressSource {
+@Tags(value = @Tag(name = "study types"))
+public class StudyTypeSource {
 
     @Inject
-    private PostAddressBean pab;
+    private StudyTypeBean cB;
 
-    @Operation(description = "Returns a list of post addresses.", summary = "Get list of post addresses", responses = {
+    @Operation(description = "Returns a list of study types.", summary = "Get list of study types", responses = {
             @ApiResponse(responseCode = "200",
-                    description = "List of post addresses",
+                    description = "List of study types",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = PostAddress.class))
+                            schema = @Schema(implementation = StudyType.class))
             )
     })
     @GET
-    public Response getPostAddresses() {
-        return Response.ok().entity(pab.getPostAddresses()).build();
+    public Response getStudyTypes() {
+        return Response.ok(cB.getStudyTypes()).build();
     }
 
-    @Operation(description = "Returns a post address with specified id.", summary = "Get post address by id", responses = {
+    @Operation(description = "Returns a study type with specified id.", summary = "Get study type by id", responses = {
             @ApiResponse(responseCode = "200",
-                    description = "Post address by id",
+                    description = "Study type by id",
                     content = @Content(
-                            schema = @Schema(implementation = PostAddress.class))
+                            schema = @Schema(implementation = StudyType.class))
             ),
             @ApiResponse(responseCode = "404",
-                    description = "Post address by id doesn't exist",
+                    description = "Study type by id doesn't exist",
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class))
             )
     })
     @Path("{id}")
     @GET
-    public Response getPostAddress(@PathParam("id") int id) {
-        return Response.ok().entity(pab.getPostAddress(id)).build();
+    public Response getStudyTypeById(@PathParam("id") int id) {
+        return Response.ok(cB.getStudyType(id)).build();
     }
 
-    @Operation(description = "Inserts a new post address.", summary = "Insert post address", responses = {
+    @Operation(description = "Inserts a new study type.", summary = "Insert study type", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Insert successful",
                     content = @Content(
-                            schema = @Schema(implementation = PostAddress.class))),
+                            schema = @Schema(implementation = StudyType.class))),
             @ApiResponse(responseCode = "400",
                     description = "Insert failed",
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class)))
     })
     @PUT
-    public Response createPostAddress(@RequestBody PostAddress pa) {
-        if(pa == null) throw new NoRequestBodyException();
-        if(pab.existsPostAddress(pa.getId())) {
+    public Response createStudyType(@RequestBody StudyType c) {
+        if(c == null) throw new NoRequestBodyException();
+        if(cB.existsStudyType(c.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
         }
-        pa = pab.insertPostAddress(pa);
-        return Response.ok().entity(pa).build();
+        c = cB.insertStudyType(c);
+        return Response.ok().entity(c).build();
     }
 
-    @Operation(description = "Deletes a post address with specified id.", summary = "Delete post address", responses = {
+    @Operation(description = "Deletes a study type with specified id.", summary = "Delete study type", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Delete successful",
                     content = @Content(
-                            schema = @Schema(implementation = PostAddress.class))),
+                            schema = @Schema(implementation = StudyType.class))),
     })
     @Path("{id}")
     @DELETE
-    public Response deletePostAddress(@PathParam("id") int id) {
-        pab.deletePostAddress(id);
+    public Response deleteStudyType(@PathParam("id") int id) {
+        cB.deleteStudyType(id);
         return Response.ok().build();
     }
 
-    @Operation(description = "Updates an existing post address.", summary = "Update post address", responses = {
+    @Operation(description = "Updates an existing study type.", summary = "Update study type", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Update successful",
                     content = @Content(
-                            schema = @Schema(implementation = PostAddress.class))),
+                            schema = @Schema(implementation = StudyType.class))),
             @ApiResponse(responseCode = "400",
                     description = "Update failed",
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class)))
     })
     @POST
-    public Response updatePostAddress(@RequestBody PostAddress pa) {
-        if(pa == null) throw new NoRequestBodyException();
-        pa = pab.updatePostAddress(pa);
-        return Response.ok().entity(pa).build();
+    public Response updateStudyType(@RequestBody StudyType c) {
+        if(c == null) throw new NoRequestBodyException();
+        c = cB.updateStudyType(c);
+        return Response.ok().entity(c).build();
     }
-}
 
+}

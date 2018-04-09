@@ -48,18 +48,24 @@ public class ProfessorBean {
     }
 
     @Transactional
-    public Professor addProfessor(Professor p) {
-        try {
-            em.persist(p);
-            log.info(String.format("Successfully inserted %s", p.toString()));
+    public Professor insertProfessor(Professor c) {
+        em.persist(c);
+        em.flush();
+        return c;
+    }
 
-            return p;
+    @Transactional
+    public void deleteProfessor(int id) {
+        Professor c = em.find(Professor.class, id);
+        if(c != null){
+            em.remove(c);
         }
-        catch (Exception e) {
-            log.severe("Something went wrong when trying to insert new Professor entity!");
-            log.severe(e.getMessage());
+    }
 
-            return null;
-        }
+    @Transactional
+    public Professor updateProfessor(Professor c) {
+        em.merge(c);
+        em.flush();
+        return c;
     }
 }

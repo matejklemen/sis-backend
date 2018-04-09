@@ -1,0 +1,10 @@
+study_type
+id;short_name;name
+1;Prvi vpis;Prvi vpis v letnik/dodatno leto
+2;Ponavljanje;Ponavljanje letnika
+3;Nadaljevanje;Nadaljevanje letnika
+4;Podaljšanje statusa;Podaljšanje statusa študenta
+5;Vpis po merilih (višji letnik);Vpis po merilih za prehode v višji letnik
+6;Vpis v semester;Vpis v semester skupnega št. programa
+7;Vpis po merilih (isti letnik);Vpis po merilih za prehode v isti letnik
+98;Zaključek;Vpis za zaključek

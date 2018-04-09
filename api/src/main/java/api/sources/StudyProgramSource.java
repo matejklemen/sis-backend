@@ -76,7 +76,7 @@ public class StudyProgramSource {
         if(cb.existsStudyProgram(c.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
         }
-        cb.insertStudyProgram(c);
+        c = cb.insertStudyProgram(c);
         return Response.ok().entity(c).build();
     }
 
@@ -106,7 +106,7 @@ public class StudyProgramSource {
     @POST
     public Response updateStudyProgram(@RequestBody StudyProgram c) {
         if(c == null) throw new NoRequestBodyException();
-        cb.updateStudyProgram(c);
+        c = cb.updateStudyProgram(c);
         return Response.ok().entity(c).build();
     }
 }

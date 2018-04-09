@@ -76,7 +76,7 @@ public class StudyDegreeSource {
         if(cb.existsStudyDegree(c.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
         }
-        cb.insertStudyDegree(c);
+        c = cb.insertStudyDegree(c);
         return Response.ok().entity(c).build();
     }
 
@@ -106,7 +106,7 @@ public class StudyDegreeSource {
     @POST
     public Response updateStudyDegree(@RequestBody StudyDegree c) {
         if(c == null) throw new NoRequestBodyException();
-        cb.updateStudyDegree(c);
+        c = cb.updateStudyDegree(c);
         return Response.ok().entity(c).build();
     }
 }

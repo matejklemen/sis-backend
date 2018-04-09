@@ -4,7 +4,6 @@ import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.ProfessorBean;
 import entities.Professor;
-import entities.curriculum.Course;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,7 +20,7 @@ import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Path("professor")
+@Path("professors")
 @ApplicationScoped
 @LogApiCalls
 @Tags(value = @Tag(name = "professor"))
@@ -67,7 +66,7 @@ public class ProfessorSource {
         if(p.getFirstName() == null || p.getLastName1() == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
 
-        Professor profEntity = pb.addProfessor(p);
+        Professor profEntity = pb.insertProfessor(p);
 
         return Response.status(Response.Status.OK).entity(profEntity).build();
     }

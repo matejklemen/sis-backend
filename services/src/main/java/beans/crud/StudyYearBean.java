@@ -18,7 +18,7 @@ public class StudyYearBean {
 
     public StudyYear getStudyYearByName(String name) {
         try {
-            return em.createNamedQuery("StudyProgram.getByName", StudyYear.class).setParameter("name", name).getSingleResult();
+            return em.createNamedQuery("StudyYear.getByName", StudyYear.class).setParameter("name", name).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
@@ -44,9 +44,9 @@ public class StudyYearBean {
     }
 
     @Transactional
-    public StudyYear getStudyYear(int postNumber) {
-        StudyYear pa = em.find(StudyYear.class, postNumber);
-        if(pa == null) throw new NoResultException("No post address by this post number");
+    public StudyYear getStudyYear(int id) {
+        StudyYear pa = em.find(StudyYear.class, id);
+        if(pa == null) throw new NoResultException("No study year by this post number");
         return pa;
     }
 

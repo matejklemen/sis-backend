@@ -1,11 +1,9 @@
 package entities.curriculum;
 
-import entities.StudyProgram;
 import interfaces.Codelistable;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity(name = "course")
 @NamedQueries(
@@ -59,7 +57,7 @@ public class Course implements Serializable, Codelistable {
 
     @Override
     public String[] getColumnNames() {
-        return new String[]{"id", "name", "credit_points", "semester"};
+        return new String[]{"id", "name", "creditPoints", "semester"};
     }
 
     @Override

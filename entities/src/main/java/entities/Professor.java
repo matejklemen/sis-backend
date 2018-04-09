@@ -1,5 +1,7 @@
 package entities;
 
+import interfaces.Codelistable;
+
 import javax.persistence.*;
 
 @Entity(name = "professor")
@@ -10,7 +12,7 @@ import javax.persistence.*;
         /* search professors with 2 surnames */
         @NamedQuery(name = "Professor.getByFirstAndLastName2", query = "SELECT p FROM professor p WHERE p.firstName = :fname AND p.lastName1 = :lname1 AND p.lastName2 = :lname2")
 })
-public class Professor {
+public class Professor implements Codelistable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_professor")
@@ -61,5 +63,15 @@ public class Professor {
     @Override
     public String toString() {
         return String.format("Professor(%s %s%s)", firstName, lastName1, lastName2 != null ? lastName2: "");
+    }
+
+    @Override
+    public String[] getColumnNames() {
+        return new String[]{"firstName", "lastName1", "lastName2"};
+    }
+
+    @Override
+    public String[] getColumnTypes() {
+        return new String[]{TYPE_STRING, TYPE_STRING, TYPE_STRING};
     }
 }

@@ -76,7 +76,7 @@ public class StudyYearSource {
         if(cb.existsStudyYear(c.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
         }
-        cb.insertStudyYear(c);
+        c = cb.insertStudyYear(c);
         return Response.ok().entity(c).build();
     }
 
@@ -106,7 +106,7 @@ public class StudyYearSource {
     @POST
     public Response updateStudyYear(@RequestBody StudyYear c) {
         if(c == null) throw new NoRequestBodyException();
-        cb.updateStudyYear(c);
+        c = cb.updateStudyYear(c);
         return Response.ok().entity(c).build();
     }
 }

@@ -2,20 +2,21 @@ package entities;
 
 import interfaces.Codelistable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import java.io.Serializable;
 
-@Entity(name = "study_year")
+@Entity(name = "study_kind")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "StudyYear.getByName", query = "SELECT sy FROM study_year sy WHERE sy.name = :name"),
-                @NamedQuery(name = "StudyYear.getAll", query = "SELECT sy FROM study_year sy")
+                @NamedQuery(name = "StudyKind.getAll", query = "SELECT sk FROM study_kind sk")
         }
 )
-public class StudyYear implements Serializable, Codelistable {
+public class StudyKind implements Serializable, Codelistable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
@@ -38,11 +39,11 @@ public class StudyYear implements Serializable, Codelistable {
 
     @Override
     public String[] getColumnNames() {
-        return new String[]{"name"};
+        return new String[]{"id", "name"};
     }
 
     @Override
     public String[] getColumnTypes() {
-        return new String[]{TYPE_STRING};
+        return new String[]{TYPE_NUMBER, TYPE_STRING};
     }
 }

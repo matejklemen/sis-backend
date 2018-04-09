@@ -72,7 +72,7 @@ public class StudyProgram implements Serializable, Codelistable {
 
     @Override
     public String[] getColumnNames() {
-        return new String[]{"id", "name", "id_study_degree", "semesters", "evs_code"};
+        return new String[]{"id", "name", "studyDegree", "semesters", "evsCode"};
     }
 
     @Override

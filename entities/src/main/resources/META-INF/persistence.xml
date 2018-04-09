@@ -7,15 +7,18 @@
         <class>entities.Country</class>
         <class>entities.Enrolment</class>
         <class>entities.EnrolmentToken</class>
+        <class>entities.Grade</class>
+        <class>entities.KlasiusSrv</class>
         <class>entities.PostAddress</class>
+        <class>entities.Professor</class>
         <class>entities.Student</class>
         <class>entities.StudyDegree</class>
+        <class>entities.StudyKind</class>
         <class>entities.StudyProgram</class>
+        <class>entities.StudyType</class>
         <class>entities.StudyYear</class>
         <class>entities.UserLogin</class>
         <class>entities.UserRole</class>
-        <class>entities.Grade</class>
-        <class>entities.Professor</class>
 
         <class>entities.curriculum.Course</class>
         <class>entities.curriculum.PartOfCurriculum</class>

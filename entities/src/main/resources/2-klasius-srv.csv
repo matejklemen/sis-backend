@@ -1,0 +1,20 @@
+klasius_srv
+id;name;description;level
+12001;Osnovnošolska izobrazba;;1
+13001;Nižja poklicna izobrazba;;3
+14001;Srednja poklicna izobrazba;;4
+15001;Srednja strokovna izobrazba;;5
+15002;Srednja splošna izobrazba;;5
+16102;Višješolska izobrazba (predbolonjska);;6/1
+16201;Specializacija po višješolski izobrazbi (predbolonjska);;6/2
+16202;Visokošolska strokovna izobrazba (predbolonjska);;6/2
+17001;Specializacija po visokošolski strokovni izobrazbi (predbolonjska);;7
+17002;Visokošolska univerzitetna izobrazba (predbolonjska);;7
+18101;Specializacija po univerzitetni izobrazbi (predbolonjska);;8/1
+18102;Magisterij znanosti (predbolonjski);;8/1
+18201;Doktorat znanosti (predbolonjski);;8/2
+16101;Višja strokovna izobrazba;;6/1
+16203;Visokošolska strokovna izobrazba (prva bolonjska stopnja);;6/2
+16204;Visokošolska univerzitetna izobrazba (prva bolonjska stopnja);;6/2
+17003;Magistrska izobrazba (druga bolonjska stopnja);;7
+18202;Doktorat znanosti (tretja bolonjska stopnja);;8/2

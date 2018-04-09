@@ -5,18 +5,19 @@ import interfaces.Codelistable;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "study_year")
+@Entity(name = "study_type")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "StudyYear.getByName", query = "SELECT sy FROM study_year sy WHERE sy.name = :name"),
-                @NamedQuery(name = "StudyYear.getAll", query = "SELECT sy FROM study_year sy")
+                @NamedQuery(name = "StudyType.getAll", query = "SELECT st FROM study_type st")
         }
 )
-public class StudyYear implements Serializable, Codelistable {
+public class StudyType implements Serializable, Codelistable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "short_name")
+    private String shortName;
 
     private String name;
 
@@ -26,6 +27,14 @@ public class StudyYear implements Serializable, Codelistable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     public String getName() {
@@ -38,11 +47,11 @@ public class StudyYear implements Serializable, Codelistable {
 
     @Override
     public String[] getColumnNames() {
-        return new String[]{"name"};
+        return new String[]{"id", "name", "shortName"};
     }
 
     @Override
     public String[] getColumnTypes() {
-        return new String[]{TYPE_STRING};
+        return new String[]{TYPE_NUMBER, TYPE_STRING, TYPE_STRING};
     }
 }

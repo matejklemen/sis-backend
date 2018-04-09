@@ -56,7 +56,7 @@ public class CourseSource {
     })
     @Path("{id}")
     @GET
-    public Response getEnrolmentById(@PathParam("id") int id) {
+    public Response getCourseById(@PathParam("id") int id) {
         return Response.ok(cB.getCourse(id)).build();
     }
 
@@ -76,7 +76,7 @@ public class CourseSource {
         if(cB.existsCourse(c.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
         }
-        cB.insertCourse(c);
+        c = cB.insertCourse(c);
         return Response.ok().entity(c).build();
     }
 
@@ -106,7 +106,7 @@ public class CourseSource {
     @POST
     public Response updateCourse(@RequestBody Course c) {
         if(c == null) throw new NoRequestBodyException();
-        cB.updateCourse(c);
+        c = cB.updateCourse(c);
         return Response.ok().entity(c).build();
     }
 
