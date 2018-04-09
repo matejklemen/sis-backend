@@ -30,11 +30,13 @@ public class Enrolment implements Serializable {
 
     private int year; // letnik
 
-    @Column(length = 20)
-    private String type; // prvi vpis, ponovni vpis, absolvent
+    @ManyToOne
+    @JoinColumn(name = "id_study_type")
+    private StudyType type; // prvi vpis, ponovni vpis, absolvent
 
-    @Column(length = 20)
-    private String kind; // redni, izredni
+    @ManyToOne
+    @JoinColumn(name = "id_study_kind")
+    private StudyKind kind; // redni, izredni
 
     @Column(nullable = false)
     private boolean confirmed; // potrdi referentka
@@ -80,19 +82,19 @@ public class Enrolment implements Serializable {
         this.year = year;
     }
 
-    public String getType() {
+    public StudyType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(StudyType type) {
         this.type = type;
     }
 
-    public String getKind() {
+    public StudyKind getKind() {
         return kind;
     }
 
-    public void setKind(String kind) {
+    public void setKind(StudyKind kind) {
         this.kind = kind;
     }
 

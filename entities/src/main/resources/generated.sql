@@ -27,4 +27,4 @@ INSERT INTO student (register_number, name, surname, id_address1, id_address2, p
 INSERT INTO student (register_number, name, surname, id_address1, email, id_login) VALUES ('63180002', 'Miha', 'Kopač', 1, 'miha21kopac@gmail.com', 1), ('63180003', 'Marta', 'Veljak', 1, 'marta.veljak0000@gmail.com', 1);
 
 -- enrolments
-INSERT INTO enrolment (id_student, id_study_year, id_study_program, year, type, kind, confirmed) VALUES (1, 1, 'VT', 1, 'prvi vpis', 'redni', true), (1, 2, 'VT', 2, 'prvi vpis', 'redni', true), (2, 2, 'VU', 1, 'prvi vpis', 'redni', true);
+INSERT INTO enrolment (id_student, id_study_year, id_study_program, year, id_study_type, id_study_kind, confirmed) VALUES (1, 1, 'VT', 1, 1, 1, true), (1, 2, 'VT', 2, 2, 1, true), (2, 2, 'VU', 1, 1, 3, true);

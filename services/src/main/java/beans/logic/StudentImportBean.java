@@ -49,8 +49,8 @@ public class StudentImportBean {
             enr.setStudyProgram(spb.getStudyProgram(iter.next()));
             enr.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
             enr.setConfirmed(false);
-            enr.setKind("redni");
-            enr.setType("prvi vpis");
+            enr.setKind(enr.getKind());
+            enr.setType(enr.getType());
 
             stu.setRegisterNumber(GenerateNewStudentId());
             stu.setEmail(iter.next());
