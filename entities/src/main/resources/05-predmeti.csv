@@ -1,0 +1,110 @@
+course
+id;name;credit_points;semester
+63508;Algoritmi;6;poletni
+63711;Algoritmi in podatkovne strukture 1;6;zimski
+63279;Algoritmi in podatkovne strukture 1;6;zimski
+63280;Algoritmi in podatkovne strukture 2;6;poletni
+63705;Diskretne strukture;6;zimski
+63203;Diskretne strukture;6;zimski
+63266;Inteligentni sistemi;6;zimski
+63517;Izračunljivost in računska zahtevnost;6;zimski
+63525;Odkrivanje znanj iz podatkov;6;poletni
+63741;Odločitveni sistemi;6;zimski
+63765;Podatkovno rudarjenje;6;poletni
+63251;Poslovna inteligenca;6;zimski
+63265;Prevajalniki;6;poletni
+63722;Prevajalniki in navidezni stroji;6;poletni
+63220;Principi programskih jezikov;6;poletni
+63502;Programiranje;5;zimski
+63277;Programiranje 1;6;zimski
+63702;Programiranje 1;6;zimski
+63278;Programiranje 2 (C);6;poletni
+63706;Programiranje 2 (Java);6;poletni
+63268;Razvoj inteligentnih sistemov;6;poletni
+63263;Računska zahtevnost in hevristično programiranje;6;zimski
+63739;Robotika in računalniško zaznavanje;6;zimski
+63519;Strojno učenje;6;zimski
+63510;Umetna inteligenca;6;poletni
+63720;Umetna inteligenca;6;zimski
+63267;Umetno zaznavanje;6;zimski
+63520;Uvod v bioinformatiko;6;zimski
+63212;Arhitektura računalniških sistemov;6;zimski
+63718;Digitalna vezja;6;zimski
+63260;Digitalno načrtovanje;6;zimski
+63257;Modeliranje računalniških omrežij;6;zimski
+63729;Načrtovanje digitalnih naprav;6;poletni
+63709;Operacijski sistemi;6;poletni
+63217;Operacijski sistemi;6;zimski
+63717;Organizacija računalnikov;6;zimski
+63218;Organizacija računalniških sistemov;6;poletni
+63204;Osnove digitalnih vezij;6;zimski
+63703;Računalniška arhitektura;6;zimski
+63221;Računalniške tehnologije;6;poletni
+63509;Računalniški sistemi;6;poletni
+63264;Sistemska programska oprema;6;zimski
+63736;Sistemska programska oprema;6;zimski
+63728;Vhodno-izhodne naprave;6;poletni
+63262;Zanesljivost in zmogljivost računalniških sistemov;6;poletni
+63516;Digitalno procesiranje signalov;6;zimski
+63744;Digitalno procesiranje signalov;6;zimski
+63532;Diskretna matematika;6;poletni
+63518;E-izobraževanje;6;zimski
+63715;Grafično oblikovanje;6;zimski
+63527;Interaktivnost in oblikovanje informacij;6;poletni
+63210;Komunikacija človek računalnik;6;poletni
+63734;Multimedijske tehnologije;6;zimski
+63270;Multimedijski sistemi;6;zimski
+63514;Obdelava biomedicinskih signalov in slik;6;zimski
+63271;Osnove oblikovanja;6;poletni
+63547;Poučevanje algoritmičnega razmišljanja;6;zimski
+63726;Produkcija multimedijskih gradiv;6;poletni
+63719;Računalniška grafika;6;zimski
+63269;Računalniška grafika in tehnologija iger;6;zimski
+63740;Tehnologija iger in navidezna resničnost;6;zimski
+63721;Uporabniški vmesniki;6;poletni
+63701;Uvod v računalništvo;6;zimski
+63714;Informacijski sistemi;6;zimski
+63533;Management proizvodnih in storitvenih procesov;6;zimski
+63512;Nekonvencionalne platforme in metode procesiranja;6;zimski
+63526;Obvladovanje informatike;6;poletni
+63253;Planiranje in upravljanje informatike;6;poletni
+63254;Postopki razvoja programske opreme;6;zimski
+63737;Procesna avtomatika;6;zimski
+63725;Razvoj informacijskih sistemov;6;poletni
+63515;Sodobne metode razvoja programske opreme;6;poletni
+63727;Spletne tehnologije;6;poletni
+63255;Spletno programiranje;6;zimski
+63732;Tehnologija programske opreme;6;zimski
+63256;Tehnologija programske opreme;6;poletni
+63724;Testiranje in kakovost;6;poletni
+63738;Vgrajeni sistemi;6;zimski
+63712;Elektronsko in mobilno poslovanje;6;zimski
+63249;Elektronsko poslovanje;6;zimski
+63521;Informacijska varnost in zasebnost;6;zimski
+63528;Kriptografija in računalniška varnost;6;zimski
+63250;Organizacija in management;6;poletni
+63215;Osnove informacijskih sistemov;6;poletni
+63707;Podatkovne baze;6;poletni
+63713;Podatkovne baze 2;6;zimski
+63530;Računalniška forenzika;6;poletni
+63226;Tehnologija upravljanja podatkov;6;zimski
+63216;Teorija informacij in sistemov;6;poletni
+63259;Brezžična in mobilna omrežja;6;poletni
+63511;Brezžična senzorska omrežja;6;poletni
+63258;Komunikacijski protokoli;6;zimski
+63716;Komunikacijski protokoli in omrežna varnost;6;zimski
+63261;Porazdeljeni sistemi;6;zimski
+63209;Računalniške komunikacije;6;poletni
+63708;Računalniške komunikacije;6;poletni
+63735;Vzporedni in porazdeljeni sistemi in algoritmi;6;zimski
+63284;Tehnične veščine (Funkcijsko programiranje za splet);3;zimski
+63752;Računalništvo v praksi 1;3;bločni
+63242;Računalništvo v praksi 2;3;bločni
+63202;Osnove matematične analize;6;zimski
+63710;Osnove verjetnosti in statistike;6;zimski
+63213;Verjetnost in statistika;6;zimski
+63207;Linearna algebra;6;poletni
+63205;Fizika;6;zimski
+63248;Ekonomika in podjetništvo;6;poletni
+63281;Diplomski seminar;6;poletni
+63214;Osnove umetne inteligence;6;zimski
