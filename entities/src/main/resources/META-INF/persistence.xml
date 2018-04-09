@@ -25,6 +25,7 @@
         <class>entities.curriculum.Curriculum</class>
         <class>entities.curriculum.StudentCourses</class>
         <class>entities.curriculum.CourseOrganization</class>
+        <class>entities.curriculum.CourseExamTerm</class>
 
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
