@@ -68,7 +68,7 @@ public class CurriculumSource {
                     content = @Content(
                             schema = @Schema(implementation = Curriculum.class))),
             @ApiResponse(responseCode = "400",
-                    description = "The year is written incorrectly. Make sure it is in format XXXXXXXX (8 numbers), for example 2005/2006 would be written as 20052006.",
+                    description = "The year is written incorrectly. Make sure it is in format XXXXXXXX (8 numbers), for example 2016/2017 would be written as 20162017.",
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class)
                     )),
