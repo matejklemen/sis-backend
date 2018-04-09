@@ -4,7 +4,6 @@ import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.CurriculumBean;
 import entities.curriculum.Curriculum;
-import entities.curriculum.PartOfCurriculum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,7 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -82,7 +80,7 @@ public class CurriculumSource {
     })
     @Path("{study-year}/{study-program-id}/{year-of-program}/")
     @GET
-    public Response getAvailableCurriculumForProgramAndYear(@PathParam(value = "study-year") @Parameter(required = true, description = "Study year (for example 2010/11) written without the dash (\"/\"), e.g. \"201011\"") String studyYear,
+    public Response getAvailableCurriculumForProgramAndYear(@PathParam(value = "study-year") @Parameter(required = true, description = "Study year (for example 2017/2018) written without the dash (\"/\"), e.g. \"20172018\"") String studyYear,
                                                    @PathParam(value = "study-program-id") String studyProgramId,
                                                    @PathParam(value = "year-of-program") @Parameter(description = "Grade that the student is in") int yearOfProgram) {
         if (studyYear.length() != 8)

@@ -1,11 +1,9 @@
 package entities.curriculum;
 
-import entities.StudyProgram;
 import interfaces.Codelistable;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity(name = "course")
 @NamedQueries(
