@@ -4,6 +4,7 @@ import entities.Professor;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
@@ -24,9 +25,9 @@ public class ProfessorBean {
     }
 
     public Professor getProfessor(int id) {
-        TypedQuery<Professor> q = em.createNamedQuery("Professor.getById", Professor.class);
-
-        return q.getSingleResult();
+        Professor p = em.find(Professor.class, id);
+        if(p == null) throw new NoResultException("No professor by this id");
+        return p;
     }
 
     public List<Professor> getProfessorByFirstAndLastName(String fName, String lName) {
