@@ -4,7 +4,6 @@ import entities.StudyProgram;
 import entities.StudyYear;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlIDREF;
 import java.io.Serializable;
 
 /*

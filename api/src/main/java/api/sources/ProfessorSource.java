@@ -4,7 +4,6 @@ import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.ProfessorBean;
 import entities.Professor;
-import entities.curriculum.Course;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
