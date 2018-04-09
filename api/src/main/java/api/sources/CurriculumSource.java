@@ -68,7 +68,7 @@ public class CurriculumSource {
                     content = @Content(
                             schema = @Schema(implementation = Curriculum.class))),
             @ApiResponse(responseCode = "400",
-                    description = "The year is written incorrectly. Make sure it is in format XXXXXXXX (8 numbers), for example 2005/2006 would be written as 20052006.",
+                    description = "The year is written incorrectly. Make sure it is in format XXXXXXXX (8 numbers), for example 2016/2017 would be written as 20162017.",
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class)
                     )),
@@ -80,7 +80,7 @@ public class CurriculumSource {
     })
     @Path("{study-year}/{study-program-id}/{year-of-program}/")
     @GET
-    public Response getAvailableCurriculumForProgramAndYear(@PathParam(value = "study-year") @Parameter(required = true, description = "Study year (for example 2010/11) written without the dash (\"/\"), e.g. \"201011\"") String studyYear,
+    public Response getAvailableCurriculumForProgramAndYear(@PathParam(value = "study-year") @Parameter(required = true, description = "Study year (for example 2017/2018) written without the dash (\"/\"), e.g. \"20172018\"") String studyYear,
                                                    @PathParam(value = "study-program-id") String studyProgramId,
                                                    @PathParam(value = "year-of-program") @Parameter(description = "Grade that the student is in") int yearOfProgram) {
         if (studyYear.length() != 8)
