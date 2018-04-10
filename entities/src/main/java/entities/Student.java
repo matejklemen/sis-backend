@@ -1,6 +1,8 @@
 package entities;
 
 import entities.address.Address;
+import entities.address.Country;
+import entities.address.Municipality;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
@@ -33,6 +35,33 @@ public class Student implements Serializable {
 
     @Column(length = 60, nullable = false)
     private String surname;
+
+    @Column(name = "date_of_birth", columnDefinition = "DATE")
+    // ! note: String formatted as: YYYY-MM-DD
+    private String dateOfBirth;
+
+    @Column(name = "place_of_birth")
+    private String placeOfBirth;
+
+    @ManyToOne
+    @JoinColumn(name = "id_municipality_of_birth")
+    private Municipality municipalityOfBirth;
+
+    @ManyToOne
+    @JoinColumn(name = "id_country_of_birth")
+    private Country countryOfBirth;
+
+    private char gender;
+
+    @Column(length = 13)
+    private String emso;
+
+    @ManyToOne
+    @JoinColumn(name = "id_citizenship")
+    private Country citizenship;
+
+    @Column(name = "tax_number", length = 8)
+    private String taxNumber;
 
     @ManyToOne
     @JoinColumn(name = "id_address1")
@@ -86,6 +115,70 @@ public class Student implements Serializable {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getPlaceOfBirth() {
+        return placeOfBirth;
+    }
+
+    public void setPlaceOfBirth(String placeOfBirth) {
+        this.placeOfBirth = placeOfBirth;
+    }
+
+    public Municipality getMunicipalityOfBirth() {
+        return municipalityOfBirth;
+    }
+
+    public void setMunicipalityOfBirth(Municipality municipalityOfBirth) {
+        this.municipalityOfBirth = municipalityOfBirth;
+    }
+
+    public Country getCountryOfBirth() {
+        return countryOfBirth;
+    }
+
+    public void setCountryOfBirth(Country countryOfBirth) {
+        this.countryOfBirth = countryOfBirth;
+    }
+
+    public char getGender() {
+        return gender;
+    }
+
+    public void setGender(char gender) {
+        this.gender = gender;
+    }
+
+    public String getEmso() {
+        return emso;
+    }
+
+    public void setEmso(String emso) {
+        this.emso = emso;
+    }
+
+    public Country getCitizenship() {
+        return citizenship;
+    }
+
+    public void setCitizenship(Country citizenship) {
+        this.citizenship = citizenship;
+    }
+
+    public String getTaxNumber() {
+        return taxNumber;
+    }
+
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
     }
 
     public Address getAddress1() {
