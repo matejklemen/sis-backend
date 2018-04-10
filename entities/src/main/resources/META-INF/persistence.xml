@@ -11,6 +11,7 @@
         <class>entities.Student</class>
         <class>entities.StudyDegree</class>
         <class>entities.StudyKind</class>
+        <class>entities.StudyForm</class>
         <class>entities.StudyProgram</class>
         <class>entities.StudyType</class>
         <class>entities.StudyYear</class>

@@ -45,6 +45,7 @@ public class CodelistSource {
     @Inject private ProfessorBean professorB;
     @Inject private KlasiusSrvBean klasiusSrvB;
     @Inject private MunicipalityBean municipalityB;
+    @Inject private StudyFormBean studyFormB;
 
     @Operation(description = "Returns a list of codelists.", summary = "Get list of codelists", responses = {
             @ApiResponse(responseCode = "200",
@@ -75,8 +76,8 @@ public class CodelistSource {
         cld.add(new CodelistsData("study_type", "Vrste študija", "studytypes", studyTypeB.getStudyTypes().size(), new StudyType().getColumnNames(), new StudyType().getColumnTypes()));
         // način študija
         cld.add(new CodelistsData("study_kind", "Načini študija", "studykinds", studyKindB.getStudyKinds().size(), new StudyKind().getColumnNames(), new StudyKind().getColumnTypes()));
-        // TODO oblika študija
-
+        // oblika študija
+        cld.add(new CodelistsData("study_form", "Oblika študija", "studyforms", studyFormB.getStudyForms().size(), new StudyForm().getColumnNames(), new StudyForm().getColumnTypes()));
         // predmeti
         cld.add(new CodelistsData("course", "Predmeti", "courses", courseB.getCourses().size(), new Course().getColumnNames(), new Course().getColumnTypes()));
         // predavatelji
