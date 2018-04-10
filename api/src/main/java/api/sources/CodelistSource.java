@@ -3,6 +3,9 @@ package api.sources;
 import api.interceptors.annotations.LogApiCalls;
 import beans.crud.*;
 import entities.*;
+import entities.address.Country;
+import entities.address.Municipality;
+import entities.address.PostAddress;
 import entities.curriculum.Course;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,6 +44,7 @@ public class CodelistSource {
     @Inject private StudyKindBean studyKindB;
     @Inject private ProfessorBean professorB;
     @Inject private KlasiusSrvBean klasiusSrvB;
+    @Inject private MunicipalityBean municipalityB;
 
     @Operation(description = "Returns a list of codelists.", summary = "Get list of codelists", responses = {
             @ApiResponse(responseCode = "200",
@@ -57,7 +61,7 @@ public class CodelistSource {
         // države
         cld.add(new CodelistsData("country", "Države", "countries", countryB.getCountries().size(), new Country().getColumnNames(), new Country().getColumnTypes()));
         // TODO: občine
-
+        cld.add(new CodelistsData("municipality", "Občine", "municipalities", municipalityB.getMunicipalities().size(), new Municipality().getColumnNames(), new Municipality().getColumnTypes()));
         // pošte
         cld.add(new CodelistsData("post_address", "Poštne številke", "postaddresses", postAddressB.getPostAddresses().size(), new PostAddress().getColumnNames(), new PostAddress().getColumnTypes()));
         // študijski program (+ študijska stopnja)

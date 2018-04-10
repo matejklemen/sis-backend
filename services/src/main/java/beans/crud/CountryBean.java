@@ -1,6 +1,6 @@
 package beans.crud;
 
-import entities.Country;
+import entities.address.Country;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
