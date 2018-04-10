@@ -78,7 +78,7 @@ public class CurriculumSource {
                             schema = @Schema(implementation = ResponseError.class)
                     ))
     })
-    @Path("{study-year}/{study-program-id}/{year-of-program}/")
+    @Path("{study-year}/{study-program-id}/{year-of-program}")
     @GET
     public Response getAvailableCurriculumForProgramAndYear(@PathParam(value = "study-year") @Parameter(required = true, description = "Study year (for example 2017/2018) written without the dash (\"/\"), e.g. \"20172018\"") String studyYear,
                                                    @PathParam(value = "study-program-id") String studyProgramId,
