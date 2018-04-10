@@ -1,14 +1,17 @@
 package api.sources;
 
+import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.EnrolmentBean;
 import entities.Enrolment;
+import entities.logic.EnrolmentSheet;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -69,5 +72,25 @@ public class EnrolmentSource {
     public Response getEnrolmentStudentId(@QueryParam("studentId") int studentId) {
         Enrolment en = enB.getLastEnrolmentByStudentId(studentId);
         return Response.ok(en).build();
+    }
+
+    @Operation(description = "Creates new enrolment for a student and adds his courses", summary = "Create new enrolment for a student and add his courses",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Enrolment successful",
+                            content = @Content(
+                                    schema = @Schema(implementation = EnrolmentSheet.class))
+                    ),
+                    @ApiResponse(responseCode = "404",
+                            description = "Enrolment for student failed",
+                            content = @Content(
+                                    schema = @Schema(implementation = ResponseError.class))
+                    )
+            })
+    @POST
+    public Response CreateEnrolmentAndAddCourses(@RequestBody EnrolmentSheet es) {
+        if(es == null) throw new NoRequestBodyException();
+        enB.putEnrolment(es.getEnrolment(), es.getCourses());
+        return Response.ok().entity(es).build();
     }
 }

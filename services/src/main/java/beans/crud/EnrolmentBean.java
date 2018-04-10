@@ -1,12 +1,16 @@
 package beans.crud;
 
 import entities.Enrolment;
+import entities.curriculum.Course;
+import entities.curriculum.StudentCourses;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -18,9 +22,16 @@ public class EnrolmentBean {
     private EntityManager em;
 
     @Transactional
-    public Enrolment putEnrolment(Enrolment en){
-        log.info("Putting: " + en.toString());
+    public Enrolment putEnrolment(Enrolment en, List<Integer> cl){
         em.persist(en);
+        Iterator<Integer> clIterator = cl.iterator();
+        while (clIterator.hasNext()) {
+            Course c = em.find(Course.class, clIterator.next());
+            StudentCourses sc = new StudentCourses();
+            sc.setCourse(c);
+            sc.setEnrolment(en);
+            em.persist(sc);
+        }
         em.flush();
         return en;
     }

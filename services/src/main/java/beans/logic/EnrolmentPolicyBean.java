@@ -1,5 +1,6 @@
 package beans.logic;
 
+import beans.crud.CurriculumBean;
 import beans.crud.GradeBean;
 import entities.Enrolment;
 import entities.Grade;
@@ -7,6 +8,7 @@ import entities.Student;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,6 +17,9 @@ public class EnrolmentPolicyBean {
 
     @Inject
     private GradeBean gb;
+
+    @Inject
+    private CurriculumBean cb;
 
     public boolean hasStudentFreeChoiceOfCurriculum(Student s){
         if(s.getEnrolments().isEmpty())

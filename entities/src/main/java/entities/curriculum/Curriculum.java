@@ -18,6 +18,11 @@ import java.io.Serializable;
                 @NamedQuery(name = "Curriculum.getByStudyProgramName", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.name = :name"),
                 /* Example use-case: get courses for doctorate study degree */
                 @NamedQuery(name = "Curriculum.getByStudyProgramDegreeName", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.studyDegree.name = :name"),
+                @NamedQuery(name = "Curriculum.getFirstYear",
+                        query = "SELECT cur FROM curriculum cur WHERE " +
+                                "cur.studyYear.name = :nameStudyYear " +
+                                "AND cur.idStudyProgram.id = :idStudyProgram " +
+                                "AND cur.yearOfProgram = 1"),
                 /* Example use-case: get module courses for specific year for undergraduate UNI program */
                 @NamedQuery(name = "Curriculum.getModuleCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +

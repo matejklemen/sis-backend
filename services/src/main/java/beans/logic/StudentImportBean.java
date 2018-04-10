@@ -3,7 +3,10 @@ package beans.logic;
 import beans.crud.*;
 import entities.Enrolment;
 import entities.Student;
+import entities.StudyProgram;
 import entities.UserLogin;
+import entities.curriculum.Course;
+import entities.curriculum.Curriculum;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -31,6 +34,8 @@ public class StudentImportBean {
     private StudyYearBean syb;
     @Inject
     private EnrolmentBean enb;
+    @Inject
+    private CurriculumBean curB;
 
     public List<Student> ParseStudentData(String studentData){
         List<String> lines = Arrays.asList(studentData.split(System.getProperty("line.separator")));
@@ -46,7 +51,8 @@ public class StudentImportBean {
             Enrolment enr = new Enrolment();
             enr.setStudent(stu);
             enr.setYear(1);
-            enr.setStudyProgram(spb.getStudyProgram(iter.next()));
+            StudyProgram studyProgram = spb.getStudyProgram(iter.next());
+            enr.setStudyProgram(studyProgram);
             enr.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
             enr.setConfirmed(false);
             enr.setKind(enr.getKind());
@@ -67,7 +73,14 @@ public class StudentImportBean {
             stu = sdb.putStudent(stu);
 
             // enrolment has to be persisted after student ?
-            enr = enb.putEnrolment(enr);
+            List<Curriculum> lCurriculum = curB.getFirstYearCourses("2017/2018", studyProgram.getId());
+            List<Integer> lCourses = new ArrayList<>();
+            Iterator<Curriculum> lCurriculumIterator = lCurriculum.iterator();
+            while (lCurriculumIterator.hasNext()) {
+                lCourses.add(lCurriculumIterator.next().getIdCourse().getId());
+            }
+
+            enr = enb.putEnrolment(enr, lCourses);
 
             // update enrolment list...
             stu.getEnrolments().add(enr);
