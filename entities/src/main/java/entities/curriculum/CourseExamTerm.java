@@ -18,9 +18,7 @@ public class CourseExamTerm implements Serializable {
     @Column(nullable = false)
     private long date; /* UNIX timestamp of start date */
 
-    private int duration;
-
-    private int grade;
+    private int duration; /* in minutes */
 
     @ManyToOne
     @JoinColumn(name = "id_course_organization")
@@ -48,14 +46,6 @@ public class CourseExamTerm implements Serializable {
 
     public void setDuration(int duration) {
         this.duration = duration;
-    }
-
-    public int getGrade() {
-        return grade;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
     }
 
     public CourseOrganization getCourse() {
