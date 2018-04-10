@@ -2,21 +2,23 @@ package entities;
 
 import interfaces.Codelistable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import java.io.Serializable;
 
-@Entity(name = "post_address")
+@Entity(name = "study_form")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "PostAddress.getAll", query = "SELECT pa FROM post_address pa"),
+                @NamedQuery(name = "StudyForm.getAll", query = "SELECT sf FROM study_form sf")
         }
 )
-public class PostAddress implements Serializable, Codelistable {
+public class StudyForm implements Serializable, Codelistable {
 
     @Id
     private int id;
 
-    @Column(nullable = false)
     private String name;
 
     public int getId() {

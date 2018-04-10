@@ -1,6 +1,6 @@
 package beans.crud;
 
-import entities.address.PostAddress;
+import entities.address.Municipality;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -11,46 +11,46 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @ApplicationScoped
-public class PostAddressBean {
+public class MunicipalityBean {
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
     @Transactional
-    public List<PostAddress> getPostAddresses() {
-        TypedQuery<PostAddress> q = em.createNamedQuery("PostAddress.getAll", PostAddress.class);
+    public List<Municipality> getMunicipalities() {
+        TypedQuery<Municipality> q = em.createNamedQuery("Municipality.getAll", Municipality.class);
         return q.getResultList();
     }
 
     @Transactional
-    public PostAddress getPostAddress(int postNumber) {
-        PostAddress pa = em.find(PostAddress.class, postNumber);
-        if(pa == null) throw new NoResultException("No post address by this post number");
+    public Municipality getMunicipality(int postNumber) {
+        Municipality pa = em.find(Municipality.class, postNumber);
+        if(pa == null) throw new NoResultException("No municipality by this post number");
         return pa;
     }
 
     @Transactional
-    public boolean existsPostAddress(int id) {
-        return em.find(PostAddress.class, id) != null;
+    public boolean existsMunicipality(int id) {
+        return em.find(Municipality.class, id) != null;
     }
 
     @Transactional
-    public PostAddress insertPostAddress(PostAddress e) {
+    public Municipality insertMunicipality(Municipality e) {
         em.persist(e);
         em.flush();
         return e;
     }
 
     @Transactional
-    public void deletePostAddress(int id) {
-        PostAddress e = em.find(PostAddress.class, id);
+    public void deleteMunicipality(int id) {
+        Municipality e = em.find(Municipality.class, id);
         if(e != null){
             em.remove(e);
         }
     }
 
     @Transactional
-    public PostAddress updatePostAddress(PostAddress e) {
+    public Municipality updateMunicipality(Municipality e) {
         em.merge(e);
         em.flush();
         return e;

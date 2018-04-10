@@ -4,7 +4,7 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.CountryBean;
-import entities.Country;
+import entities.address.Country;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

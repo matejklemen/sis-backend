@@ -3,8 +3,8 @@ package api.sources;
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
-import beans.crud.PostAddressBean;
-import entities.address.PostAddress;
+import beans.crud.MunicipalityBean;
+import entities.address.Municipality;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,93 +21,93 @@ import javax.ws.rs.core.Response;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Path("postaddresses")
+@Path("municipalities")
 @ApplicationScoped
 @LogApiCalls
-@Tags(value = @Tag(name = "post addresses"))
-public class PostAddressSource {
+@Tags(value = @Tag(name = "municipalities"))
+public class MunicipalitySource {
 
     @Inject
-    private PostAddressBean pab;
+    private MunicipalityBean pab;
 
-    @Operation(description = "Returns a list of post addresses.", summary = "Get list of post addresses", responses = {
+    @Operation(description = "Returns a list of municipalities.", summary = "Get list of municipalities", responses = {
             @ApiResponse(responseCode = "200",
-                    description = "List of post addresses",
+                    description = "List of municipalities",
                     content = @Content(
                             schema = @Schema(implementation
-                                    = PostAddress.class))
+                                    = Municipality.class))
             )
     })
     @GET
-    public Response getPostAddresses() {
-        return Response.ok().entity(pab.getPostAddresses()).build();
+    public Response getMunicipalityes() {
+        return Response.ok().entity(pab.getMunicipalities()).build();
     }
 
-    @Operation(description = "Returns a post address with specified id.", summary = "Get post address by id", responses = {
+    @Operation(description = "Returns a municipality with specified id.", summary = "Get municipality by id", responses = {
             @ApiResponse(responseCode = "200",
-                    description = "Post address by id",
+                    description = "Municipality by id",
                     content = @Content(
-                            schema = @Schema(implementation = PostAddress.class))
+                            schema = @Schema(implementation = Municipality.class))
             ),
             @ApiResponse(responseCode = "404",
-                    description = "Post address by id doesn't exist",
+                    description = "Municipality by id doesn't exist",
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class))
             )
     })
     @Path("{id}")
     @GET
-    public Response getPostAddress(@PathParam("id") int id) {
-        return Response.ok().entity(pab.getPostAddress(id)).build();
+    public Response getMunicipality(@PathParam("id") int id) {
+        return Response.ok().entity(pab.getMunicipality(id)).build();
     }
 
-    @Operation(description = "Inserts a new post address.", summary = "Insert post address", responses = {
+    @Operation(description = "Inserts a new municipality.", summary = "Insert municipality", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Insert successful",
                     content = @Content(
-                            schema = @Schema(implementation = PostAddress.class))),
+                            schema = @Schema(implementation = Municipality.class))),
             @ApiResponse(responseCode = "400",
                     description = "Insert failed",
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class)))
     })
     @PUT
-    public Response createPostAddress(@RequestBody PostAddress pa) {
+    public Response createMunicipality(@RequestBody Municipality pa) {
         if(pa == null) throw new NoRequestBodyException();
-        if(pab.existsPostAddress(pa.getId())) {
+        if(pab.existsMunicipality(pa.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
         }
-        pa = pab.insertPostAddress(pa);
+        pa = pab.insertMunicipality(pa);
         return Response.ok().entity(pa).build();
     }
 
-    @Operation(description = "Deletes a post address with specified id.", summary = "Delete post address", responses = {
+    @Operation(description = "Deletes a municipality with specified id.", summary = "Delete municipality", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Delete successful",
                     content = @Content(
-                            schema = @Schema(implementation = PostAddress.class))),
+                            schema = @Schema(implementation = Municipality.class))),
     })
     @Path("{id}")
     @DELETE
-    public Response deletePostAddress(@PathParam("id") int id) {
-        pab.deletePostAddress(id);
+    public Response deleteMunicipality(@PathParam("id") int id) {
+        pab.deleteMunicipality(id);
         return Response.ok().build();
     }
 
-    @Operation(description = "Updates an existing post address.", summary = "Update post address", responses = {
+    @Operation(description = "Updates an existing municipality.", summary = "Update municipality", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Update successful",
                     content = @Content(
-                            schema = @Schema(implementation = PostAddress.class))),
+                            schema = @Schema(implementation = Municipality.class))),
             @ApiResponse(responseCode = "400",
                     description = "Update failed",
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class)))
     })
     @POST
-    public Response updatePostAddress(@RequestBody PostAddress pa) {
+    public Response updateMunicipality(@RequestBody Municipality pa) {
         if(pa == null) throw new NoRequestBodyException();
-        pa = pab.updatePostAddress(pa);
+        pa = pab.updateMunicipality(pa);
         return Response.ok().entity(pa).build();
     }
 }
