@@ -18,7 +18,7 @@ public class Address implements Serializable {
     private String line2;
 
     @ManyToOne
-    @JoinColumn(name = "id_post_address", nullable = false)
+    @JoinColumn(name = "id_post_address")
     private PostAddress post;
 
     @ManyToOne

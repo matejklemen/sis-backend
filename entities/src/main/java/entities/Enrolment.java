@@ -38,6 +38,10 @@ public class Enrolment implements Serializable {
     @JoinColumn(name = "id_study_kind")
     private StudyKind kind; // redni, izredni
 
+    @ManyToOne
+    @JoinColumn(name = "id_study_form")
+    private StudyForm form; //
+
     @Column(nullable = false)
     private boolean confirmed; // potrdi referentka
 
@@ -96,6 +100,14 @@ public class Enrolment implements Serializable {
 
     public void setKind(StudyKind kind) {
         this.kind = kind;
+    }
+
+    public StudyForm getForm() {
+        return form;
+    }
+
+    public void setForm(StudyForm form) {
+        this.form = form;
     }
 
     public boolean isConfirmed() {
