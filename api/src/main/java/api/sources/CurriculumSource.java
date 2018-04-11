@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -42,7 +43,68 @@ public class CurriculumSource {
         return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum()).build();
     }
 
-    @Operation(description = "Retrieves curriculum for particular study program.", summary = "Get curriculum for specified study program.", responses = {
+    @Operation(description = "Retrieves curriculum by curriculum ID.", summary = "Get curriculum for curriculum ID", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Retrieved curriculum",
+                    content = @Content(
+                            schema = @Schema(implementation = Curriculum.class))),
+            @ApiResponse(responseCode = "404",
+                    description = "No curriculum found for specified curriculum ID",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)
+                    ))
+    })
+    @Path("{id-curriculum}")
+    @GET
+    public Response getCurriculumByCurriculumId(@PathParam(value = "id-curriculum") int idCurriculum) {
+        Curriculum c = cb.getCurriculumByIdCurriculum(idCurriculum);
+
+        return c == null ? Response.status(Response.Status.NOT_FOUND).build():
+                Response.status(Response.Status.OK).entity(c).build();
+    }
+
+    @Operation(description = "Updates curriculum with specific curriculum ID.", summary = "Update curriculum by curriculum ID", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Updated curriculum",
+                    content = @Content(
+                            schema = @Schema(implementation = Curriculum.class))),
+            @ApiResponse(responseCode = "404",
+                    description = "Could not update curriculum",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)
+                    ))
+    })
+    // id curriculum is actually not needed, it's just here in an attempt to have similar structure on API methods
+    @Path("{id-curriculum}")
+    @POST
+    public Response updateCurriculum(@PathParam(value = "id-curriculum") int idCurriculum, @RequestBody Curriculum cur) {
+        Curriculum newCur = cb.updateCurriculum(cur);
+
+        return newCur != null ? Response.status(Response.Status.OK).entity(newCur).build():
+                Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @Operation(description = "Deletes curriculum with specific curriculum ID.", summary = "Delete curriculum by curriculum ID", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Deleted curriculum",
+                    content = @Content(
+                            schema = @Schema(implementation = Curriculum.class))),
+            @ApiResponse(responseCode = "404",
+                    description = "Could not delete curriculum",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)
+                    ))
+    })
+    @Path("{id-curriculum}")
+    @DELETE
+    public Response deleteCurriculum(@PathParam(value = "id-curriculum") int idCurriculum) {
+        boolean deleted = cb.deleteCurriculum(idCurriculum);
+
+        return deleted ? Response.status(Response.Status.OK).build():
+                Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @Operation(description = "Retrieves curriculum for particular study program.", summary = "Get curriculum for specified study program", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Retrieved curriculum",
                     content = @Content(
@@ -53,16 +115,16 @@ public class CurriculumSource {
                                 schema = @Schema(implementation = ResponseError.class)
                         ))
     })
-    @Path("{study-program-id}")
+    @Path("studyprogram/{study-program-id}")
     @GET
-    public Response getCurriculumByStudyProgramId(@PathParam(value = "study-program-id") @Parameter(required = true) String studyProgramId) {
+    public Response getCurriculumByStudyProgramId(@PathParam(value = "study-program-id") String studyProgramId) {
         List<Curriculum> c = cb.getCurriculumByStudyProgramId(studyProgramId);
 
         return c == null ? Response.status(Response.Status.NOT_FOUND).build():
                 Response.status(Response.Status.OK).entity(c).build();
     }
 
-    @Operation(description = "Retrieves curriculum for particular study program for particular study year and particular grade.", summary = "Get curriculum for specified study program, year and grade.", responses = {
+    @Operation(description = "Retrieves curriculum for particular study program for particular study year and particular grade.", summary = "Get curriculum for specified study program, year and grade", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Retrieved curriculum",
                     content = @Content(
