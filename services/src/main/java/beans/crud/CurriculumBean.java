@@ -4,8 +4,10 @@ import entities.curriculum.Curriculum;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -21,6 +23,17 @@ public class CurriculumBean {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getAll", Curriculum.class);
 
         return q.getResultList();
+    }
+
+    public Curriculum getCurriculumByIdCurriculum(int idCurriculum) {
+        TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByIdCurriculum", Curriculum.class);
+        q.setParameter("id_curriculum", idCurriculum);
+
+        // using getResultList instead of getSingleResult because the latter requires exception catching...
+        List<Curriculum> c = q.getResultList();
+
+        // id is unique -> max 1 result
+        return c.size() > 0 ? c.get(0): null;
     }
 
     public List<Curriculum> getCurriculumByStudyProgramId(String studyProgramId) {
@@ -90,5 +103,22 @@ public class CurriculumBean {
         q.setParameter("yearOfProgram", yearOfProgram);
 
         return q.getResultList();
+    }
+
+    @Transactional
+    public boolean deleteCurriculum(int idCurriculum) {
+        Curriculum c = em.find(Curriculum.class, idCurriculum);
+        if(c != null){
+            em.remove(c);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Transactional
+    public Curriculum updateCurriculum(Curriculum cur) {
+        em.merge(cur);
+        return cur;
     }
 }
