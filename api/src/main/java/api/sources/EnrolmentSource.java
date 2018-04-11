@@ -38,44 +38,39 @@ public class EnrolmentSource {
     @Inject
     private EnrolmentTokenBean entB;
 
-    @Operation(description = "Returns a enrolment with specified id.", summary = "Get enrolment by id", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Enrolment by id",
-                    content = @Content(
-                            schema = @Schema(implementation = Enrolment.class))
-            ),
-            @ApiResponse(responseCode = "404",
-                    description = "Enrolment by id doesn't exist",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class))
-            )
-    })
-    @Path("{id}")
-    @GET
-    public Response getEnrolmentById(@PathParam("id") int id) {
-        Enrolment en = enB.getEnrolmentById(id);
-        return Response.ok(en).build();
-    }
-
-    @Operation(description = "Returns last enrolment for studentId", summary = "Get last enrolment",
+    @Operation(description = "Returns enrolment for studentId (and studyProgram). NOTE: this is student in and not  registerNumber", summary = "Get enrolment",
             parameters = {
-                @Parameter(name = "studentId", description = "Student id", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
+                    @Parameter(name = "studyProgramId", description = "studyProgram Id", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+                    @Parameter(name = "order", description = "can be last or first. Last is default", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
             },
             responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Enrolment",
-                    content = @Content(
-                            schema = @Schema(implementation = Enrolment.class))
-            ),
-            @ApiResponse(responseCode = "404",
-                    description = "Enrolment for student id doesn't exist",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class))
-            )
-    })
+                    @ApiResponse(responseCode = "200",
+                            description = "Enrolment",
+                            content = @Content(
+                                    schema = @Schema(implementation = Enrolment.class))
+                    ),
+                    @ApiResponse(responseCode = "404",
+                            description = "Enrolment for student id and studyProgramId doesn't exist",
+                            content = @Content(
+                                    schema = @Schema(implementation = ResponseError.class))
+                    )
+            })
+    @Path("{studentId}")
     @GET
-    public Response getEnrolmentStudentId(@QueryParam("studentId") int studentId) {
-        Enrolment en = enB.getLastEnrolmentByStudentId(studentId);
+    public Response getEnrolment(@PathParam("studentId") int studentId,@QueryParam("order") String order ,@QueryParam("studyProgramId") String studyProgramId) {
+        Enrolment en;
+
+        if(order != null && order.equals("first")){
+            if(studyProgramId==null)
+                return Response.status(400).entity(new ResponseError(400, "No query parameter studyProgramId")).build();
+            en = enB.getFirstEnrolmentByStudentIdAndProgram(studentId, studyProgramId);
+        }
+        else{
+            if(studyProgramId!=null)
+                return Response.status(400).entity(new ResponseError(400, "Query parameter studyProgramId is not impelmented for last")).build();
+            en = enB.getLastEnrolmentByStudentId(studentId);
+        }
+
         return Response.ok(en).build();
     }
 

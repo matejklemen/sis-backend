@@ -7,7 +7,8 @@ import java.io.Serializable;
 @Entity(name = "enrolment")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "Enrolment.getLastByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id ORDER BY e.studyYear.id DESC")
+                @NamedQuery(name = "Enrolment.getLastByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id ORDER BY e.studyYear.id DESC"),
+                @NamedQuery(name = "Enrolment.getFirstByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id AND e.studyProgram.id=:studyProgramId ORDER BY e.studyYear.id ASC")
         }
 )
 public class Enrolment implements Serializable {
