@@ -4,7 +4,9 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.EnrolmentBean;
+import beans.crud.EnrolmentTokenBean;
 import entities.Enrolment;
+import entities.EnrolmentToken;
 import entities.logic.EnrolmentSheet;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,6 +34,9 @@ public class EnrolmentSource {
 
     @Inject
     private EnrolmentBean enB;
+
+    @Inject
+    private EnrolmentTokenBean entB;
 
     @Operation(description = "Returns a enrolment with specified id.", summary = "Get enrolment by id", responses = {
             @ApiResponse(responseCode = "200",
@@ -90,7 +95,17 @@ public class EnrolmentSource {
     @POST
     public Response CreateEnrolmentAndAddCourses(@RequestBody EnrolmentSheet es) {
         if(es == null) throw new NoRequestBodyException();
-        enB.putEnrolment(es.getEnrolment(), es.getCourses());
-        return Response.ok().entity(es).build();
+        EnrolmentToken enToken = entB.getEnrolmentTokenByStudentId(es.getEnrolment().getStudent().getId());
+        if(enToken != null) {
+            if(enToken.validEnrolment(es.getEnrolment())) {
+                enB.putEnrolment(es.getEnrolment(), es.getCourses());
+                return Response.ok().entity(es).build();
+            } else {
+                return Response.status(404).encoding("No valid token for given enrolment").build();
+            }
+        } else {
+            return Response.status(404).encoding("No token found").build();
+        }
+
     }
 }
