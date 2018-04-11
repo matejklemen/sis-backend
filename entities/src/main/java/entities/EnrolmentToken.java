@@ -143,4 +143,18 @@ public class EnrolmentToken implements Serializable {
         return et;
     }
 
+    public boolean validEnrolment (Enrolment e) {
+        if(this.kind == e.getKind() &&
+           this.student == e.getStudent() &&
+           this.studyProgram == e.getStudyProgram() &&
+           this.studyYear == e.getStudyYear() &&
+           this.type == e.getType() &&
+           this.year == e.getYear()
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
