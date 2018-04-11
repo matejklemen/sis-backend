@@ -95,7 +95,7 @@ public class EnrolmentSource {
     @POST
     public Response CreateEnrolmentAndAddCourses(@RequestBody EnrolmentSheet es) {
         if(es == null) throw new NoRequestBodyException();
-        EnrolmentToken enToken = entB.getEnrolmentTokenByStudentId(es.getEnrolment().getStudent().getId());
+        EnrolmentToken enToken = entB.getEnrolmentTokenByStudentId(es.getStudent().getId());
         if(enToken != null) {
             if(enToken.validEnrolment(es.getEnrolment())) {
                 enB.putEnrolment(es.getEnrolment(), es.getCourses());

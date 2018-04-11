@@ -11,12 +11,22 @@ import java.io.Serializable;
 import java.util.List;
 
 public class EnrolmentSheet implements Serializable {
+    @XmlElement
+    private Student student;
 
     @XmlElement
     private Enrolment enrolment;
 
     @XmlElement
     private List<Integer> courses;
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
     public Enrolment getEnrolment() {
         return enrolment;
