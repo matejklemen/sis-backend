@@ -148,6 +148,7 @@ public class EnrolmentToken implements Serializable {
            this.studyProgram.getId().equals(e.getStudyProgram().getId()) &&
            this.studyYear.getId() == e.getStudyYear().getId() &&
            this.type.getId() == e.getType().getId() &&
+           this.form.getId() == e.getForm().getId() &&
            this.year == e.getYear() &&
            !this.used
         ) {
