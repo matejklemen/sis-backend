@@ -13,6 +13,7 @@ import java.io.Serializable;
 @NamedQueries(
         value = {
                 @NamedQuery(name = "Curriculum.getAll", query = "SELECT cur FROM curriculum cur"),
+                @NamedQuery(name = "Curriculum.getByIdCurriculum", query = "SELECT cur FROM curriculum cur WHERE cur.idCurriculum = :id_curriculum"),
                 @NamedQuery(name = "Curriculum.getByStudyProgramId", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.id = :id"),
                 /* Example use-case: get courses for BUN study program */
                 @NamedQuery(name = "Curriculum.getByStudyProgramName", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.name = :name"),
