@@ -16,7 +16,7 @@ INSERT INTO klasius_srv (id,name,description,level) VALUES ('12001','Osnovnošol
 INSERT INTO study_kind (id,name) VALUES ('1','redni'),('3','izredni');
 INSERT INTO study_form (id,name) VALUES ('1','na lokaciji'),('2','na daljavo'),('3','e-študij');
 INSERT INTO study_type (id,short_name,name) VALUES ('1','Prvi vpis','Prvi vpis v letnik/dodatno leto'),('2','Ponavljanje','Ponavljanje letnika'),('3','Nadaljevanje','Nadaljevanje letnika'),('4','Podaljšanje statusa','Podaljšanje statusa študenta'),('5','Vpis po merilih (višji letnik)','Vpis po merilih za prehode v višji letnik'),('6','Vpis v semester','Vpis v semester skupnega št. programa'),('7','Vpis po merilih (isti letnik)','Vpis po merilih za prehode v isti letnik'),('98','Zaključek','Vpis za zaključek');
-INSERT INTO course_exam_term (id_course_exam_term,date,duration,id_course_organization) VALUES ('1','1516813200','60','1'),('2','1518105600','60','1'),('3','1535990400','60','1');
+INSERT INTO course_exam_term (id_course_exam_term,date,duration,id_course_organization) VALUES ('1','2018-01-24 17:00:00','60','1'),('2','2018-02-08 16:00:00','60','1'),('3','2018-09-03 16:00:00','60','1'),('4','2018-01-24 08:00:00','90','2'),('5','2018-02-10 08:00:00','90','2'),('6','2018-09-05 08:00:00','90','2'),('7','2018-06-13 10:00:00','45','5'),('8','2018-06-18 9:00:00','60','4'),('9','2018-06-19 13:00:00','60','7');
 -- nevem zakaj mora bit v eni vrstici ceu ukaz, probu sm sam values nastet po vrsticah pa ni delal
 
 -- user logins
