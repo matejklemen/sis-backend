@@ -47,6 +47,7 @@ public class StudentImportBean {
             Student stu = new Student();
             stu.setName(iter.next());
             stu.setSurname(iter.next());
+            stu.setGender('-');
 
             Enrolment enr = new Enrolment();
             enr.setStudent(stu);
