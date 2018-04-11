@@ -1,11 +1,7 @@
 package beans.logic;
 
 import beans.crud.*;
-import entities.Enrolment;
-import entities.Student;
-import entities.StudyProgram;
-import entities.UserLogin;
-import entities.curriculum.Course;
+import entities.*;
 import entities.curriculum.Curriculum;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -48,13 +44,13 @@ public class StudentImportBean {
             stu.setName(iter.next());
             stu.setSurname(iter.next());
 
-            Enrolment enr = new Enrolment();
+            EnrolmentToken enr = new EnrolmentToken();
             enr.setStudent(stu);
             enr.setYear(1);
             StudyProgram studyProgram = spb.getStudyProgram(iter.next());
             enr.setStudyProgram(studyProgram);
             enr.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
-            enr.setConfirmed(false);
+            enr.setUsed(true);
             enr.setKind(enr.getKind());
             enr.setType(enr.getType());
 
@@ -80,10 +76,10 @@ public class StudentImportBean {
                 lCourses.add(lCurriculumIterator.next().getIdCourse().getId());
             }
 
-            enr = enb.putEnrolment(enr, lCourses);
+            Enrolment en = enb.putEnrolment(enr, lCourses);
 
             // update enrolment list...
-            stu.getEnrolments().add(enr);
+            stu.getEnrolments().add(en);
             stu = sdb.updateStudent(stu);
 
             listOfStudents.add(stu);

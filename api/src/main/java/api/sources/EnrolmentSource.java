@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -31,6 +32,8 @@ import javax.ws.rs.core.Response;
 @LogApiCalls
 @Tags(value = @Tag(name = "enrolments"))
 public class EnrolmentSource {
+
+    private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @Inject
     private EnrolmentBean enB;
@@ -92,14 +95,16 @@ public class EnrolmentSource {
         if(es == null) throw new NoRequestBodyException();
         EnrolmentToken enToken = entB.getEnrolmentTokenByStudentId(es.getStudent().getId());
         if(enToken != null) {
-            if(enToken.validEnrolment(es.getEnrolment())) {
-                enB.putEnrolment(es.getEnrolment(), es.getCourses());
+            if(enToken.validEnrolmentToken(es.getEnrolmentToken())) {
+                enToken.setUsed(true);
+                entB.updateEnrolmentToken(enToken);
+                enB.putEnrolment(es.getEnrolmentToken(), es.getCourses());
                 return Response.ok().entity(es).build();
             } else {
-                return Response.status(404).encoding("No valid token for given enrolment").build();
+                return Response.status(404).entity(new ResponseError(404,"No valid token for given enrolment")).build();
             }
         } else {
-            return Response.status(404).encoding("No token found").build();
+            return Response.status(404).entity(new ResponseError(404,"No token found")).build();
         }
 
     }

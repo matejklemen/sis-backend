@@ -15,7 +15,7 @@ public class EnrolmentSheet implements Serializable {
     private Student student;
 
     @XmlElement
-    private Enrolment enrolment;
+    private EnrolmentToken enrolmentToken;
 
     @XmlElement
     private List<Integer> courses;
@@ -28,12 +28,12 @@ public class EnrolmentSheet implements Serializable {
         this.student = student;
     }
 
-    public Enrolment getEnrolment() {
-        return enrolment;
+    public EnrolmentToken getEnrolmentToken() {
+        return enrolmentToken;
     }
 
-    public void setEnrolment(Enrolment enrolment) {
-        this.enrolment = enrolment;
+    public void setEnrolmentToken(EnrolmentToken enrolmentToken) {
+        this.enrolmentToken = enrolmentToken;
     }
 
     public List<Integer> getCourses() {
