@@ -39,6 +39,10 @@ public class EnrolmentToken implements Serializable {
     @JoinColumn(name = "id_study_kind")
     private StudyKind kind; // redni, izredni
 
+    @ManyToOne
+    @JoinColumn(name = "id_study_form")
+    private StudyForm form; //
+
     @Column(nullable = false)
     private boolean used; // porabi student
 
@@ -102,6 +106,14 @@ public class EnrolmentToken implements Serializable {
         this.kind = kind;
     }
 
+    public StudyForm getForm() {
+        return form;
+    }
+
+    public void setForm(StudyForm form) {
+        this.form = form;
+    }
+
     public boolean isUsed() {
         return used;
     }
@@ -126,6 +138,7 @@ public class EnrolmentToken implements Serializable {
         et.setStudyYear(e.getStudyYear());
         et.setType(e.getType());
         et.setYear(e.getYear());
+        et.setForm(e.getForm());
         et.setFreeChoice(false);
         return et;
     }

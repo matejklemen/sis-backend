@@ -2,6 +2,7 @@ package entities.curriculum;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /* "izpitni rok" */
 @Entity(name = "course_exam_term")
@@ -15,8 +16,9 @@ public class CourseExamTerm implements Serializable {
     @Column(name = "id_course_exam_term")
     private int id;
 
-    @Column(nullable = false)
-    private long date; /* UNIX timestamp of start date */
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    // ! note: String formatted as: YYYY-MM-DD HH:MM:SS
+    private String date;
 
     private int duration; /* in minutes */
 
@@ -32,11 +34,11 @@ public class CourseExamTerm implements Serializable {
         this.id = id;
     }
 
-    public long getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

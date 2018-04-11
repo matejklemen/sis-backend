@@ -53,4 +53,13 @@ public class EnrolmentBean {
                 .getSingleResult();
     }
 
+    @Transactional
+    public Enrolment getFirstEnrolmentByStudentIdAndProgram(int studentId, String studyProgramId) {
+        log.info("Getting last enrolment for student id: " + studentId);
+        return em.createNamedQuery("Enrolment.getFirstByStudentId", Enrolment.class)
+                .setParameter("id", studentId)
+                .setParameter("studyProgramId", studyProgramId)
+                .setMaxResults(1)
+                .getSingleResult();
+    }
 }

@@ -7,7 +7,8 @@ import java.io.Serializable;
 @Entity(name = "enrolment")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "Enrolment.getLastByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id ORDER BY e.studyYear.id DESC")
+                @NamedQuery(name = "Enrolment.getLastByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id ORDER BY e.studyYear.id DESC"),
+                @NamedQuery(name = "Enrolment.getFirstByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id AND e.studyProgram.id=:studyProgramId ORDER BY e.studyYear.id ASC")
         }
 )
 public class Enrolment implements Serializable {
@@ -37,6 +38,10 @@ public class Enrolment implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_study_kind")
     private StudyKind kind; // redni, izredni
+
+    @ManyToOne
+    @JoinColumn(name = "id_study_form")
+    private StudyForm form; //
 
     @Column(nullable = false)
     private boolean confirmed; // potrdi referentka
@@ -96,6 +101,14 @@ public class Enrolment implements Serializable {
 
     public void setKind(StudyKind kind) {
         this.kind = kind;
+    }
+
+    public StudyForm getForm() {
+        return form;
+    }
+
+    public void setForm(StudyForm form) {
+        this.form = form;
     }
 
     public boolean isConfirmed() {
