@@ -1,6 +1,5 @@
 package beans.crud;
 
-import entities.Candidate;
 import entities.Student;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -83,6 +82,22 @@ public class StudentBean {
             return (Student) q.getSingleResult();
         } catch(NoResultException e) {
             return null;
+        }
+    }
+
+    @Transactional
+    public boolean hasStudent(Student stu) {
+        try{
+            Query q = em.createNamedQuery("Student.getStudent", Student.class)
+                    .setParameter("name", stu.getName())
+                    .setParameter("surname", stu.getSurname())
+                    .setParameter("studyProgram", stu.getStudyProgram())
+                    .setParameter("email", stu.getEmail());
+
+            q.getSingleResult();
+            return true;
+        } catch(NoResultException e) {
+            return false;
         }
     }
 }

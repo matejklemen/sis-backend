@@ -2,6 +2,7 @@ package beans.logic;
 
 import beans.crud.*;
 import entities.*;
+import javafx.util.Pair;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -21,37 +22,43 @@ public class StudentImportBean {
     @Inject private UserLoginBean ulb;
     @Inject private UserRoleBean urb;
     @Inject private StudyProgramBean spb;
-    @Inject private CandidateBean cb;
 
-    public List<Candidate> ParseStudentData(String studentData){
-        List<Candidate> listOfCandidates = new ArrayList<>();
+    public Pair<List<Student>,List<Student>> ParseStudentData(String studentData){
+        List<Student> listOfCandidates = new ArrayList<>();
+        List<Student> listOfRejected = new ArrayList<>();
 
         GenerateNewStudentId();
         int pos = 0;
         while(pos < studentData.length()){
 
-            // Create new candidate
-            Candidate can = new Candidate();
-            can.setName(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
-            can.setSurname(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
-            can.setStudyProgram(spb.getStudyProgram(studentData.substring(pos, (pos = pos+7))));
-            can.setRegisterNumber(GenerateNewStudentId());
-            can.setEmail(studentData.substring(pos, (pos = pos+60)).replaceAll("\\s+",""));
+            // Create new student
+            Student stu = new Student();
+            stu.setName(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
+            stu.setSurname(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
+            stu.setStudyProgram(spb.getStudyProgram(studentData.substring(pos, (pos = pos+7))));
+            stu.setRegisterNumber(GenerateNewStudentId());
+            stu.setEmail(studentData.substring(pos, (pos = pos+60)).replaceAll("\\s+",""));
+
+            // Check if Student with this data already exists
+            if(sdb.hasStudent(stu)){
+                listOfRejected.add(stu);
+                continue;
+            }
 
             // Register user for login
             UserLogin ul = new UserLogin();
-            ul.setUsername(GenerateUsername(can));
-            ul.setPassword(GeneratePassword(ul, can));
+            ul.setUsername(GenerateUsername(stu));
+            ul.setPassword(GeneratePassword(ul, stu));
             ul.setRole(urb.getRoleById(2));
 
             ul = ulb.insertUserLoginSingle(ul.getUsername(), ul.getPassword(), ul.getRole());
-            can.setLoginData(ul);
-            cb.putCandidate(can);
+            stu.setLoginData(ul);
+            sdb.putStudent(stu);
 
-            listOfCandidates.add(can);
+            listOfCandidates.add(stu);
         }
 
-        return listOfCandidates;
+        return new Pair<>(listOfCandidates,listOfRejected);
     }
 
     /* Helpers */
@@ -71,12 +78,12 @@ public class StudentImportBean {
         return String.valueOf(nextStudentId);
     }
 
-    private String GeneratePassword(UserLogin ul, Candidate can){
+    private String GeneratePassword(UserLogin ul, Student can){
         String prefix = ul.getUsername().substring(0,2);
         return prefix + "_" + can.getRegisterNumber();
     }
 
-    private String GenerateUsername(Candidate can){
+    private String GenerateUsername(Student can){
         String prefix = can.getName().substring(0,1) + can.getSurname().substring(0,1);
         String[] idNumbers = can.getRegisterNumber().split("");
         String uniqueId = idNumbers[3] + idNumbers[5] + idNumbers[6] + idNumbers[7];
