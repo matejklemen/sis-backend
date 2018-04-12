@@ -73,4 +73,9 @@ public class StudentBean {
         q.setMaxResults(1);
         return q.getSingleResult();
     }
+
+    @Transactional
+    public Student getStudentByLoginId(int loginId) {
+        return em.createNamedQuery("Student.getByLoginId", Student.class).setParameter("loginId", loginId).getSingleResult();
+    }
 }

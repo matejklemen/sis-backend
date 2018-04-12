@@ -8,6 +8,7 @@ import javax.persistence.*;
 @NamedQueries(value = {
         @NamedQuery(name = "Professor.getAllProfessors", query = "SELECT p FROM professor p"),
         @NamedQuery(name = "Professor.getByFirstAndLastName", query = "SELECT p FROM professor p WHERE p.firstName = :fname AND (p.lastName1 = :lname OR p.lastName2 = :lname)"),
+        @NamedQuery(name = "Professor.getByLoginId", query = "SELECT p FROM professor p WHERE p.loginData.id = :loginId"),
         /* search professors with 2 surnames */
         @NamedQuery(name = "Professor.getByFirstAndLastName2", query = "SELECT p FROM professor p WHERE p.firstName = :fname AND p.lastName1 = :lname1 AND p.lastName2 = :lname2")
 })
@@ -28,6 +29,10 @@ public class Professor implements Codelistable {
 
     @Column(name = "last_name2")
     private String lastName2;
+
+    @OneToOne
+    @JoinColumn(name = "id_login")
+    private UserLogin loginData;
 
     public int getId() {
         return id;
@@ -59,6 +64,14 @@ public class Professor implements Codelistable {
 
     public void setLastName2(String lastName2) {
         this.lastName2 = lastName2;
+    }
+
+    public UserLogin getLoginData() {
+        return loginData;
+    }
+
+    public void setLoginData(UserLogin loginData) {
+        this.loginData = loginData;
     }
 
     @Override
