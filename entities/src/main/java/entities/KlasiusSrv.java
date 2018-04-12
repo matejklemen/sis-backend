@@ -2,17 +2,15 @@ package entities;
 
 import interfaces.Codelistable;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity(name = "klasius_srv")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "KlasiusSrv.getAll", query = "SELECT ks FROM klasius_srv ks"),
-                @NamedQuery(name = "KlasiusSrv.getById", query = "SELECT ks FROM klasius_srv ks WHERE ks.id = :id"),
+                @NamedQuery(name = "KlasiusSrv.getAll", query = "SELECT ks FROM klasius_srv ks WHERE ks.deleted = false"),
+                @NamedQuery(name = "KlasiusSrv.getDeleted", query = "SELECT ks FROM klasius_srv ks WHERE ks.deleted = true"),
+                @NamedQuery(name = "KlasiusSrv.getById", query = "SELECT ks FROM klasius_srv ks WHERE ks.id = :id AND ks.deleted = false"),
         }
 )
 public class KlasiusSrv implements Serializable, Codelistable {
@@ -66,5 +64,18 @@ public class KlasiusSrv implements Serializable, Codelistable {
     @Override
     public String[] getColumnTypes() {
         return new String[]{TYPE_NUMBER, TYPE_STRING, TYPE_STRING, TYPE_STRING};
+    }
+
+    @Column(columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
+    private boolean deleted = false;
+
+    @Override
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

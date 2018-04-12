@@ -63,8 +63,11 @@ public class ProfessorBean {
     @Transactional
     public void deleteProfessor(int id) {
         Professor c = em.find(Professor.class, id);
-        if(c != null){
-            em.remove(c);
+        if(c != null) {
+            c.setDeleted(true);
+            em.merge(c);
+        } else {
+            throw new NoResultException("Course by ID doesn't exist");
         }
     }
 

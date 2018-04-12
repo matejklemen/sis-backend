@@ -8,7 +8,8 @@ import java.io.Serializable;
 @Entity(name = "country")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "Country.getAll", query = "SELECT c FROM country c"),
+                @NamedQuery(name = "Country.getAll", query = "SELECT c FROM country c WHERE c.deleted = false"),
+                @NamedQuery(name = "Country.getDeleted", query = "SELECT c FROM country c WHERE c.deleted = true"),
         }
 )
 public class Country implements Serializable, Codelistable {
@@ -16,10 +17,10 @@ public class Country implements Serializable, Codelistable {
     @Id
     private int id;
 
-    @Column(length = 2, nullable = false)
+    @Column(length = 2, nullable = false, unique = true)
     private String code2;
 
-    @Column(length = 3, nullable = false)
+    @Column(length = 3, nullable = false, unique = true)
     private String code3;
 
     private String name;
@@ -79,4 +80,16 @@ public class Country implements Serializable, Codelistable {
         return new String[]{TYPE_NUMBER, TYPE_STRING, TYPE_STRING, TYPE_STRING, TYPE_STRING};
     }
 
+    @Column(columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
+    private boolean deleted = false;
+
+    @Override
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

@@ -45,8 +45,11 @@ public class StudyKindBean {
     @Transactional
     public void deleteStudyKind(int id) {
         StudyKind c = em.find(StudyKind.class, id);
-        if(c != null){
-            em.remove(c);
+        if(c != null) {
+            c.setDeleted(true);
+            em.merge(c);
+        } else {
+            throw new NoResultException("Course by ID doesn't exist");
         }
     }
 
