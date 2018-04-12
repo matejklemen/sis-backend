@@ -49,10 +49,10 @@ public class PostAddressBean {
 
     @Transactional
     public void deletePostAddress(int id) {
-        PostAddress e = em.find(PostAddress.class, id);
-        if(e != null) {
-            e.setDeleted(true);
-            em.merge(e);
+        PostAddress c = em.find(PostAddress.class, id);
+        if(c != null) {
+            c.setDeleted(!c.getDeleted());
+            em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");
         }

@@ -127,7 +127,7 @@ public class CurriculumBean {
     public void deleteCurriculum(int id) {
         Curriculum c = em.find(Curriculum.class, id);
         if(c != null) {
-            c.setDeleted(true);
+            c.setDeleted(!c.getDeleted());
             em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");
