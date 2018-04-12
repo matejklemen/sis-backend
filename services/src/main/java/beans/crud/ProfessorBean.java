@@ -24,6 +24,12 @@ public class ProfessorBean {
         return q.getResultList();
     }
 
+    public List<Professor> getDeletedProfessors() {
+        TypedQuery<Professor> q = em.createNamedQuery("Professor.getDeletedProfessors", Professor.class);
+
+        return q.getResultList();
+    }
+
     public Professor getProfessor(int id) {
         Professor p = em.find(Professor.class, id);
         if(p == null) throw new NoResultException("No professor by this id");
@@ -64,7 +70,7 @@ public class ProfessorBean {
     public void deleteProfessor(int id) {
         Professor c = em.find(Professor.class, id);
         if(c != null) {
-            c.setDeleted(true);
+            c.setDeleted(!c.getDeleted());
             em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");

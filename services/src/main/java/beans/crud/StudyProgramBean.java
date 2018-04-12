@@ -28,6 +28,11 @@ public class StudyProgramBean {
     }
 
     @Transactional
+    public List<StudyProgram> getDeletedStudyPrograms() {
+        return em.createNamedQuery("StudyProgram.getDeleted", StudyProgram.class).getResultList();
+    }
+
+    @Transactional
     public boolean existsStudyProgram(String id) {
         return em.find(StudyProgram.class, id) != null;
     }
@@ -42,10 +47,10 @@ public class StudyProgramBean {
 
     @Transactional
     public void deleteStudyProgram(String id) {
-        StudyProgram e = em.find(StudyProgram.class, id);
-        if(e != null) {
-            e.setDeleted(true);
-            em.merge(e);
+        StudyProgram c = em.find(StudyProgram.class, id);
+        if(c != null) {
+            c.setDeleted(!c.getDeleted());
+            em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");
         }

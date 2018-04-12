@@ -17,6 +17,7 @@
         <class>entities.StudyYear</class>
         <class>entities.UserLogin</class>
         <class>entities.UserRole</class>
+        <class>entities.Candidate</class>
 
         <class>entities.address.Address</class>
         <class>entities.address.Country</class>

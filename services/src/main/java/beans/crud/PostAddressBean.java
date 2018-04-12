@@ -23,6 +23,12 @@ public class PostAddressBean {
     }
 
     @Transactional
+    public List<PostAddress> getDeletedPostAddresses() {
+        TypedQuery<PostAddress> q = em.createNamedQuery("PostAddress.getDeleted", PostAddress.class);
+        return q.getResultList();
+    }
+
+    @Transactional
     public PostAddress getPostAddress(int postNumber) {
         PostAddress pa = em.find(PostAddress.class, postNumber);
         if(pa == null) throw new NoResultException("No post address by this post number");
@@ -43,10 +49,10 @@ public class PostAddressBean {
 
     @Transactional
     public void deletePostAddress(int id) {
-        PostAddress e = em.find(PostAddress.class, id);
-        if(e != null) {
-            e.setDeleted(true);
-            em.merge(e);
+        PostAddress c = em.find(PostAddress.class, id);
+        if(c != null) {
+            c.setDeleted(!c.getDeleted());
+            em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");
         }

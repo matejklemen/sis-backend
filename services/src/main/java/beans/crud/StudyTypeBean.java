@@ -27,6 +27,14 @@ public class StudyTypeBean {
     }
 
     @Transactional
+    public List<StudyType> getDeletedStudyTypes() {
+        TypedQuery<StudyType> q = em.createNamedQuery("StudyType.getDeleted", StudyType.class);
+        //q.setMaxResults(100);
+        return q.getResultList();
+    }
+
+
+    @Transactional
     public StudyType getStudyType(int id) {
         StudyType c = em.find(StudyType.class, id);
         if(c == null) throw new NoResultException("No study type by this id");
@@ -49,7 +57,7 @@ public class StudyTypeBean {
     public void deleteStudyType(int id) {
         StudyType c = em.find(StudyType.class, id);
         if(c != null) {
-            c.setDeleted(true);
+            c.setDeleted(!c.getDeleted());
             em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");

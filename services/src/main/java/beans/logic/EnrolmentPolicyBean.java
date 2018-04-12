@@ -18,9 +18,6 @@ public class EnrolmentPolicyBean {
     private GradeBean GradeBean;
 
     @Inject
-    private CurriculumBean cb;
-
-    @Inject
     private EnrolmentBean enrolmentBean;
 
     @Inject
@@ -46,9 +43,6 @@ public class EnrolmentPolicyBean {
 
     @Inject
     private StudyKindBean studyKindBean;
-
-    @Inject
-    private EnrolmentTokenBean enrolmentTokenBean;
 
     public boolean hasStudentFreeChoiceOfCurriculum(Student s){
         if(enrolmentBean.getEnrolmentsForStudent(s.getId()).isEmpty())

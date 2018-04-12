@@ -27,6 +27,13 @@ public class CountryBean {
     }
 
     @Transactional
+    public List<Country> getDeletedCountries() {
+        TypedQuery<Country> q = em.createNamedQuery("Country.getDeleted", Country.class);
+        //q.setMaxResults(100);
+        return q.getResultList();
+    }
+
+    @Transactional
     public Country getCountry(int id) {
         Country c = em.find(Country.class, id);
         if(c == null) throw new NoResultException("No country by this id");
@@ -49,7 +56,7 @@ public class CountryBean {
     public void deleteCountry(int id) {
         Country c = em.find(Country.class, id);
         if(c != null) {
-            c.setDeleted(true);
+            c.setDeleted(!c.getDeleted());
             em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");

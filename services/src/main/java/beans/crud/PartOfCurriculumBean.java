@@ -19,8 +19,16 @@ public class PartOfCurriculumBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    @Transactional
     public List<PartOfCurriculum> getAllPOC() {
         TypedQuery<PartOfCurriculum> q = em.createNamedQuery("PartOfCurriculum.getAll", PartOfCurriculum.class);
+
+        return q.getResultList();
+    }
+
+    @Transactional
+    public List<PartOfCurriculum> getDeletedAllPOC() {
+        TypedQuery<PartOfCurriculum> q = em.createNamedQuery("PartOfCurriculum.getDeleted", PartOfCurriculum.class);
 
         return q.getResultList();
     }
@@ -61,7 +69,7 @@ public class PartOfCurriculumBean {
     public void deletePartOfCurriculum(int id) {
         PartOfCurriculum c = em.find(PartOfCurriculum.class, id);
         if(c != null) {
-            c.setDeleted(true);
+            c.setDeleted(!c.getDeleted());
             em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");

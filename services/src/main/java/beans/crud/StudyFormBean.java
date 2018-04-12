@@ -24,6 +24,13 @@ public class StudyFormBean {
     }
 
     @Transactional
+    public List<StudyForm> getDeletedStudyForms() {
+        TypedQuery<StudyForm> q = em.createNamedQuery("StudyForm.getDeleted", StudyForm.class);
+        //q.setMaxResults(100);
+        return q.getResultList();
+    }
+
+    @Transactional
     public StudyForm getStudyForm(int id) {
         StudyForm c = em.find(StudyForm.class, id);
         if(c == null) throw new NoResultException("No study kind by this id");
@@ -46,7 +53,7 @@ public class StudyFormBean {
     public void deleteStudyForm(int id) {
         StudyForm c = em.find(StudyForm.class, id);
         if(c != null) {
-            c.setDeleted(true);
+            c.setDeleted(!c.getDeleted());
             em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");

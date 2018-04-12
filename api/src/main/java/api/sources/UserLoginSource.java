@@ -161,14 +161,17 @@ public class UserLoginSource {
         if(ur == null) {
             return Response.status(400).entity(new ResponseError(400, "No roleId defined")).build();
         }
-        switch (ur.getName()) {
-            case "Administrator":
+        switch (ur.getId()) {
+            case 1:
                 // TODO
                 return Response.status(400).entity(new ResponseError(400, "Not implemented for this role")).build();
-            case "Student":
+            case 2:
                 return Response.ok(sB.getStudentByLoginId(loginId)).build();
-            case "Professor":
+            case 3:
                 return Response.ok(pB.getProfessorByLoginId(loginId)).build();
+            case 4:
+                // TODO
+                return Response.status(400).entity(new ResponseError(400, "Not implemented for this role")).build();
             default:
                 return Response.status(400).entity(new ResponseError(400, "Unknown roleId.")).build();
         }

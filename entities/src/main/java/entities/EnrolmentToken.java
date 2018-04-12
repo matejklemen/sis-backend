@@ -155,6 +155,19 @@ public class EnrolmentToken implements Serializable {
         return et;
     }
 
+    public static EnrolmentToken createFirstEnrolmentToken(Student s, StudyKind sk, StudyType st, StudyYear sy, StudyForm sf){
+        EnrolmentToken et = new EnrolmentToken();
+        et.setKind(sk); //1 redni
+        et.setStudent(s);
+        et.setStudyProgram(s.getStudyProgram());
+        et.setStudyYear(sy);//5 -> zdaj
+        et.setType(st); //1 -> prvi vpis
+        et.setYear(1); //1 prvi letnik
+        et.setForm(sf); //1 na lokaciji
+        et.setFreeChoice(false);
+        return et;
+    }
+
     public boolean validEnrolmentToken (EnrolmentToken e) {
         if(this.kind.getId() == e.getKind().getId() &&
            this.studyProgram.getId().equals(e.getStudyProgram().getId()) &&

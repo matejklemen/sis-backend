@@ -76,6 +76,28 @@ public class StudentBean {
 
     @Transactional
     public Student getStudentByLoginId(int loginId) {
-        return em.createNamedQuery("Student.getByLoginId", Student.class).setParameter("loginId", loginId).getSingleResult();
+        try{
+            Query q = em.createNamedQuery("Student.getByLoginId", Student.class);
+            q.setParameter("loginId", loginId);
+            return (Student) q.getSingleResult();
+        } catch(NoResultException e) {
+            return null;
+        }
+    }
+
+    @Transactional
+    public boolean hasStudent(Student stu) {
+        try{
+            Query q = em.createNamedQuery("Student.getStudent", Student.class)
+                    .setParameter("name", stu.getName())
+                    .setParameter("surname", stu.getSurname())
+                    .setParameter("studyProgram", stu.getStudyProgram())
+                    .setParameter("email", stu.getEmail());
+
+            q.getSingleResult();
+            return true;
+        } catch(NoResultException e) {
+            return false;
+        }
     }
 }

@@ -23,6 +23,12 @@ public class MunicipalityBean {
     }
 
     @Transactional
+    public List<Municipality> getDeletedMunicipalities() {
+        TypedQuery<Municipality> q = em.createNamedQuery("Municipality.getDeleted", Municipality.class);
+        return q.getResultList();
+    }
+
+    @Transactional
     public Municipality getMunicipality(int postNumber) {
         Municipality pa = em.find(Municipality.class, postNumber);
         if(pa == null) throw new NoResultException("No municipality by this post number");
@@ -43,10 +49,10 @@ public class MunicipalityBean {
 
     @Transactional
     public void deleteMunicipality(int id) {
-        Municipality e = em.find(Municipality.class, id);
-        if(e != null) {
-            e.setDeleted(true);
-            em.merge(e);
+        Municipality c = em.find(Municipality.class, id);
+        if(c != null) {
+            c.setDeleted(!c.getDeleted());
+            em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");
         }

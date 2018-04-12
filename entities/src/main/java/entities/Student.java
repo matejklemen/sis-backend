@@ -17,7 +17,8 @@ import java.util.List;
                 @NamedQuery(name = "Student.getByRegisterNumber", query = "SELECT st FROM student st WHERE st.registerNumber = :regno"),
                 @NamedQuery(name = "Student.getByLoginId", query = "SELECT st FROM student st WHERE st.loginData.id = :loginId"),
                 @NamedQuery(name = "Student.searchStudents", query = "SELECT st FROM student st WHERE st.registerNumber LIKE :sq OR st.name LIKE :sq OR st.surname LIKE :sq"),
-                @NamedQuery(name = "Student.getAllReverse", query = "SELECT st FROM student st ORDER BY st.id DESC")
+                @NamedQuery(name = "Student.getAllReverse", query = "SELECT st FROM student st ORDER BY st.id DESC"),
+                @NamedQuery(name = "Student.getStudent", query = "SELECT st FROM student st WHERE st.name = :name AND st.surname = :surname AND st.studyProgram = :studyProgram AND st.email = :email")
         }
 )
 public class Student implements Serializable {
@@ -80,6 +81,10 @@ public class Student implements Serializable {
 
     @Column(length = 80, nullable = false)
     private String email;
+
+    @ManyToOne
+    @JoinColumn(name = "id_study_program")
+    private StudyProgram studyProgram;
 
     //@XmlIDREF // if enabled, JSON has only ID, not whole userlogin object
     @OneToOne
@@ -230,4 +235,11 @@ public class Student implements Serializable {
         this.loginData = loginData;
     }
 
+    public StudyProgram getStudyProgram() {
+        return studyProgram;
+    }
+
+    public void setStudyProgram(StudyProgram studyProgram) {
+        this.studyProgram = studyProgram;
+    }
 }
