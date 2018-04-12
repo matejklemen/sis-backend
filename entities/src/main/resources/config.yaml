@@ -5,7 +5,7 @@ kumuluzee:
     name: dev
   datasources:
     - jndi-name: jdbc/sisTestDB
-      connection-url: jdbc:postgresql://localhost:5432/sis
+      connection-url: jdbc:postgresql://192.168.99.100:5432/sis
       username: postgres
       password: postgres
       max-pool-size: 10
