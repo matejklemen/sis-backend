@@ -2,11 +2,9 @@ package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
-import beans.crud.EnrolmentBean;
-import beans.crud.EnrolmentTokenBean;
+import beans.crud.*;
 import beans.logic.EnrolmentPolicyBean;
-import entities.Enrolment;
-import entities.EnrolmentToken;
+import entities.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -40,6 +38,16 @@ public class EnrolmentTokenSource {
     @Inject
     private EnrolmentPolicyBean epb;
 
+    @Inject
+    private StudentBean sb;
+    @Inject private StudyYearBean syb;
+    @Inject private StudyProgramBean spb;
+    @Inject private StudyFormBean sfb;
+    @Inject private StudyKindBean skb;
+    @Inject private StudyTypeBean stb;
+
+
+
     @Operation(description = "Returns newly created enrolment token for given id", summary = "Create enrolment token by student id", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Created token for id",
@@ -61,6 +69,39 @@ public class EnrolmentTokenSource {
         EnrolmentToken et = EnrolmentToken.createEnrolmentToken(e);
 
         et.setFreeChoice(epb.hasStudentFreeChoiceOfCurriculum(et.getStudent()));
+
+        et = etb.putEnrolmentToken(et);
+
+        return Response.ok().entity(et).build();
+    }
+
+    @Operation(description = "Returns newly created enrolment token for given id and first year student", summary = "Create enrolment token by student id", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Created token for id",
+                    content = @Content(
+                            schema = @Schema(implementation
+                                    = EnrolmentToken.class))
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "No student with this id",
+                    content = @Content(
+                            schema = @Schema(implementation
+                                    = ResponseError.class))
+            )
+    })
+    @Path("first/{id}")
+    @PUT
+    public Response putTokenForFirstTime(@PathParam("id") int id) {
+
+        Student s = sb.getStudentById(id);
+        StudyType st = stb.getStudyType(1);
+        StudyKind sk = skb.getStudyKind(1);
+        StudyForm sf = sfb.getStudyForm(1);
+        StudyYear sy = syb.getStudyYear(5);
+
+        EnrolmentToken et = EnrolmentToken.createFirstEnrolmentToken(s,sk,st,sy,sf);
+
+        et.setFreeChoice(false);
 
         et = etb.putEnrolmentToken(et);
 
