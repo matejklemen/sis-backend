@@ -8,7 +8,9 @@ import java.io.Serializable;
 @Entity(name = "course")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "Course.getAll", query = "SELECT c FROM course c"),
+                @NamedQuery(name = "Course.getAll", query = "SELECT c FROM course c WHERE c.deleted = false"),
+                @NamedQuery(name = "Course.getDeleted", query = "SELECT c FROM course c WHERE c.deleted = true"),
+                @NamedQuery(name = "Course.getById", query = "SELECT c FROM course c WHERE c.id = :id AND c.deleted = false"),
         }
 )
 public class Course implements Serializable, Codelistable {
@@ -63,5 +65,18 @@ public class Course implements Serializable, Codelistable {
     @Override
     public String[] getColumnTypes() {
         return new String[]{TYPE_NUMBER, TYPE_STRING, TYPE_NUMBER, TYPE_STRING};
+    }
+
+    @Column(columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
+    private boolean deleted = false;
+
+    @Override
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

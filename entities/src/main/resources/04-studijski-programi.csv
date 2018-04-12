@@ -1,23 +1,20 @@
 study_program
-id;name;id_study_degree;semesters;evs_code
-XU;Humanistika in družba (BD);M;6;NULL
-LE;Informacijski sistemi in odločanje (predb D);G;4;1000479
-L3;Informacijski sistemi in odločanje (predb M);F;4;1000480
-X5;Kognitivna znanost (BM);L;4;1000472
-MM;Multimedija (BUN);K;6;1001001
-7002801;Pedagoško računalništvo in informatika (BM);L;4;100977
-Izmenjave;Predmetnik za tuje študente na izmenjavi;NULL;NULL;NULL
-L2;Računalništvo in informatika (predb UN);C;9;1000475
-P7;Računalništvo in matematika (predb UN);C;8;1000425
-HB;Računalništvo in informatika (predb VS);B;6;1000477
-VV;Računalništvo in matematika (BUN);K;6;1000407
-L1;Računalništvo in informatika (BM);L;4;1000471
-VT;Računalništvo in informatika (BUN);K;6;1000468
-VU;Računalništvo in informatika (BVS);J;6;1000470
-X6;Računalništvo in informatika (BD);M;6;1000474
-7E;Računalništvo in informatika (predb D);G;4;1000478
-71;Računalništvo in informatika (predb M);F;4;1000481
-02;Računalništvo in informatika (vis-uni);71;8;NULL
-03;Računalništvo in informatika (višješ.);61;4;NULL
-KP00;Računalništvo in matematika (BM);L;4;1000934
-Z2;Upravna informatika (BUN);K;6;1000469
+id;name;id_study_degree;semesters
+1000479;Informacijski sistemi in odločanje (predb D);G;4
+1000480;Informacijski sistemi in odločanje (predb M);F;4
+1000472;Kognitivna znanost (BM);L;4
+1001001;Multimedija (BUN);K;6
+100977;Pedagoško računalništvo in informatika (BM);L;4
+-1;Predmetnik za tuje študente na izmenjavi;NULL;NULL
+1000475;Računalništvo in informatika (predb UN);C;9
+1000425;Računalništvo in matematika (predb UN);C;8
+1000477;Računalništvo in informatika (predb VS);B;6
+1000407;Računalništvo in matematika (BUN);K;6
+1000471;Računalništvo in informatika (BM);L;4
+1000468;Računalništvo in informatika (BUN);K;6
+1000470;Računalništvo in informatika (BVS);J;6
+1000474;Računalništvo in informatika (BD);M;6
+1000478;Računalništvo in informatika (predb D);G;4
+1000481;Računalništvo in informatika (predb M);F;4
+1000934;Računalništvo in matematika (BM);L;4
+1000469;Upravna informatika (BUN);K;6

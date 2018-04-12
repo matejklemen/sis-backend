@@ -33,6 +33,7 @@ public class EnrolmentBean {
         en.setStudyYear(ent.getStudyYear());
         en.setType(ent.getType());
         en.setYear(ent.getYear());
+        en.setKlasiusSrv(ent.getKlasiusSrv());
         em.persist(en);
         Iterator<Integer> clIterator = cl.iterator();
         while (clIterator.hasNext()) {

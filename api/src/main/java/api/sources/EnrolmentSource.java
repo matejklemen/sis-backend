@@ -5,6 +5,7 @@ import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.EnrolmentBean;
 import beans.crud.EnrolmentTokenBean;
+import beans.logic.EnrolmentPolicyBean;
 import entities.Enrolment;
 import entities.EnrolmentToken;
 import entities.logic.EnrolmentSheet;
@@ -23,6 +24,8 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -39,7 +42,10 @@ public class EnrolmentSource {
     private EnrolmentBean enB;
 
     @Inject
-    private EnrolmentTokenBean entB;
+    private EnrolmentTokenBean enrolmentTokenBean;
+
+    @Inject
+    private EnrolmentPolicyBean enrolmentPolicyBean;
 
     @Operation(description = "Returns enrolments for student. If order and studyProgramId are given, returns one Enrolment. Order can be one of [\"first\",\"last\"]", summary = "Get enrolment(-s) by studentId and/or query parameters",
             parameters = {
@@ -95,19 +101,15 @@ public class EnrolmentSource {
     @POST
     public Response CreateEnrolmentAndAddCourses(@RequestBody EnrolmentSheet es) {
         if(es == null) throw new NoRequestBodyException();
-        EnrolmentToken enToken = entB.getEnrolmentTokenByStudentId(es.getStudent().getId());
-        if(enToken != null) {
-            if(enToken.validEnrolmentToken(es.getEnrolmentToken())) {
-                enToken.setUsed(true);
-                entB.updateEnrolmentToken(enToken);
-                enB.putEnrolment(es.getEnrolmentToken(), es.getCourses());
-                return Response.ok().entity(es).build();
-            } else {
-                return Response.status(404).entity(new ResponseError(404,"No valid token for given enrolment")).build();
-            }
+        EnrolmentToken enToken = enrolmentTokenBean.getEnrolmentTokenByStudentId(es.getStudent().getId());
+        List<String> list = enrolmentPolicyBean.checkEnrolment(es, enToken);
+        if(list.isEmpty()) {
+            enToken.setUsed(true);
+            enrolmentTokenBean.updateEnrolmentToken(enToken);
+            enB.putEnrolment(es.getEnrolmentToken(), es.getCourses());
+            return Response.ok().entity(es).build();
         } else {
-            return Response.status(404).entity(new ResponseError(404,"No token found")).build();
+            return Response.status(404).entity(list).build();
         }
-
     }
 }

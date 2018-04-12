@@ -2,7 +2,6 @@ package beans.logic;
 
 import beans.crud.*;
 import entities.*;
-import entities.curriculum.Curriculum;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,16 +17,11 @@ public class StudentImportBean {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
-    @Inject
-    private StudentBean sdb;
-    @Inject
-    private UserLoginBean ulb;
-    @Inject
-    private UserRoleBean urb;
-    @Inject
-    private StudyProgramBean spb;
-    @Inject
-    private CandidateBean cb;
+    @Inject private StudentBean sdb;
+    @Inject private UserLoginBean ulb;
+    @Inject private UserRoleBean urb;
+    @Inject private StudyProgramBean spb;
+    @Inject private CandidateBean cb;
 
     public List<Candidate> ParseStudentData(String studentData){
         List<Candidate> listOfCandidates = new ArrayList<>();
@@ -40,7 +34,7 @@ public class StudentImportBean {
             Candidate can = new Candidate();
             can.setName(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
             can.setSurname(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
-            can.setStudyProgram(spb.getStudyProgramByEvsCode(Integer.parseInt(studentData.substring(pos, (pos = pos+7)))));
+            can.setStudyProgram(spb.getStudyProgram(studentData.substring(pos, (pos = pos+7))));
             can.setRegisterNumber(GenerateNewStudentId());
             can.setEmail(studentData.substring(pos, (pos = pos+60)).replaceAll("\\s+",""));
 
@@ -48,7 +42,7 @@ public class StudentImportBean {
             UserLogin ul = new UserLogin();
             ul.setUsername(GenerateUsername(can));
             ul.setPassword(GeneratePassword(ul, can));
-            ul.setRole(urb.getRoleByName("Student"));
+            ul.setRole(urb.getRoleById(2));
 
             ul = ulb.insertUserLoginSingle(ul.getUsername(), ul.getPassword(), ul.getRole());
             can.setLoginData(ul);

@@ -24,8 +24,7 @@ public class CandidateBean {
     public Candidate getCandidateByLoginId(int loginId) {
         log.info("Getting candidate by loginId");
         try{
-            Query q = em.createNamedQuery("Candidate.getByLoginId", Candidate.class);
-            q.setParameter("loginId", loginId);
+            Query q = em.createNamedQuery("Candidate.getByLoginId", Candidate.class).setParameter("loginId", loginId);
             return (Candidate) q.getSingleResult();
         } catch(NoResultException e) {
             return null;

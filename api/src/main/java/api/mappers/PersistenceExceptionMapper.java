@@ -14,10 +14,19 @@ public class PersistenceExceptionMapper implements ExceptionMapper<PersistenceEx
 
         e.printStackTrace();
 
+        int ioe = e.getMessage().indexOf("ERROR");
+        String errorMessage = e.getMessage();
+        if(ioe > 0) {
+            errorMessage = e.getMessage().substring(ioe);
+            if(errorMessage.length() > 100)
+                errorMessage = errorMessage.substring(0, 100) + "...";
+        }
+
+
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
                 .header("Content-Type", MediaType.APPLICATION_JSON)
-                .entity(new ResponseError(500, "Database error, see server logs."))
+                .entity(new ResponseError(500, errorMessage))
                 .build();
     }
 

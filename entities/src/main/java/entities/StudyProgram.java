@@ -8,10 +8,10 @@ import java.io.Serializable;
 @Entity(name = "study_program")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "StudyProgram.getByName", query = "SELECT sp FROM study_program sp WHERE sp.name = :name"),
-                @NamedQuery(name = "StudyProgram.getAll", query = "SELECT sp FROM study_program sp"),
-                @NamedQuery(name = "StudyProgram.getById", query = "SELECT sp FROM study_program sp WHERE sp.id = :id"),
-                @NamedQuery(name = "StudyProgram.getByEvsCode", query = "SELECT sp FROM study_program sp WHERE sp.evsCode = :evsCode"),
+                @NamedQuery(name = "StudyProgram.getByName", query = "SELECT sp FROM study_program sp WHERE sp.name = :name AND sp.deleted = false"),
+                @NamedQuery(name = "StudyProgram.getAll", query = "SELECT sp FROM study_program sp WHERE sp.deleted = false"),
+                @NamedQuery(name = "StudyProgram.getDeleted", query = "SELECT sp FROM study_program sp WHERE sp.deleted = true"),
+                @NamedQuery(name = "StudyProgram.getById", query = "SELECT sp FROM study_program sp WHERE sp.id = :id AND sp.deleted = false"),
         }
 )
 public class StudyProgram implements Serializable, Codelistable {
@@ -27,9 +27,6 @@ public class StudyProgram implements Serializable, Codelistable {
     private StudyDegree studyDegree;
 
     private int semesters;
-
-    @Column(name = "evs_code")
-    private int evsCode;
 
     public String getId() {
         return id;
@@ -63,21 +60,26 @@ public class StudyProgram implements Serializable, Codelistable {
         this.semesters = semesters;
     }
 
-    public int getEvsCode() {
-        return evsCode;
-    }
-
-    public void setEvsCode(int evsCode) {
-        this.evsCode = evsCode;
-    }
-
     @Override
     public String[] getColumnNames() {
-        return new String[]{"id", "name", "studyDegree", "semesters", "evsCode"};
+        return new String[]{"id", "name", "studyDegree", "semesters"};
     }
 
     @Override
     public String[] getColumnTypes() {
-        return new String[]{TYPE_STRING, TYPE_STRING, "studydegrees", TYPE_NUMBER, TYPE_NUMBER};
+        return new String[]{TYPE_STRING, TYPE_STRING, "studydegrees", TYPE_NUMBER};
+    }
+
+    @Column(columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
+    private boolean deleted = false;
+
+    @Override
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

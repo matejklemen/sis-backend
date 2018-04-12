@@ -48,8 +48,11 @@ public class StudyTypeBean {
     @Transactional
     public void deleteStudyType(int id) {
         StudyType c = em.find(StudyType.class, id);
-        if(c != null){
-            em.remove(c);
+        if(c != null) {
+            c.setDeleted(true);
+            em.merge(c);
+        } else {
+            throw new NoResultException("Course by ID doesn't exist");
         }
     }
 

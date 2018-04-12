@@ -4,6 +4,7 @@ import entities.curriculum.PartOfCurriculum;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
@@ -59,8 +60,11 @@ public class PartOfCurriculumBean {
     @Transactional
     public void deletePartOfCurriculum(int id) {
         PartOfCurriculum c = em.find(PartOfCurriculum.class, id);
-        if(c != null){
-            em.remove(c);
+        if(c != null) {
+            c.setDeleted(true);
+            em.merge(c);
+        } else {
+            throw new NoResultException("Course by ID doesn't exist");
         }
     }
 

@@ -6,11 +6,12 @@ import javax.persistence.*;
 
 @Entity(name = "professor")
 @NamedQueries(value = {
-        @NamedQuery(name = "Professor.getAllProfessors", query = "SELECT p FROM professor p"),
-        @NamedQuery(name = "Professor.getByFirstAndLastName", query = "SELECT p FROM professor p WHERE p.firstName = :fname AND (p.lastName1 = :lname OR p.lastName2 = :lname)"),
-        @NamedQuery(name = "Professor.getByLoginId", query = "SELECT p FROM professor p WHERE p.loginData.id = :loginId"),
+        @NamedQuery(name = "Professor.getAllProfessors", query = "SELECT p FROM professor p WHERE p.deleted = false"),
+        @NamedQuery(name = "Professor.getDeletedProfessors", query = "SELECT p FROM professor p WHERE p.deleted = true"),
+        @NamedQuery(name = "Professor.getByFirstAndLastName", query = "SELECT p FROM professor p WHERE p.firstName = :fname AND (p.lastName1 = :lname OR p.lastName2 = :lname) AND p.deleted = false"),
+        @NamedQuery(name = "Professor.getByLoginId", query = "SELECT p FROM professor p WHERE p.loginData.id = :loginId AND p.deleted = false"),
         /* search professors with 2 surnames */
-        @NamedQuery(name = "Professor.getByFirstAndLastName2", query = "SELECT p FROM professor p WHERE p.firstName = :fname AND p.lastName1 = :lname1 AND p.lastName2 = :lname2")
+        @NamedQuery(name = "Professor.getByFirstAndLastName2", query = "SELECT p FROM professor p WHERE p.firstName = :fname AND p.lastName1 = :lname1 AND p.lastName2 = :lname2 AND p.deleted = false")
 })
 public class Professor implements Codelistable {
 
@@ -87,5 +88,18 @@ public class Professor implements Codelistable {
     @Override
     public String[] getColumnTypes() {
         return new String[]{TYPE_STRING, TYPE_STRING, TYPE_STRING};
+    }
+
+    @Column(columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
+    private boolean deleted = false;
+
+    @Override
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

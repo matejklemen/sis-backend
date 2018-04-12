@@ -1,6 +1,8 @@
 package entities;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 import java.io.Serializable;
 
 @Entity(name = "candidate")
@@ -13,6 +15,8 @@ public class Candidate implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @XmlID
+    @XmlElement
     private int id;
 
     @Column(name = "register_number", length = 8, nullable = false, unique = true)
