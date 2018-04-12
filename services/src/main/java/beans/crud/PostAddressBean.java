@@ -23,6 +23,12 @@ public class PostAddressBean {
     }
 
     @Transactional
+    public List<PostAddress> getDeletedPostAddresses() {
+        TypedQuery<PostAddress> q = em.createNamedQuery("PostAddress.getDeleted", PostAddress.class);
+        return q.getResultList();
+    }
+
+    @Transactional
     public PostAddress getPostAddress(int postNumber) {
         PostAddress pa = em.find(PostAddress.class, postNumber);
         if(pa == null) throw new NoResultException("No post address by this post number");

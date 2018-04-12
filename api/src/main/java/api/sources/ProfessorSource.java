@@ -38,7 +38,9 @@ public class ProfessorSource {
             )
     })
     @GET
-    public Response getProfessors() {
+    public Response getProfessors(@QueryParam("deleted") boolean deleted) {
+        if(deleted)
+            return Response.ok(pB.getDeletedProfessors()).build();
         return Response.ok(pB.getAllProfessors()).build();
     }
 

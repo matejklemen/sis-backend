@@ -27,6 +27,13 @@ public class CourseBean {
     }
 
     @Transactional
+    public List<Course> getDeletedCourses() {
+        TypedQuery<Course> q = em.createNamedQuery("Course.getDeleted", Course.class);
+        //q.setMaxResults(100);
+        return q.getResultList();
+    }
+
+    @Transactional
     public Course getCourse(int id) {
         Course c = em.find(Course.class, id);
         if(c == null) throw new NoResultException("No course by this id");

@@ -24,6 +24,12 @@ public class ProfessorBean {
         return q.getResultList();
     }
 
+    public List<Professor> getDeletedProfessors() {
+        TypedQuery<Professor> q = em.createNamedQuery("Professor.getDeletedProfessors", Professor.class);
+
+        return q.getResultList();
+    }
+
     public Professor getProfessor(int id) {
         Professor p = em.find(Professor.class, id);
         if(p == null) throw new NoResultException("No professor by this id");

@@ -23,6 +23,12 @@ public class KlasiusSrvBean {
     }
 
     @Transactional
+    public List<KlasiusSrv> getDeletedKlasiusSrvs() {
+        TypedQuery<KlasiusSrv> q = em.createNamedQuery("KlasiusSrv.getDeleted", KlasiusSrv.class);
+        return q.getResultList();
+    }
+
+    @Transactional
     public KlasiusSrv getKlasiusSrv(int id) {
         KlasiusSrv c = em.find(KlasiusSrv.class, id);
         if(c == null) throw new NoResultException("No course by this id");

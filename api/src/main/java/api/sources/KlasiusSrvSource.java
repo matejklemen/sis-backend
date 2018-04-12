@@ -38,7 +38,9 @@ public class KlasiusSrvSource {
             )
     })
     @GET
-    public Response getKlasiusSrvs() {
+    public Response getKlasiusSrvs(@QueryParam("deleted") boolean deleted) {
+        if(deleted)
+            return Response.ok(cB.getDeletedKlasiusSrvs()).build();
         return Response.ok(cB.getKlasiusSrvs()).build();
     }
 

@@ -43,7 +43,10 @@ public class PartOfCurriculumSource {
                             schema = @Schema(implementation = ResponseError.class)))
     })
     @GET
-    public Response getAllPOC() {
+    public Response getAllPOC(@QueryParam("deleted") boolean deleted) {
+        if(deleted) {
+            return Response.ok(pocb.getDeletedAllPOC()).build();
+        }
         List<PartOfCurriculum> allPOC = pocb.getAllPOC();
 
         return allPOC == null ? Response.status(Response.Status.NOT_FOUND).build() :

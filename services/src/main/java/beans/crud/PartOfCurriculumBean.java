@@ -19,8 +19,16 @@ public class PartOfCurriculumBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    @Transactional
     public List<PartOfCurriculum> getAllPOC() {
         TypedQuery<PartOfCurriculum> q = em.createNamedQuery("PartOfCurriculum.getAll", PartOfCurriculum.class);
+
+        return q.getResultList();
+    }
+
+    @Transactional
+    public List<PartOfCurriculum> getDeletedAllPOC() {
+        TypedQuery<PartOfCurriculum> q = em.createNamedQuery("PartOfCurriculum.getDeleted", PartOfCurriculum.class);
 
         return q.getResultList();
     }

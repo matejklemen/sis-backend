@@ -40,7 +40,9 @@ public class CurriculumSource {
                             schema = @Schema(implementation = Curriculum.class)))
     })
     @GET
-    public Response getEntireCurriculum() {
+    public Response getEntireCurriculum(@QueryParam("deleted") boolean deleted) {
+        if(deleted)
+            return Response.status(Response.Status.OK).entity(cb.getDeletedEntireCurriculum()).build();
         return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum()).build();
     }
 
