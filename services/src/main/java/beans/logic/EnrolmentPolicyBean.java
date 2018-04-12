@@ -6,21 +6,21 @@ import entities.logic.EnrolmentSheet;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
+import static org.eclipse.persistence.config.TargetDatabase.Database;
 
 @ApplicationScoped
 public class EnrolmentPolicyBean {
 
     @Inject
-    private GradeBean gb;
+    private GradeBean GradeBean;
 
     @Inject
     private CurriculumBean cb;
 
     @Inject
-    private EnrolmentBean eb;
+    private EnrolmentBean enrolmentBean;
 
     @Inject
     private PostAddressBean postAddressBean;
@@ -38,7 +38,7 @@ public class EnrolmentPolicyBean {
     private StudyTypeBean studyTypeBean;
 
     @Inject
-    private StudyDegreeBean studyDegreeBean;
+    private KlasiusSrvBean klasiusSrvBean;
 
     @Inject
     private StudyFormBean studyFormBean;
@@ -46,11 +46,14 @@ public class EnrolmentPolicyBean {
     @Inject
     private StudyKindBean studyKindBean;
 
+    @Inject
+    private EnrolmentTokenBean enrolmentTokenBean;
+
     public boolean hasStudentFreeChoiceOfCurriculum(Student s){
-        if(eb.getEnrolmentsForStudent(s.getId()).isEmpty())
+        if(enrolmentBean.getEnrolmentsForStudent(s.getId()).isEmpty())
             return false;
 
-        Iterator<Enrolment> iters = eb.getEnrolmentsForStudent(s.getId()).iterator();
+        Iterator<Enrolment> iters = enrolmentBean.getEnrolmentsForStudent(s.getId()).iterator();
         int maxYear = 0;
         while(iters.hasNext()){
             int tmp = iters.next().getYear();
@@ -61,7 +64,7 @@ public class EnrolmentPolicyBean {
         if(maxYear != 2)
             return false;
 
-        List<Grade> grades =  gb.getGradesByStudentId(s.getId());
+        List<Grade> grades =  GradeBean.getGradesByStudentId(s.getId());
         double sum = 0.0;
         for(Grade grade: grades){
             sum += grade.getGrade();
@@ -72,8 +75,17 @@ public class EnrolmentPolicyBean {
         return false;
     }
 
-    public List<String> validCodes(EnrolmentSheet es){
-        List<String> list = new ArrayList<String>();
+    public List<String> checkEnrolment(EnrolmentSheet es, EnrolmentToken enToken){
+        List<String> list = new ArrayList<>();
+        if(enToken == null) {
+            list.add("No token found");
+            return list;
+        }
+        if(!enToken.validEnrolmentToken(es.getEnrolmentToken())) {
+            list.add("No valid token for given enrolment");
+            return list;
+        }
+
         if(!postAddressBean.existsPostAddress(es.getStudent().getAddress1().getPost().getId())) {
             list.add("Address1 invalid post code");
         }
@@ -92,10 +104,52 @@ public class EnrolmentPolicyBean {
         if(!studyTypeBean.existsStudyType(es.getEnrolmentToken().getType().getId())) {
             list.add("Invalid study type code");
         }
-        if(!studyTypeBean.existsStudyType(es.getEnrolmentToken().getType().getId())) {
-            list.add("Invalid study type code");
+        if(es.getEnrolmentToken().getKlasiusSrv() != null && !klasiusSrvBean.existsKlasiusSrv(es.getEnrolmentToken().getKlasiusSrv().getId())) {
+            list.add("Invalid klasius_srv code");
         }
-        year >= 1 && year <= 3
-        return true;
+        if(!studyFormBean.existsStudyForm(es.getEnrolmentToken().getForm().getId())) {
+            list.add("Invalid study form code");
+        }
+        if(!studyKindBean.existsStudyKind(es.getEnrolmentToken().getKind().getId())) {
+            list.add("Invalid study kind code");
+        }
+        if(es.getEnrolmentToken().getYear() < 1 || es.getEnrolmentToken().getYear() > 3) {
+            list.add("Invalid year range");
+        }
+
+        String date = es.getStudent().getDateOfBirth();
+        String EMSO = date.split("-")[2].substring(0, 2)+date.split("-")[1]+date.split("-")[0].substring(1,4)+(es.getStudent().getGender() == 'M' ? "50[0-4][0-9]{3}" : "505[5-9][0-9]{3}");
+        if(!es.getStudent().getEmso().matches(EMSO)) {
+            list.add("Invalid EMSO number");
+        }
+
+        if(!es.getStudent().getName().matches("[A-Ž][a-ž]+")) {
+            list.add("Invalid name format");
+        }
+        if(!es.getStudent().getSurname().matches("[A-Ž][a-ž]+")) {
+            list.add("Invalid surname format");
+        }
+
+        if(municipalityBean.existsMunicipality(es.getStudent().getMunicipalityOfBirth().getId()) && !es.getStudent().getCountryOfBirth().getName().equals("Slovenija")) {
+            list.add("Invalid country and municipality combination");
+        }
+
+        List<Enrolment> studentEnrolments = enrolmentBean.getEnrolmentsForStudent(es.getStudent().getId());
+        if(studentEnrolments.isEmpty() && es.getEnrolmentToken().getYear() != 1) {
+            list.add("Invalid year for first enrolment for this student");
+        } else {
+            Enrolment maxEnrolment = Collections.max(studentEnrolments, new Comparator<Enrolment>() {
+                @Override
+                public int compare(Enrolment o1, Enrolment o2) {
+                    return Integer.compare(o1.getYear(), o2.getYear());
+                }
+            });
+            if(maxEnrolment.getYear() + 1 < es.getEnrolmentToken().getYear() ||  maxEnrolment.getYear() > es.getEnrolmentToken().getYear()) {
+                list.add("Invalid year for enrolment for this student");
+            }
+        }
+
+
+        return list;
     }
 }
