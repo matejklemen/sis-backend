@@ -14,16 +14,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import pojo.CodelistsData;
+import utils.AuthUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -55,7 +59,16 @@ public class CodelistSource {
             )
     })
     @GET
-    public Response getCodeLists() {
+    public Response getCodeLists(@Context HttpServletRequest requestContext) {
+        HashSet<String> allowedRoles = new HashSet<String>();
+        allowedRoles.add("Administrator");
+
+        String authHeader = requestContext.getHeader("Authorization");
+
+        if(authHeader == null || !AuthUtils.hasProperRole(authHeader, allowedRoles))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        // ---------------------------------------------
+
         List<CodelistsData> cld = new ArrayList<>();
         // TODO: this can be optimized
 
