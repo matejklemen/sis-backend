@@ -44,8 +44,11 @@ public class MunicipalityBean {
     @Transactional
     public void deleteMunicipality(int id) {
         Municipality e = em.find(Municipality.class, id);
-        if(e != null){
-            em.remove(e);
+        if(e != null) {
+            e.setDeleted(true);
+            em.merge(e);
+        } else {
+            throw new NoResultException("Course by ID doesn't exist");
         }
     }
 

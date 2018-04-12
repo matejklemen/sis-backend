@@ -2,16 +2,14 @@ package entities;
 
 import interfaces.Codelistable;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity(name = "study_form")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "StudyForm.getAll", query = "SELECT sf FROM study_form sf")
+                @NamedQuery(name = "StudyForm.getAll", query = "SELECT sf FROM study_form sf WHERE sf.deleted = false"),
+                @NamedQuery(name = "StudyForm.getDeleted", query = "SELECT sf FROM study_form sf WHERE sf.deleted = true"),
         }
 )
 public class StudyForm implements Serializable, Codelistable {
@@ -45,5 +43,18 @@ public class StudyForm implements Serializable, Codelistable {
     @Override
     public String[] getColumnTypes() {
         return new String[]{TYPE_NUMBER, TYPE_STRING};
+    }
+
+    @Column(columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
+    private boolean deleted = false;
+
+    @Override
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

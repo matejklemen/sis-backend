@@ -1,5 +1,6 @@
 user_role
 id;name
-1;Administrator
-2;Student
-3;Professor
+1;Administrator/ka
+2;Študent/ka
+3;Profesor/ica
+4;Referent/ka

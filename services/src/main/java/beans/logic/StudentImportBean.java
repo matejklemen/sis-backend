@@ -34,21 +34,20 @@ public class StudentImportBean {
     private CurriculumBean curB;
 
     public List<Student> ParseStudentData(String studentData){
-        List<String> lines = Arrays.asList(studentData.split(System.getProperty("line.separator")));
-        Iterator<String> iter = lines.iterator();
-
         List<Student> listOfStudents = new ArrayList<>();
+
         GenerateNewStudentId();
-        while(iter.hasNext()){
+        int pos = 0;
+        while(pos < studentData.length()){
             Student stu = new Student();
-            stu.setName(iter.next());
-            stu.setSurname(iter.next());
+            stu.setName(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
+            stu.setSurname(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
             stu.setGender('-');
 
             EnrolmentToken enr = new EnrolmentToken();
             enr.setStudent(stu);
             enr.setYear(1);
-            StudyProgram studyProgram = spb.getStudyProgram(iter.next());
+            StudyProgram studyProgram = spb.getStudyProgram(studentData.substring(pos, (pos = pos+7)));
             enr.setStudyProgram(studyProgram);
             enr.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
             enr.setUsed(true);
@@ -56,7 +55,7 @@ public class StudentImportBean {
             enr.setType(enr.getType());
 
             stu.setRegisterNumber(GenerateNewStudentId());
-            stu.setEmail(iter.next());
+            stu.setEmail(studentData.substring(pos, (pos = pos+60)).replaceAll("\\s+",""));
 
             UserLogin ul = new UserLogin();
             ul.setUsername(GenerateUsername(stu));

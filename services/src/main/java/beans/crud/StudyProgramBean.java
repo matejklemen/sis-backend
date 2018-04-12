@@ -17,7 +17,7 @@ public class StudyProgramBean {
 
     @Transactional
     public StudyProgram getStudyProgram(String id) {
-        StudyProgram pa = em.find(StudyProgram.class, id);
+        StudyProgram pa = em.find(StudyProgram.class,id);
         if(pa == null) throw new NoResultException("No study degree by this id");
         return pa;
     }
@@ -43,8 +43,11 @@ public class StudyProgramBean {
     @Transactional
     public void deleteStudyProgram(String id) {
         StudyProgram e = em.find(StudyProgram.class, id);
-        if(e != null){
-            em.remove(e);
+        if(e != null) {
+            e.setDeleted(true);
+            em.merge(e);
+        } else {
+            throw new NoResultException("Course by ID doesn't exist");
         }
     }
 

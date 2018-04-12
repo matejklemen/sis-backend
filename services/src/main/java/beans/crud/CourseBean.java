@@ -48,8 +48,11 @@ public class CourseBean {
     @Transactional
     public void deleteCourse(int id) {
         Course c = em.find(Course.class, id);
-        if(c != null){
-            em.remove(c);
+        if(c != null) {
+            c.setDeleted(true);
+            em.merge(c);
+        } else {
+            throw new NoResultException("Course by ID doesn't exist");
         }
     }
 

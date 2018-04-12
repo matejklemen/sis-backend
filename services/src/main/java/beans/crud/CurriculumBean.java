@@ -120,8 +120,11 @@ public class CurriculumBean {
     @Transactional
     public void deleteCurriculum(int id) {
         Curriculum c = em.find(Curriculum.class, id);
-        if(c != null){
-            em.remove(c);
+        if(c != null) {
+            c.setDeleted(true);
+            em.merge(c);
+        } else {
+            throw new NoResultException("Course by ID doesn't exist");
         }
     }
 

@@ -8,7 +8,8 @@ import java.io.Serializable;
 @Entity(name = "part_of_curriculum")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "PartOfCurriculum.getAll", query = "SELECT poc FROM part_of_curriculum poc")
+                @NamedQuery(name = "PartOfCurriculum.getAll", query = "SELECT poc FROM part_of_curriculum poc WHERE poc.deleted = false"),
+                @NamedQuery(name = "PartOfCurriculum.getDeleted", query = "SELECT poc FROM part_of_curriculum poc WHERE poc.deleted = true"),
         }
 )
 public class PartOfCurriculum implements Serializable, Codelistable {
@@ -62,5 +63,18 @@ public class PartOfCurriculum implements Serializable, Codelistable {
     @Override
     public String[] getColumnTypes() {
         return new String[]{TYPE_NUMBER, TYPE_STRING, TYPE_STRING};
+    }
+
+    @Column(columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
+    private boolean deleted = false;
+
+    @Override
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

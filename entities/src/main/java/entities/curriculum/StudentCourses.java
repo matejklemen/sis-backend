@@ -13,7 +13,7 @@ import java.io.Serializable;
                 @NamedQuery(name = "StudentCourses.getByEnrolmentId", query = "SELECT c FROM student_courses c WHERE c.enrolment = :enrolment")
         }
 )
-public class StudentCourses implements Serializable, Codelistable {
+public class StudentCourses implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,13 +52,4 @@ public class StudentCourses implements Serializable, Codelistable {
         this.course = course;
     }
 
-    @Override
-    public String[] getColumnNames() {
-        return new String[]{"id", "id_enrolment", "id_course"};
-    }
-
-    @Override
-    public String[] getColumnTypes() {
-        return new String[]{TYPE_NUMBER, TYPE_NUMBER, TYPE_NUMBER};
-    }
 }

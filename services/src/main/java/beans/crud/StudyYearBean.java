@@ -65,8 +65,11 @@ public class StudyYearBean {
     @Transactional
     public void deleteStudyYear(int id) {
         StudyYear e = em.find(StudyYear.class, id);
-        if(e != null){
-            em.remove(e);
+        if(e != null) {
+            e.setDeleted(true);
+            em.merge(e);
+        } else {
+            throw new NoResultException("Course by ID doesn't exist");
         }
     }
 
