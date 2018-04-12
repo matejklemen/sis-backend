@@ -2,10 +2,10 @@ package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
 import beans.logic.StudentImportBean;
-import entities.Candidate;
 import entities.Student;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import javafx.util.Pair;
 import pojo.FileData;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,9 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Path("files")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -33,7 +31,7 @@ public class FileSource {
 
     @PUT
     public Response putFile(FileData file){
-        List<Candidate> sp = si.ParseStudentData(file.getFileData());
+        Pair<List<Student>,List<Student>> sp = si.ParseStudentData(file.getFileData());
         return Response.status(Response.Status.OK).entity(sp).build();
     }
 }
