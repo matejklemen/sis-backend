@@ -28,8 +28,11 @@ http://localhost:8080/api-specs/ui (when running locally)
 
 ## Sample users
 joze1 [administrator/ka]
+
 mk3141 (at) student.uni-lj.si [študent/ka]
+
 fejk.mail (at) student.uni-lj.si [profesor/ica]
+
 ref (at) student.uni-lj.si [referent/ka]
 
 passwords for all 4 sample users in the system: 123
