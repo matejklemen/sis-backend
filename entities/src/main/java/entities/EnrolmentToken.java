@@ -43,6 +43,10 @@ public class EnrolmentToken implements Serializable {
     @JoinColumn(name = "id_study_form")
     private StudyForm form; //
 
+    @ManyToOne
+    @JoinColumn(name = "id_klasius_srv")
+    private KlasiusSrv klasiusSrv;
+
     @Column(nullable = false)
     private boolean used; // porabi student
 
@@ -112,6 +116,14 @@ public class EnrolmentToken implements Serializable {
 
     public void setForm(StudyForm form) {
         this.form = form;
+    }
+
+    public KlasiusSrv getKlasiusSrv() {
+        return klasiusSrv;
+    }
+
+    public void setKlasiusSrv(KlasiusSrv klasiusSrv) {
+        this.klasiusSrv = klasiusSrv;
     }
 
     public boolean isUsed() {
