@@ -70,7 +70,7 @@ public class ProfessorBean {
     public void deleteProfessor(int id) {
         Professor c = em.find(Professor.class, id);
         if(c != null) {
-            c.setDeleted(true);
+            c.setDeleted(!c.getDeleted());
             em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");

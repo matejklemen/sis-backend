@@ -56,7 +56,7 @@ public class CountryBean {
     public void deleteCountry(int id) {
         Country c = em.find(Country.class, id);
         if(c != null) {
-            c.setDeleted(true);
+            c.setDeleted(!c.getDeleted());
             em.merge(c);
         } else {
             throw new NoResultException("Course by ID doesn't exist");
