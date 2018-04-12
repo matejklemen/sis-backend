@@ -1,5 +1,7 @@
 package entities.curriculum;
 
+import interfaces.Codelistable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -9,11 +11,10 @@ import java.io.Serializable;
                 @NamedQuery(name = "PartOfCurriculum.getAll", query = "SELECT poc FROM part_of_curriculum poc")
         }
 )
-public class PartOfCurriculum implements Serializable {
+public class PartOfCurriculum implements Serializable, Codelistable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int idPOC;
+    private int id;
 
     /*
     One of: {obv, siz, piz, mod} where:
@@ -29,12 +30,12 @@ public class PartOfCurriculum implements Serializable {
     @Column(name = "module_name")
     private String moduleName;
 
-    public int getIdPOC() {
-        return idPOC;
+    public int getId() {
+        return id;
     }
 
-    public void setIdPOC(int idPOC) {
-        this.idPOC = idPOC;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getType() {
@@ -51,5 +52,15 @@ public class PartOfCurriculum implements Serializable {
 
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
+    }
+
+    @Override
+    public String[] getColumnNames() {
+        return new String[]{"id", "type", "moduleName"};
+    }
+
+    @Override
+    public String[] getColumnTypes() {
+        return new String[]{TYPE_NUMBER, TYPE_STRING, TYPE_STRING};
     }
 }

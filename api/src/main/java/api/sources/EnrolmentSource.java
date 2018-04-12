@@ -41,14 +41,14 @@ public class EnrolmentSource {
     @Inject
     private EnrolmentTokenBean entB;
 
-    @Operation(description = "Returns enrolment for studentId (and studyProgram). NOTE: this is student in and not  registerNumber", summary = "Get enrolment",
+    @Operation(description = "Returns enrolments for student. If order and studyProgramId are given, returns one Enrolment. Order can be one of [\"first\",\"last\"]", summary = "Get enrolment(-s) by studentId and/or query parameters",
             parameters = {
                     @Parameter(name = "studyProgramId", description = "studyProgram Id", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
                     @Parameter(name = "order", description = "can be last or first. Last is default", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
             },
             responses = {
                     @ApiResponse(responseCode = "200",
-                            description = "Enrolment",
+                            description = "List of enrolments",
                             content = @Content(
                                     schema = @Schema(implementation = Enrolment.class))
                     ),
@@ -60,21 +60,23 @@ public class EnrolmentSource {
             })
     @Path("{studentId}")
     @GET
-    public Response getEnrolment(@PathParam("studentId") int studentId,@QueryParam("order") String order ,@QueryParam("studyProgramId") String studyProgramId) {
+    public Response getEnrolment(@PathParam("studentId") int studentId, @QueryParam("order") String order, @QueryParam("studyProgramId") String studyProgramId) {
         Enrolment en;
 
-        if(order != null && order.equals("first")){
-            if(studyProgramId==null)
-                return Response.status(400).entity(new ResponseError(400, "No query parameter studyProgramId")).build();
-            en = enB.getFirstEnrolmentByStudentIdAndProgram(studentId, studyProgramId);
+        if(order != null) {
+            if (order.equals("first")) {
+                if (studyProgramId == null)
+                    return Response.status(400).entity(new ResponseError(400, "No query parameter studyProgramId")).build();
+                en = enB.getFirstEnrolmentByStudentIdAndProgram(studentId, studyProgramId);
+            } else { // order == "last"
+                if (studyProgramId != null)
+                    return Response.status(400).entity(new ResponseError(400, "Query parameter studyProgramId is not impelmented for last")).build();
+                en = enB.getLastEnrolmentByStudentId(studentId);
+            }
+            return Response.ok(en).build();
+        } else {
+            return Response.ok(enB.getEnrolmentsForStudent(studentId)).build();
         }
-        else{
-            if(studyProgramId!=null)
-                return Response.status(400).entity(new ResponseError(400, "Query parameter studyProgramId is not impelmented for last")).build();
-            en = enB.getLastEnrolmentByStudentId(studentId);
-        }
-
-        return Response.ok(en).build();
     }
 
     @Operation(description = "Creates new enrolment for a student and adds his courses", summary = "Create new enrolment for a student and add his courses",

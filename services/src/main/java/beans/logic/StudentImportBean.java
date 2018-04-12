@@ -79,8 +79,6 @@ public class StudentImportBean {
 
             Enrolment en = enb.putEnrolment(enr, lCourses);
 
-            // update enrolment list...
-            stu.getEnrolments().add(en);
             stu = sdb.updateStudent(stu);
 
             listOfStudents.add(stu);

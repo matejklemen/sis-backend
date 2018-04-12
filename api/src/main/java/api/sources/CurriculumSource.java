@@ -1,5 +1,6 @@
 package api.sources;
 
+import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.CurriculumBean;
@@ -63,47 +64,6 @@ public class CurriculumSource {
                 Response.status(Response.Status.OK).entity(c).build();
     }
 
-    @Operation(description = "Updates curriculum with specific curriculum ID.", summary = "Update curriculum by curriculum ID", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Updated curriculum",
-                    content = @Content(
-                            schema = @Schema(implementation = Curriculum.class))),
-            @ApiResponse(responseCode = "404",
-                    description = "Could not update curriculum",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class)
-                    ))
-    })
-    // id curriculum is actually not needed, it's just here in an attempt to have similar structure on API methods
-    @Path("{id-curriculum}")
-    @POST
-    public Response updateCurriculum(@PathParam(value = "id-curriculum") int idCurriculum, @RequestBody Curriculum cur) {
-        Curriculum newCur = cb.updateCurriculum(cur);
-
-        return newCur != null ? Response.status(Response.Status.OK).entity(newCur).build():
-                Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    @Operation(description = "Deletes curriculum with specific curriculum ID.", summary = "Delete curriculum by curriculum ID", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Deleted curriculum",
-                    content = @Content(
-                            schema = @Schema(implementation = Curriculum.class))),
-            @ApiResponse(responseCode = "404",
-                    description = "Could not delete curriculum",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class)
-                    ))
-    })
-    @Path("{id-curriculum}")
-    @DELETE
-    public Response deleteCurriculum(@PathParam(value = "id-curriculum") int idCurriculum) {
-        boolean deleted = cb.deleteCurriculum(idCurriculum);
-
-        return deleted ? Response.status(Response.Status.OK).build():
-                Response.status(Response.Status.NOT_FOUND).build();
-    }
-
     @Operation(description = "Retrieves curriculum for particular study program.", summary = "Get curriculum for specified study program", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Retrieved curriculum",
@@ -164,6 +124,56 @@ public class CurriculumSource {
 
         return c == null ? Response.status(Response.Status.NOT_FOUND).build():
                 Response.status(Response.Status.OK).entity(c).build();
+    }
+
+    @Operation(description = "Inserts a new curriculum.", summary = "Insert curriculum", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Insert successful",
+                    content = @Content(
+                            schema = @Schema(implementation = Curriculum.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Insert failed",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)))
+    })
+    @PUT
+    public Response createCurriculum(@RequestBody Curriculum c) {
+        if(c == null) throw new NoRequestBodyException();
+        if(cb.existsCurriculum(c.getId())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+        }
+        c = cb.insertCurriculum(c);
+        return Response.ok().entity(c).build();
+    }
+
+    @Operation(description = "Deletes a curriculum with specified id.", summary = "Delete curriculum", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Delete successful",
+                    content = @Content(
+                            schema = @Schema(implementation = Curriculum.class))),
+    })
+    @Path("{id}")
+    @DELETE
+    public Response deleteCurriculum(@PathParam("id") int id) {
+        cb.deleteCurriculum(id);
+        return Response.ok().build();
+    }
+
+    @Operation(description = "Updates an existing curriculum.", summary = "Update curriculum", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Update successful",
+                    content = @Content(
+                            schema = @Schema(implementation = Curriculum.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Update failed",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)))
+    })
+    @POST
+    public Response updateCurriculum(@RequestBody Curriculum c) {
+        if(c == null) throw new NoRequestBodyException();
+        c = cb.updateCurriculum(c);
+        return Response.ok().entity(c).build();
     }
 
 }

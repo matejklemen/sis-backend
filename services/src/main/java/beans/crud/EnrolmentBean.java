@@ -72,4 +72,9 @@ public class EnrolmentBean {
                 .setMaxResults(1)
                 .getSingleResult();
     }
+
+    @Transactional
+    public List<Enrolment> getEnrolmentsForStudent(int studentId) {
+        return em.createNamedQuery("Enrolment.getByStudentId", Enrolment.class).setParameter("id", studentId).getResultList();
+    }
 }
