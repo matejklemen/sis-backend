@@ -43,4 +43,31 @@ public class PartOfCurriculumBean {
             return null;
         }
     }
+
+    @Transactional
+    public boolean existsPartOfCurriculum(int id) {
+        return em.find(PartOfCurriculum.class, id) != null;
+    }
+
+    @Transactional
+    public PartOfCurriculum insertPartOfCurriculum(PartOfCurriculum c) {
+        em.persist(c);
+        em.flush();
+        return c;
+    }
+
+    @Transactional
+    public void deletePartOfCurriculum(int id) {
+        PartOfCurriculum c = em.find(PartOfCurriculum.class, id);
+        if(c != null){
+            em.remove(c);
+        }
+    }
+
+    @Transactional
+    public PartOfCurriculum updatePartOfCurriculum(PartOfCurriculum c) {
+        em.merge(c);
+        em.flush();
+        return c;
+    }
 }

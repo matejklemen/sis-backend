@@ -143,13 +143,14 @@ public class EnrolmentToken implements Serializable {
         return et;
     }
 
-    public boolean validEnrolment (Enrolment e) {
-        if(this.kind == e.getKind() &&
-           this.student == e.getStudent() &&
-           this.studyProgram == e.getStudyProgram() &&
-           this.studyYear == e.getStudyYear() &&
-           this.type == e.getType() &&
-           this.year == e.getYear()
+    public boolean validEnrolmentToken (EnrolmentToken e) {
+        if(this.kind.getId() == e.getKind().getId() &&
+           this.studyProgram.getId().equals(e.getStudyProgram().getId()) &&
+           this.studyYear.getId() == e.getStudyYear().getId() &&
+           this.type.getId() == e.getType().getId() &&
+           this.form.getId() == e.getForm().getId() &&
+           this.year == e.getYear() &&
+           !this.used
         ) {
             return true;
         } else {

@@ -1,6 +1,7 @@
 package beans.crud;
 
 import entities.Enrolment;
+import entities.EnrolmentToken;
 import entities.curriculum.Course;
 import entities.curriculum.StudentCourses;
 
@@ -22,7 +23,16 @@ public class EnrolmentBean {
     private EntityManager em;
 
     @Transactional
-    public Enrolment putEnrolment(Enrolment en, List<Integer> cl){
+    public Enrolment putEnrolment(EnrolmentToken ent, List<Integer> cl){
+        Enrolment en = new Enrolment();
+        en.setConfirmed(true);
+        en.setForm(ent.getForm());
+        en.setKind(ent.getKind());
+        en.setStudent(ent.getStudent());
+        en.setStudyProgram(ent.getStudyProgram());
+        en.setStudyYear(ent.getStudyYear());
+        en.setType(ent.getType());
+        en.setYear(ent.getYear());
         em.persist(en);
         Iterator<Integer> clIterator = cl.iterator();
         while (clIterator.hasNext()) {
@@ -61,5 +71,10 @@ public class EnrolmentBean {
                 .setParameter("studyProgramId", studyProgramId)
                 .setMaxResults(1)
                 .getSingleResult();
+    }
+
+    @Transactional
+    public List<Enrolment> getEnrolmentsForStudent(int studentId) {
+        return em.createNamedQuery("Enrolment.getByStudentId", Enrolment.class).setParameter("id", studentId).getResultList();
     }
 }

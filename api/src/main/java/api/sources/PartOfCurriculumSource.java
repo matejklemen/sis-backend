@@ -1,5 +1,6 @@
 package api.sources;
 
+import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.PartOfCurriculumBean;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -58,6 +60,7 @@ public class PartOfCurriculumSource {
                     content = @Content(
                             schema = @Schema(implementation = ResponseError.class)))
     })
+    @Path("mod")
     @PUT
     public Response insertNewModule(@Parameter(description = "Name of new module", required = true) String moduleName) {
         try {
@@ -68,5 +71,55 @@ public class PartOfCurriculumSource {
         catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+    }
+
+    @Operation(description = "Inserts a new part of curriculum.", summary = "Insert part of curriculum", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Insert successful",
+                    content = @Content(
+                            schema = @Schema(implementation = PartOfCurriculum.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Insert failed",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)))
+    })
+    @PUT
+    public Response createPartOfCurriculum(@RequestBody PartOfCurriculum c) {
+        if(c == null) throw new NoRequestBodyException();
+        if(pocb.existsPartOfCurriculum(c.getId())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+        }
+        c = pocb.insertPartOfCurriculum(c);
+        return Response.ok().entity(c).build();
+    }
+
+    @Operation(description = "Deletes a part of curriculum with specified id.", summary = "Delete part of curriculum", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Delete successful",
+                    content = @Content(
+                            schema = @Schema(implementation = PartOfCurriculum.class))),
+    })
+    @Path("{id}")
+    @DELETE
+    public Response deletePartOfCurriculum(@PathParam("id") int id) {
+        pocb.deletePartOfCurriculum(id);
+        return Response.ok().build();
+    }
+
+    @Operation(description = "Updates an existing part of curriculum.", summary = "Update part of curriculum", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Update successful",
+                    content = @Content(
+                            schema = @Schema(implementation = PartOfCurriculum.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Update failed",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)))
+    })
+    @POST
+    public Response updatePartOfCurriculum(@RequestBody PartOfCurriculum c) {
+        if(c == null) throw new NoRequestBodyException();
+        c = pocb.updatePartOfCurriculum(c);
+        return Response.ok().entity(c).build();
     }
 }

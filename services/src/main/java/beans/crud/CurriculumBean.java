@@ -106,19 +106,30 @@ public class CurriculumBean {
     }
 
     @Transactional
-    public boolean deleteCurriculum(int idCurriculum) {
-        Curriculum c = em.find(Curriculum.class, idCurriculum);
-        if(c != null){
-            em.remove(c);
-            return true;
-        }
-
-        return false;
+    public boolean existsCurriculum(int id) {
+        return em.find(Curriculum.class, id) != null;
     }
 
     @Transactional
-    public Curriculum updateCurriculum(Curriculum cur) {
-        em.merge(cur);
-        return cur;
+    public Curriculum insertCurriculum(Curriculum c) {
+        em.persist(c);
+        em.flush();
+        return c;
     }
+
+    @Transactional
+    public void deleteCurriculum(int id) {
+        Curriculum c = em.find(Curriculum.class, id);
+        if(c != null){
+            em.remove(c);
+        }
+    }
+
+    @Transactional
+    public Curriculum updateCurriculum(Curriculum c) {
+        em.merge(c);
+        em.flush();
+        return c;
+    }
+
 }

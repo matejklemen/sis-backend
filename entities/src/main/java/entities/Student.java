@@ -82,9 +82,6 @@ public class Student implements Serializable {
     @JoinColumn(name = "id_login")
     private UserLogin loginData;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.PERSIST)
-    private List<Enrolment> enrolments;
-
     public int getId() {
         return id;
     }
@@ -221,11 +218,4 @@ public class Student implements Serializable {
         this.loginData = loginData;
     }
 
-    public List<Enrolment> getEnrolments() {
-        return enrolments;
-    }
-
-    public void setEnrolments(List<Enrolment> enrolments) {
-        this.enrolments = enrolments;
-    }
 }

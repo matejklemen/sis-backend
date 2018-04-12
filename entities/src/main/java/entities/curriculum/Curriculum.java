@@ -2,6 +2,7 @@ package entities.curriculum;
 
 import entities.StudyProgram;
 import entities.StudyYear;
+import interfaces.Codelistable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.io.Serializable;
 @NamedQueries(
         value = {
                 @NamedQuery(name = "Curriculum.getAll", query = "SELECT cur FROM curriculum cur"),
-                @NamedQuery(name = "Curriculum.getByIdCurriculum", query = "SELECT cur FROM curriculum cur WHERE cur.idCurriculum = :id_curriculum"),
+                @NamedQuery(name = "Curriculum.getByIdCurriculum", query = "SELECT cur FROM curriculum cur WHERE cur.id = :id_curriculum"),
                 @NamedQuery(name = "Curriculum.getByStudyProgramId", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.id = :id"),
                 /* Example use-case: get courses for BUN study program */
                 @NamedQuery(name = "Curriculum.getByStudyProgramName", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.name = :name"),
@@ -27,40 +28,40 @@ import java.io.Serializable;
                 /* Example use-case: get module courses for specific year for undergraduate UNI program */
                 @NamedQuery(name = "Curriculum.getModuleCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
-                                "cur.POC.type = \"mod\" " +
+                                "cur.poc.type = \"mod\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
                                 "AND cur.idStudyProgram.id = :idStudyProgram " +
                                 "AND cur.yearOfProgram = :yearOfProgram"),
                 @NamedQuery(name = "Curriculum.getMandatoryCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
-                                "cur.POC.type = \"obv\" " +
+                                "cur.poc.type = \"obv\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
                                 "AND cur.idStudyProgram.id = :idStudyProgram " +
                                 "AND cur.yearOfProgram = :yearOfProgram"),
                 /* Note: specialist elective courses = strokovni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getSpecialistElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
-                                "cur.POC.type = \"siz\" " +
+                                "cur.poc.type = \"siz\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
                                 "AND cur.idStudyProgram.id = :idStudyProgram " +
                                 "AND cur.yearOfProgram = :yearOfProgram"),
                 /* Note: general elective courses = splošni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getGeneralElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
-                                "cur.POC.type = \"piz\" " +
+                                "cur.poc.type = \"piz\" " +
                                 "AND cur.studyYear.name = :nameStudyYear " +
                                 "AND cur.idStudyProgram.id = :idStudyProgram " +
                                 "AND cur.yearOfProgram = :yearOfProgram")
         }
 )
-public class Curriculum implements Serializable {
+public class Curriculum implements Serializable, Codelistable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_curriculum")
-    private int idCurriculum;
+    private int id;
     @ManyToOne
     @JoinColumn(name = "part_of_curriculum")
-    private PartOfCurriculum POC;
+    private PartOfCurriculum poc;
 
     @ManyToOne
     @JoinColumn(name = "id_course")
@@ -77,20 +78,20 @@ public class Curriculum implements Serializable {
     @Column(name = "year_of_program")
     private int yearOfProgram; // = letnik
 
-    public int getIdCurriculum() {
-        return idCurriculum;
+    public int getId() {
+        return id;
     }
 
-    public void setIdCurriculum(int idCurriculum) {
-        this.idCurriculum = idCurriculum;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public PartOfCurriculum getPOC() {
-        return POC;
+    public PartOfCurriculum getPoc() {
+        return poc;
     }
 
-    public void setPOC(PartOfCurriculum POC) {
-        this.POC = POC;
+    public void setPoc(PartOfCurriculum POC) {
+        this.poc = POC;
     }
 
     public Course getIdCourse() {
@@ -115,5 +116,23 @@ public class Curriculum implements Serializable {
 
     public void setStudyYear(StudyYear studyYear) {
         this.studyYear = studyYear;
+    }
+
+    public int getYearOfProgram() {
+        return yearOfProgram;
+    }
+
+    public void setYearOfProgram(int yearOfProgram) {
+        this.yearOfProgram = yearOfProgram;
+    }
+
+    @Override
+    public String[] getColumnNames() {
+        return new String[]{"id", "poc", "idCourse", "idStudyProgram", "studyYear", "yearOfProgram"};
+    }
+
+    @Override
+    public String[] getColumnTypes() {
+        return new String[]{TYPE_NUMBER, "poc", "courses", "studyprograms", "studyyears", TYPE_NUMBER};
     }
 }

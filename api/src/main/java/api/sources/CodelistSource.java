@@ -7,6 +7,8 @@ import entities.address.Country;
 import entities.address.Municipality;
 import entities.address.PostAddress;
 import entities.curriculum.Course;
+import entities.curriculum.Curriculum;
+import entities.curriculum.PartOfCurriculum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -50,6 +52,8 @@ public class CodelistSource {
     @Inject private KlasiusSrvBean klasiusSrvB;
     @Inject private MunicipalityBean municipalityB;
     @Inject private StudyFormBean studyFormB;
+    @Inject private CurriculumBean curriculumB;
+    @Inject private PartOfCurriculumBean pocB;
 
     @Operation(description = "Returns a list of codelists.", summary = "Get list of codelists", responses = {
             @ApiResponse(responseCode = "200",
@@ -95,6 +99,10 @@ public class CodelistSource {
         cld.add(new CodelistsData("course", "Predmeti", "courses", courseB.getCourses().size(), new Course().getColumnNames(), new Course().getColumnTypes()));
         // predavatelji
         cld.add(new CodelistsData("professor", "Predavatelji", "professors", professorB.getAllProfessors().size(), new Professor().getColumnNames(), new Professor().getColumnTypes()));
+        // predmetnik(-i)
+        cld.add(new CodelistsData("curriculum", "Predmetnik", "curriculum", curriculumB.getEntireCurriculum().size(), new Curriculum().getColumnNames(), new Curriculum().getColumnTypes()));
+        // deli predmetnikov
+        cld.add(new CodelistsData("poc", "Deli predmetnikov", "poc", pocB.getAllPOC().size(), new PartOfCurriculum().getColumnNames(), new PartOfCurriculum().getColumnTypes()));
 
         return Response.ok(cld).build();
     }

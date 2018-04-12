@@ -1,6 +1,7 @@
 package beans.logic;
 
 import beans.crud.CurriculumBean;
+import beans.crud.EnrolmentBean;
 import beans.crud.GradeBean;
 import entities.Enrolment;
 import entities.Grade;
@@ -21,11 +22,14 @@ public class EnrolmentPolicyBean {
     @Inject
     private CurriculumBean cb;
 
+    @Inject
+    private EnrolmentBean eb;
+
     public boolean hasStudentFreeChoiceOfCurriculum(Student s){
-        if(s.getEnrolments().isEmpty())
+        if(eb.getEnrolmentsForStudent(s.getId()).isEmpty())
             return false;
 
-        Iterator<Enrolment> iters = s.getEnrolments().iterator();
+        Iterator<Enrolment> iters = eb.getEnrolmentsForStudent(s.getId()).iterator();
         int maxYear = 0;
         while(iters.hasNext()){
             int tmp = iters.next().getYear();
