@@ -42,6 +42,7 @@ public class AuthUtils {
                 .setIssuedAt(issuedDate)
                 .setExpiration(expiredDate)
                 .claim("role", user.getRole())
+                .claim("loginid", user.getId())
                 .signWith(SignatureAlgorithm.HS512, serverSecret) /* server secret is set in the config file */
                 .compact();
 

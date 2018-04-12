@@ -52,7 +52,7 @@ public class Student implements Serializable {
     @JoinColumn(name = "id_country_of_birth")
     private Country countryOfBirth;
 
-    private char gender;
+    private char gender = '-';
 
     @Column(length = 13)
     private String emso;
@@ -71,6 +71,9 @@ public class Student implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_address2")
     private Address address2;
+
+    @Column(name = "sending_address")
+    private int sendingAddress = 1;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -193,6 +196,14 @@ public class Student implements Serializable {
 
     public void setAddress2(Address address2) {
         this.address2 = address2;
+    }
+
+    public int getSendingAddress() {
+        return sendingAddress;
+    }
+
+    public void setSendingAddress(int sendingAddress) {
+        this.sendingAddress = sendingAddress;
     }
 
     public String getPhoneNumber() {
