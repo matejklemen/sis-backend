@@ -128,11 +128,11 @@ public class Curriculum implements Serializable, Codelistable {
 
     @Override
     public String[] getColumnNames() {
-        return new String[]{"id", "poc", "idCourse", "idStudyProgram", "studyYear", "yearOfProgram"};
+        return new String[]{"poc", "idCourse", "idStudyProgram", "studyYear", "yearOfProgram"};
     }
 
     @Override
     public String[] getColumnTypes() {
-        return new String[]{TYPE_NUMBER, "poc", "courses", "studyprograms", "studyyears", TYPE_NUMBER};
+        return new String[]{"poc", "courses", "studyprograms", "studyyears", TYPE_NUMBER};
     }
 }

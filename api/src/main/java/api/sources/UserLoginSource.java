@@ -1,9 +1,14 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
+import api.mappers.ResponseError;
+import beans.crud.ProfessorBean;
+import beans.crud.StudentBean;
 import beans.crud.UserLoginBean;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
+import beans.crud.UserRoleBean;
 import entities.UserLogin;
+import entities.UserRole;
 import exceptions.UserBlacklistedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,10 +22,7 @@ import utils.AuthUtils;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -44,6 +46,12 @@ public class UserLoginSource {
 
     @Inject
     private UserLoginBean ulB;
+
+    @Inject
+    private UserRoleBean urB;
+
+    @Inject private StudentBean sB;
+    @Inject private ProfessorBean pB;
 
     /*
         Returns:
@@ -143,5 +151,26 @@ public class UserLoginSource {
 
         return success ? Response.status(Response.Status.OK).build():
                 Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @Path("{loginId}")
+    @GET
+    public Response getPersonByLoginId(@PathParam("loginId") int loginId, @QueryParam("roleId") int roleId) {
+
+        UserRole ur = urB.getRoleById(roleId);
+        if(ur == null) {
+            return Response.status(400).entity(new ResponseError(400, "No roleId defined")).build();
+        }
+        switch (ur.getName()) {
+            case "Administrator":
+                // TODO
+                return Response.status(400).entity(new ResponseError(400, "Not implemented for this role")).build();
+            case "Student":
+                return Response.ok(sB.getStudentByLoginId(loginId)).build();
+            case "Professor":
+                return Response.ok(pB.getProfessorByLoginId(loginId)).build();
+            default:
+                return Response.status(400).entity(new ResponseError(400, "Unknown roleId.")).build();
+        }
     }
 }

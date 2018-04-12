@@ -74,4 +74,8 @@ public class ProfessorBean {
         em.flush();
         return c;
     }
+
+    public Professor getProfessorByLoginId(int loginId) {
+        return em.createNamedQuery("Professor.getByLoginId", Professor.class).setParameter("loginId", loginId).getSingleResult();
+    }
 }
