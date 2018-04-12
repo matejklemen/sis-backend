@@ -17,7 +17,7 @@ public class StudyProgramBean {
 
     @Transactional
     public StudyProgram getStudyProgram(String id) {
-        StudyProgram pa = em.find(StudyProgram.class, id);
+        StudyProgram pa = em.find(StudyProgram.class,id);
         if(pa == null) throw new NoResultException("No study degree by this id");
         return pa;
     }

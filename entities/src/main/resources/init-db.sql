@@ -1,7 +1,7 @@
 -- nevem zakaj mora bit v eni vrstici ceu ukaz, probu sm sam values nastet po vrsticah pa ni delal
 
 -- user logins
-INSERT INTO user_login (username, password, id_user_role, salt) VALUES ('joze1', '263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62', 1, 123);
+INSERT INTO user_login (username, password, id_user_role, salt) VALUES ('joze1', '263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62', 1, 123), ('mk3141@student.uni-lj.si', '5c04bcdf01a4553d9b4ebe88b0d6cca9ad763c141f0fef491cbbad71114d24a2d8e633c32179d6c05f4d1adfa29ba3cda2e1cb1bdcd23b2d50abf317e77de41c', 2, 1337), ('fejk.mail@fri.uni-lj.si', 'ebbcfecbb97654304f3aee0228236ec4d94fa0593ea1ec8236fc3e2b9e6b01546d9ee62550d8ff30d3df9edc65517caa75dcb6dd358e11a9ec5d7cdf8911b0c0', 3, 321), ('ref@fri.uni-lj.si', '3cb32dbc41cda352b023833eb6ea9d23e0be5f821cfe5cec1d426936e5d35167d3c38b9e14cee2f688500b7361ab2dd4849b0c45ffaef9c88daa3484b703abb0', 4, 666);
 
 -- address
 INSERT INTO address (line1, id_post_address, id_country) VALUES ('Generični kraj 9', 1234, 705), ('Ulica zlatih jam 14', 8000, 705), ('Pod orodjem 6b', 8220, 705), ('Pod streho 45', 5243, 705), ('Cesta poštenih padcev 11', 1231, 705);

@@ -23,12 +23,7 @@ public class AuthUtils {
      * @throws SignatureException if an error occured during the parsing of JWT token (i.e. invalid token).
      */
     public static Jws<Claims> getJWTObject(String jwtToken) throws SignatureException {
-
-        String[] tokenParts = jwtToken.split(" ");
-        if(tokenParts.length != 2)
-            throw new SignatureException("Invalid form of JWT token");
-
-        return Jwts.parser().setSigningKey(serverSecret).parseClaimsJws(tokenParts[1]);
+        return Jwts.parser().setSigningKey(serverSecret).parseClaimsJws(jwtToken);
     }
 
     public static String issueJWTToken(UserLogin user, int duration) {
