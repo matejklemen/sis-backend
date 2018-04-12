@@ -16,8 +16,19 @@ public class StudyProgramBean {
     private EntityManager em;
 
     @Transactional
+    public StudyProgram getStudyProgramByEvsCode(int evsCode) {
+        StudyProgram pa = em.createNamedQuery("StudyProgram.getByEvsCode", StudyProgram.class)
+                .setParameter("evsCode",evsCode)
+                .setMaxResults(1)
+                .getSingleResult();
+
+        if(pa == null) throw new NoResultException("No study degree by this evsCode");
+        return pa;
+    }
+
+    @Transactional
     public StudyProgram getStudyProgram(String id) {
-        StudyProgram pa = em.find(StudyProgram.class, id);
+        StudyProgram pa = em.find(StudyProgram.class,id);
         if(pa == null) throw new NoResultException("No study degree by this id");
         return pa;
     }

@@ -11,6 +11,7 @@ import java.io.Serializable;
                 @NamedQuery(name = "StudyProgram.getByName", query = "SELECT sp FROM study_program sp WHERE sp.name = :name"),
                 @NamedQuery(name = "StudyProgram.getAll", query = "SELECT sp FROM study_program sp"),
                 @NamedQuery(name = "StudyProgram.getById", query = "SELECT sp FROM study_program sp WHERE sp.id = :id"),
+                @NamedQuery(name = "StudyProgram.getByEvsCode", query = "SELECT sp FROM study_program sp WHERE sp.evsCode = :evsCode"),
         }
 )
 public class StudyProgram implements Serializable, Codelistable {
