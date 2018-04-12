@@ -6,7 +6,7 @@ import beans.crud.UserLoginBean;
 import beans.crud.UserRoleBean;
 import entities.Student;
 import entities.UserLogin;
-import utils.Pair;
+import javafx.util.Pair;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

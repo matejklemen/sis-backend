@@ -6,7 +6,7 @@ import entities.Student;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import pojo.FileData;
-import utils.Pair;
+import javafx.util.Pair;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
