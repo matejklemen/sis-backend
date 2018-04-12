@@ -6,16 +6,15 @@ import beans.crud.ProfessorBean;
 import beans.crud.StudentBean;
 import beans.crud.UserLoginBean;
 import beans.crud.UserRoleBean;
-import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import entities.UserLogin;
 import entities.UserRole;
 import exceptions.UserBlacklistedException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import pojo.UserLoginRequest;
+import utils.AuthUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -39,9 +38,6 @@ import java.util.logging.Logger;
 public class UserLoginSource {
 
     private Logger log = Logger.getLogger(getClass().getSimpleName());
-    private final String serverSecret = ConfigurationUtil.getInstance().get("auth.server-secret").orElse("");
-
-    private static final String TOKEN_ISSUER = "sis";
     private static final int TOKEN_VALIDITY_MINS_LOGIN = 15;
     private static final int TOKEN_VALIDITY_MINS_RESET_PASSWORD = 1;
 
@@ -82,7 +78,7 @@ public class UserLoginSource {
         if(user == null)
             return Response.status(Response.Status.FORBIDDEN).build();
 
-        String jwtToken = issueJWTToken(user, TOKEN_VALIDITY_MINS_LOGIN);
+        String jwtToken = AuthUtils.issueJWTToken(user, TOKEN_VALIDITY_MINS_LOGIN);
 
         // build a Map instead of creating a class for response
         Map<String, String> responseBody = new HashMap<String, String>();
@@ -91,34 +87,6 @@ public class UserLoginSource {
         responseBody.put("token", jwtToken);
 
         return Response.ok().entity(responseBody).build();
-    }
-
-    private String issueJWTToken(UserLogin user, int duration) {
-        Date issuedDate = new Date();
-
-        Date expiredDate = new Date(issuedDate.getTime() + TOKEN_VALIDITY_MINS_LOGIN * 60 * 1000);
-
-        String jwtToken = Jwts.builder()
-                .setSubject(user.getUsername())
-                .setIssuer(TOKEN_ISSUER)
-                .setIssuedAt(issuedDate)
-                .setExpiration(expiredDate)
-                .claim("role", user.getRole())
-                .signWith(SignatureAlgorithm.HS512, serverSecret) /* server secret is set in the config file */
-                .compact();
-
-        return jwtToken;
-    }
-
-    /**
-     * Extracts claims ("properties") from jwtToken.
-     * NOTE: get claims by using <Claim-object>.get(<claim-name>).
-     * @param jwtToken
-     * @return set of claims
-     * @throws Exception if an error occured during the parsing of JWT token.
-     */
-    private Claims extractClaimsFromJWT(String jwtToken) throws Exception {
-        return Jwts.parser().setSigningKey(serverSecret).parseClaimsJws(jwtToken).getBody();
     }
 
     @POST
@@ -136,7 +104,7 @@ public class UserLoginSource {
         List<UserLogin> ul = ulB.getUserLoginInfoByUsername(ulreq.getUsername());
 
         if(ul.size() > 0)
-            ulB.sendToken(ulreq.getUsername(), issueJWTToken(ul.get(0), TOKEN_VALIDITY_MINS_RESET_PASSWORD));
+            ulB.sendToken(ulreq.getUsername(), AuthUtils.issueJWTToken(ul.get(0), TOKEN_VALIDITY_MINS_RESET_PASSWORD));
         else
             log.severe(String.format("User %s could not be found, therefore I am not sending a password reset mail.\n", ulreq.getUsername()));
 
@@ -163,9 +131,9 @@ public class UserLoginSource {
         Claims userClaims = null;
 
         try {
-            userClaims = extractClaimsFromJWT(ulreq.getJwtToken());
+            userClaims = AuthUtils.getJWTObject(ulreq.getJwtToken()).getBody();
         }
-        catch (Exception e) {
+        catch (SignatureException se) {
             log.severe("Encountered an invalid JWT token in request to change password!");
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -178,7 +146,8 @@ public class UserLoginSource {
 
         boolean success = ulB.changePassword(username, ulreq.getNewPassword());
 
-        return success ? Response.status(Response.Status.OK).build() : Response.status(Response.Status.BAD_REQUEST).build();
+        return success ? Response.status(Response.Status.OK).build():
+                Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @Path("{loginId}")
