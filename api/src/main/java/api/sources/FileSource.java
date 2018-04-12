@@ -5,8 +5,8 @@ import beans.logic.StudentImportBean;
 import entities.Student;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
-import javafx.util.Pair;
 import pojo.FileData;
+import utils.Pair;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -31,7 +31,7 @@ public class FileSource {
 
     @PUT
     public Response putFile(FileData file){
-        Pair<List<Student>,List<Student>> sp = si.ParseStudentData(file.getFileData());
+        Pair<List<Student>, List<Student>> sp = si.ParseStudentData(file.getFileData());
         return Response.status(Response.Status.OK).entity(sp).build();
     }
 }

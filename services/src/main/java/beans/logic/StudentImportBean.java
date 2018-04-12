@@ -1,12 +1,18 @@
 package beans.logic;
 
-import beans.crud.*;
-import entities.*;
-import javafx.util.Pair;
+import beans.crud.StudentBean;
+import beans.crud.StudyProgramBean;
+import beans.crud.UserLoginBean;
+import beans.crud.UserRoleBean;
+import entities.Student;
+import entities.UserLogin;
+import utils.Pair;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static java.lang.Integer.parseInt;
