@@ -28,6 +28,11 @@ public class StudyProgramBean {
     }
 
     @Transactional
+    public List<StudyProgram> getDeletedStudyPrograms() {
+        return em.createNamedQuery("StudyProgram.getDeleted", StudyProgram.class).getResultList();
+    }
+
+    @Transactional
     public boolean existsStudyProgram(String id) {
         return em.find(StudyProgram.class, id) != null;
     }

@@ -38,7 +38,9 @@ public class CourseSource {
             )
     })
     @GET
-    public Response getCourses() {
+    public Response getCourses(@QueryParam("deleted") boolean deleted) {
+        if(deleted)
+            return Response.ok(cB.getDeletedCourses()).build();
         return Response.ok(cB.getCourses()).build();
     }
 

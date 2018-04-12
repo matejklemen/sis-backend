@@ -38,7 +38,9 @@ public class StudyKindSource {
             )
     })
     @GET
-    public Response getStudyKinds() {
+    public Response getStudyKinds(@QueryParam("deleted") boolean deleted) {
+        if(deleted)
+            return Response.ok(cB.getDeletedStudyKinds()).build();
         return Response.ok(cB.getStudyKinds()).build();
     }
 

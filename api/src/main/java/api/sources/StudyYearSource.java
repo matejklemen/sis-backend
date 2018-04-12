@@ -38,7 +38,9 @@ public class StudyYearSource {
             )
     })
     @GET
-    public Response getStudyYears() {
+    public Response getStudyYears(@QueryParam("deleted") boolean deleted) {
+        if(deleted)
+            return Response.ok().entity(cb.getDeletedStudyYears()).build();
         return Response.ok().entity(cb.getStudyYears()).build();
     }
 

@@ -24,6 +24,13 @@ public class StudyKindBean {
     }
 
     @Transactional
+    public List<StudyKind> getDeletedStudyKinds() {
+        TypedQuery<StudyKind> q = em.createNamedQuery("StudyKind.getDeleted", StudyKind.class);
+        //q.setMaxResults(100);
+        return q.getResultList();
+    }
+
+    @Transactional
     public StudyKind getStudyKind(int id) {
         StudyKind c = em.find(StudyKind.class, id);
         if(c == null) throw new NoResultException("No study kind by this id");

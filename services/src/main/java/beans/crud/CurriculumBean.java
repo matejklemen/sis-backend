@@ -25,6 +25,12 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    public List<Curriculum> getDeletedEntireCurriculum() {
+        TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getDeleted", Curriculum.class);
+
+        return q.getResultList();
+    }
+
     public Curriculum getCurriculumByIdCurriculum(int idCurriculum) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByIdCurriculum", Curriculum.class);
         q.setParameter("id_curriculum", idCurriculum);

@@ -23,6 +23,12 @@ public class MunicipalityBean {
     }
 
     @Transactional
+    public List<Municipality> getDeletedMunicipalities() {
+        TypedQuery<Municipality> q = em.createNamedQuery("Municipality.getDeleted", Municipality.class);
+        return q.getResultList();
+    }
+
+    @Transactional
     public Municipality getMunicipality(int postNumber) {
         Municipality pa = em.find(Municipality.class, postNumber);
         if(pa == null) throw new NoResultException("No municipality by this post number");

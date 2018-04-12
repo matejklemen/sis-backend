@@ -44,6 +44,12 @@ public class StudyYearBean {
     }
 
     @Transactional
+    public List<StudyYear> getDeletedStudyYears() {
+        TypedQuery<StudyYear> q = em.createNamedQuery("StudyYear.getDeleted", StudyYear.class);
+        return q.getResultList();
+    }
+
+    @Transactional
     public StudyYear getStudyYear(int id) {
         StudyYear pa = em.find(StudyYear.class, id);
         if(pa == null) throw new NoResultException("No study year by this post number");

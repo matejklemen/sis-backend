@@ -38,7 +38,9 @@ public class StudyFormSource {
             )
     })
     @GET
-    public Response getStudyForms() {
+    public Response getStudyForms(@QueryParam("deleted") boolean deleted) {
+        if(deleted)
+            return Response.ok(cB.getDeletedStudyForms()).build();
         return Response.ok(cB.getStudyForms()).build();
     }
 

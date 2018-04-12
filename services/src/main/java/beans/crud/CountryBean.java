@@ -27,6 +27,13 @@ public class CountryBean {
     }
 
     @Transactional
+    public List<Country> getDeletedCountries() {
+        TypedQuery<Country> q = em.createNamedQuery("Country.getDeleted", Country.class);
+        //q.setMaxResults(100);
+        return q.getResultList();
+    }
+
+    @Transactional
     public Country getCountry(int id) {
         Country c = em.find(Country.class, id);
         if(c == null) throw new NoResultException("No country by this id");

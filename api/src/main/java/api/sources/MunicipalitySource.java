@@ -39,7 +39,9 @@ public class MunicipalitySource {
             )
     })
     @GET
-    public Response getMunicipalityes() {
+    public Response getMunicipalities(@QueryParam("deleted") boolean deleted) {
+        if(deleted)
+            return Response.ok().entity(pab.getDeletedMunicipalities()).build();
         return Response.ok().entity(pab.getMunicipalities()).build();
     }
 
