@@ -31,6 +31,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -39,6 +40,8 @@ import java.util.List;
 @LogApiCalls
 @Tags(value = @Tag(name = "codelists"))
 public class CodelistSource {
+
+    private Logger log = Logger.getLogger(getClass().getSimpleName());
 
     @Inject private CountryBean countryB;
     @Inject private PostAddressBean postAddressB;
@@ -64,14 +67,17 @@ public class CodelistSource {
     })
     @GET
     public Response getCodeLists(@Context HttpServletRequest requestContext) {
+        /*
+        ------ UNCOMMENT THIS AFTER TOKEN IS BEING SENT IN THE HEADER --------
         HashSet<String> allowedRoles = new HashSet<String>();
         allowedRoles.add("Administrator");
 
         String authHeader = requestContext.getHeader("Authorization");
+        log.info(String.format("Auth header: %s", authHeader));
 
         if(authHeader == null || !AuthUtils.hasProperRole(authHeader, allowedRoles))
             return Response.status(Response.Status.UNAUTHORIZED).build();
-        // ---------------------------------------------
+        */
 
         List<CodelistsData> cld = new ArrayList<>();
         // TODO: this can be optimized

@@ -41,7 +41,7 @@ public class AuthUtils {
                 .setIssuer(TOKEN_ISSUER)
                 .setIssuedAt(issuedDate)
                 .setExpiration(expiredDate)
-                .claim("role", user.getRole().getName())
+                .claim("role", user.getRole())
                 .signWith(SignatureAlgorithm.HS512, serverSecret) /* server secret is set in the config file */
                 .compact();
 

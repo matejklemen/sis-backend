@@ -2,9 +2,12 @@ package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
 import beans.crud.UserLoginBean;
+import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import entities.UserLogin;
 import exceptions.UserBlacklistedException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
