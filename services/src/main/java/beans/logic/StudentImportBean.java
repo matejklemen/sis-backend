@@ -27,65 +27,40 @@ public class StudentImportBean {
     @Inject
     private StudyProgramBean spb;
     @Inject
-    private StudyYearBean syb;
-    @Inject
-    private EnrolmentBean enb;
-    @Inject
-    private CurriculumBean curB;
+    private CandidateBean cb;
 
-    public List<Student> ParseStudentData(String studentData){
-        List<Student> listOfStudents = new ArrayList<>();
+    public List<Candidate> ParseStudentData(String studentData){
+        List<Candidate> listOfCandidates = new ArrayList<>();
 
         GenerateNewStudentId();
         int pos = 0;
         while(pos < studentData.length()){
-            Student stu = new Student();
-            stu.setName(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
-            stu.setSurname(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
-            stu.setGender('-');
 
-            EnrolmentToken enr = new EnrolmentToken();
-            enr.setStudent(stu);
-            enr.setYear(1);
-            StudyProgram studyProgram = spb.getStudyProgramByEvsCode(Integer.parseInt(studentData.substring(pos, (pos = pos+7))));
-            enr.setStudyProgram(studyProgram);
-            enr.setStudyYear(syb.getOrCreateStudyYear("2017/2018"));
-            enr.setUsed(true);
-            enr.setKind(enr.getKind());
-            enr.setType(enr.getType());
+            // Create new candidate
+            Candidate can = new Candidate();
+            can.setName(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
+            can.setSurname(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
+            can.setStudyProgram(spb.getStudyProgramByEvsCode(Integer.parseInt(studentData.substring(pos, (pos = pos+7)))));
+            can.setRegisterNumber(GenerateNewStudentId());
+            can.setEmail(studentData.substring(pos, (pos = pos+60)).replaceAll("\\s+",""));
 
-            stu.setRegisterNumber(GenerateNewStudentId());
-            stu.setEmail(studentData.substring(pos, (pos = pos+60)).replaceAll("\\s+",""));
-
+            // Register user for login
             UserLogin ul = new UserLogin();
-            ul.setUsername(GenerateUsername(stu));
-            ul.setPassword(GeneratePassword(ul, stu));
+            ul.setUsername(GenerateUsername(can));
+            ul.setPassword(GeneratePassword(ul, can));
             ul.setRole(urb.getRoleByName("Student"));
 
             ul = ulb.insertUserLoginSingle(ul.getUsername(), ul.getPassword(), ul.getRole());
+            can.setLoginData(ul);
+            cb.putCandidate(can);
 
-            stu.setLoginData(ul);
-
-            stu = sdb.putStudent(stu);
-
-            // enrolment has to be persisted after student ?
-            List<Curriculum> lCurriculum = curB.getFirstYearCourses("2017/2018", studyProgram.getId());
-            List<Integer> lCourses = new ArrayList<>();
-            Iterator<Curriculum> lCurriculumIterator = lCurriculum.iterator();
-            while (lCurriculumIterator.hasNext()) {
-                lCourses.add(lCurriculumIterator.next().getIdCourse().getId());
-            }
-
-            Enrolment en = enb.putEnrolment(enr, lCourses);
-
-            stu = sdb.updateStudent(stu);
-
-            listOfStudents.add(stu);
+            listOfCandidates.add(can);
         }
 
-        return listOfStudents;
+        return listOfCandidates;
     }
 
+    /* Helpers */
     private String GenerateNewStudentId(){
         if(nextStudentId == null){
             Student lastStudent = sdb.getLastStudent();
@@ -102,14 +77,14 @@ public class StudentImportBean {
         return String.valueOf(nextStudentId);
     }
 
-    private String GeneratePassword(UserLogin ul, Student sd){
+    private String GeneratePassword(UserLogin ul, Candidate can){
         String prefix = ul.getUsername().substring(0,2);
-        return prefix + "_" + sd.getRegisterNumber();
+        return prefix + "_" + can.getRegisterNumber();
     }
 
-    private String GenerateUsername(Student sd){
-        String prefix = sd.getName().substring(0,1) + sd.getSurname().substring(0,1);
-        String[] idNumbers = sd.getRegisterNumber().split("");
+    private String GenerateUsername(Candidate can){
+        String prefix = can.getName().substring(0,1) + can.getSurname().substring(0,1);
+        String[] idNumbers = can.getRegisterNumber().split("");
         String uniqueId = idNumbers[3] + idNumbers[5] + idNumbers[6] + idNumbers[7];
         String suffix = "@student.uni-lj.si";
         return prefix.toLowerCase()  + uniqueId + suffix;

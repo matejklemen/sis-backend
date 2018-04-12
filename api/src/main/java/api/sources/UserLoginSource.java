@@ -2,11 +2,10 @@ package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
-import beans.crud.ProfessorBean;
-import beans.crud.StudentBean;
-import beans.crud.UserLoginBean;
+import beans.crud.*;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
-import beans.crud.UserRoleBean;
+import entities.Candidate;
+import entities.Student;
 import entities.UserLogin;
 import entities.UserRole;
 import exceptions.UserBlacklistedException;
@@ -44,14 +43,11 @@ public class UserLoginSource {
     private static final int TOKEN_VALIDITY_MINS_LOGIN = 15;
     private static final int TOKEN_VALIDITY_MINS_RESET_PASSWORD = 1;
 
-    @Inject
-    private UserLoginBean ulB;
-
-    @Inject
-    private UserRoleBean urB;
-
+    @Inject private UserLoginBean ulB;
+    @Inject private UserRoleBean urB;
     @Inject private StudentBean sB;
     @Inject private ProfessorBean pB;
+    @Inject private CandidateBean cB;
 
     /*
         Returns:
@@ -166,7 +162,12 @@ public class UserLoginSource {
                 // TODO
                 return Response.status(400).entity(new ResponseError(400, "Not implemented for this role")).build();
             case "Student":
-                return Response.ok(sB.getStudentByLoginId(loginId)).build();
+                Student s = sB.getStudentByLoginId(loginId);
+                if(s != null)
+                    Response.ok(s).build();
+
+                Candidate c = cB.getCandidateByLoginId(loginId);
+                Response.ok(c).build();
             case "Professor":
                 return Response.ok(pB.getProfessorByLoginId(loginId)).build();
             default:
