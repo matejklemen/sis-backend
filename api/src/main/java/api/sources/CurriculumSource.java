@@ -4,9 +4,11 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.CurriculumBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.Curriculum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -17,10 +19,13 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,6 +35,11 @@ import java.util.List;
 @Tags(value = @Tag(name = "curriculum"))
 public class CurriculumSource {
 
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Context
+    protected UriInfo uriInfo;
+
     @Inject
     CurriculumBean cb;
 
@@ -37,13 +47,28 @@ public class CurriculumSource {
             @ApiResponse(responseCode = "200",
                     description = "Retrieved data",
                     content = @Content(
-                            schema = @Schema(implementation = Curriculum.class)))
-    })
+                            schema = @Schema(implementation = Curriculum.class)))},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+            })
     @GET
     public Response getEntireCurriculum(@QueryParam("deleted") boolean deleted) {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
         if(deleted)
             return Response.status(Response.Status.OK).entity(cb.getDeletedEntireCurriculum()).build();
-        return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum()).build();
+
+        return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum(query)).build();
+    }
+
+    @GET
+    @Path("count")
+    public Response getNumberOfCurriculums() {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
+        return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum(query).size()).build();
     }
 
     @Operation(description = "Retrieves curriculum by curriculum ID.", summary = "Get curriculum for curriculum ID", responses = {

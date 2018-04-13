@@ -25,14 +25,9 @@ public class CountryBean {
 
     @Transactional
     public List<Country> getCountries(QueryParameters query) {
-        try {
-            List<Country> countries = JPAUtils.queryEntities(em, Country.class, query);
+        List<Country> countries = JPAUtils.queryEntities(em, Country.class, query);
 
-            return countries;
-        } catch (NotFoundException e) {
-            log.warning(e.toString());
-            throw e;
-        }
+        return countries;
     }
 
     @Transactional

@@ -92,9 +92,9 @@ public class CodelistSource {
         // TODO: this can be optimized
 
         // države
-        cld.add(new CodelistsData("country", "Države", "countries", countryB.getCountries(null).size(), new Country().getColumnNames(), new Country().getColumnTypes()));
+        cld.add(new CodelistsData("country", "Države", "countries", countryB.getCountries(new QueryParameters()).size(), new Country().getColumnNames(), new Country().getColumnTypes()));
         // TODO: občine
-        cld.add(new CodelistsData("municipality", "Občine", "municipalities", municipalityB.getMunicipalities().size(), new Municipality().getColumnNames(), new Municipality().getColumnTypes()));
+        cld.add(new CodelistsData("municipality", "Občine", "municipalities", municipalityB.getMunicipalities(new QueryParameters()).size(), new Municipality().getColumnNames(), new Municipality().getColumnTypes()));
         // pošte
         cld.add(new CodelistsData("post_address", "Poštne številke", "postaddresses", postAddressB.getPostAddresses().size(), new PostAddress().getColumnNames(), new PostAddress().getColumnTypes()));
         // študijski program (+ študijska stopnja)
@@ -103,7 +103,7 @@ public class CodelistSource {
         // študijsko leto
         cld.add(new CodelistsData("study_year", "Študijska leta", "studyyears", studyYearB.getStudyYears().size(), new StudyYear().getColumnNames(), new StudyYear().getColumnTypes()));
         // vrsta študija (KLASIUS SRV)
-        cld.add(new CodelistsData("klasius_srv", "KLASIUS SRV", "klasius", klasiusSrvB.getKlasiusSrvs().size(), new KlasiusSrv().getColumnNames(), new KlasiusSrv().getColumnTypes()));
+        cld.add(new CodelistsData("klasius_srv", "KLASIUS SRV", "klasius", klasiusSrvB.getKlasiusSrvs(new QueryParameters()).size(), new KlasiusSrv().getColumnNames(), new KlasiusSrv().getColumnTypes()));
         // vrsta vpisa
         cld.add(new CodelistsData("study_type", "Vrste študija", "studytypes", studyTypeB.getStudyTypes().size(), new StudyType().getColumnNames(), new StudyType().getColumnTypes()));
         // način študija
@@ -111,11 +111,11 @@ public class CodelistSource {
         // oblika študija
         cld.add(new CodelistsData("study_form", "Oblika študija", "studyforms", studyFormB.getStudyForms().size(), new StudyForm().getColumnNames(), new StudyForm().getColumnTypes()));
         // predmeti
-        cld.add(new CodelistsData("course", "Predmeti", "courses", courseB.getCourses().size(), new Course().getColumnNames(), new Course().getColumnTypes()));
+        cld.add(new CodelistsData("course", "Predmeti", "courses", courseB.getCourses(new QueryParameters()).size(), new Course().getColumnNames(), new Course().getColumnTypes()));
         // predavatelji
         cld.add(new CodelistsData("professor", "Predavatelji", "professors", professorB.getAllProfessors().size(), new Professor().getColumnNames(), new Professor().getColumnTypes()));
         // predmetnik(-i)
-        cld.add(new CodelistsData("curriculum", "Predmetnik", "curriculum", curriculumB.getEntireCurriculum().size(), new Curriculum().getColumnNames(), new Curriculum().getColumnTypes()));
+        cld.add(new CodelistsData("curriculum", "Predmetnik", "curriculum", curriculumB.getEntireCurriculum(new QueryParameters()).size(), new Curriculum().getColumnNames(), new Curriculum().getColumnTypes()));
         // deli predmetnikov
         cld.add(new CodelistsData("poc", "Deli predmetnikov", "poc", pocB.getAllPOC().size(), new PartOfCurriculum().getColumnNames(), new PartOfCurriculum().getColumnTypes()));
 

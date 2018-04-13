@@ -4,8 +4,11 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.CourseBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.Course;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -16,8 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,6 +33,11 @@ import javax.ws.rs.core.Response;
 @Tags(value = @Tag(name = "courses"))
 public class CourseSource {
 
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Context
+    protected UriInfo uriInfo;
+
     @Inject
     private CourseBean cB;
 
@@ -35,13 +46,27 @@ public class CourseSource {
                     description = "List of courses",
                     content = @Content(
                             schema = @Schema(implementation = Course.class))
-            )
-    })
+            )},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+            })
     @GET
     public Response getCourses(@QueryParam("deleted") boolean deleted) {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
         if(deleted)
             return Response.ok(cB.getDeletedCourses()).build();
-        return Response.ok(cB.getCourses()).build();
+        return Response.ok(cB.getCourses(query)).build();
+    }
+
+    @GET
+    @Path("count")
+    public Response getNumberOfCourses() {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
+        return Response.status(Response.Status.OK).entity(cB.getCourses(query).size()).build();
     }
 
     @Operation(description = "Returns a course with specified id.", summary = "Get course by id", responses = {

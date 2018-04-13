@@ -8,6 +8,7 @@ import javax.persistence.*;
 /* Represents the metadata about who are the organizers of a course in a particular study year */
 @Entity(name = "course_organization")
 @NamedQueries(value = {
+        @NamedQuery(name = "CourseOrganization.getAll", query = "SELECT co FROM course_organization co"),
         @NamedQuery(name = "CourseOrganization.getByCourseId", query = "SELECT co FROM course_organization co WHERE co.course.id = :idCourse"),
         @NamedQuery(name = "CourseOrganization.getByProfessorId", query = "SELECT co FROM course_organization co WHERE (co.organizer1.id = :profId OR co.organizer2.id = :profId OR co.organizer3.id = :profId)"),
         @NamedQuery(name = "CourseOrganization.getByStudyYear", query = "SELECT co FROM course_organization co WHERE co.studyYear.name = :studyYear")
