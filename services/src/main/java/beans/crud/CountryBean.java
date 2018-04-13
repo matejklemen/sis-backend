@@ -26,17 +26,9 @@ public class CountryBean {
     @Transactional
     public List<Country> getCountries(QueryParameters query) {
         try {
-            // if you do not want to deal with pagination, pass null as 'query' parameter
-            if(query == null) {
-                TypedQuery<Country> q = em.createNamedQuery("Country.getAll", Country.class);
+            List<Country> countries = JPAUtils.queryEntities(em, Country.class, query);
 
-                return q.getResultList();
-            }
-            else {
-                List<Country> countries = JPAUtils.queryEntities(em, Country.class, query);
-
-                return countries;
-            }
+            return countries;
         } catch (NotFoundException e) {
             log.warning(e.toString());
             throw e;
