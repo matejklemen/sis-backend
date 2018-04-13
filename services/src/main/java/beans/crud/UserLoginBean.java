@@ -198,7 +198,7 @@ public class UserLoginBean {
                 .buildEmail();
 
         Mailer mailer = MailerBuilder
-                .withSMTPServer("smtp.gmail.com", 25, SENDER_MAIL, SENDER_PASSWORD)
+                .withSMTPServer("smtp.gmail.com", 587, SENDER_MAIL, SENDER_PASSWORD)
                 .withTransportStrategy(TransportStrategy.SMTP_TLS)
                 .buildMailer();
 

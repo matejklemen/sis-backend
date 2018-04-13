@@ -44,12 +44,15 @@ public class StudentImportBean {
             stu.setStudyProgram(spb.getStudyProgram(studentData.substring(pos, (pos = pos+7))));
             stu.setRegisterNumber(GenerateNewStudentId());
             stu.setEmail(studentData.substring(pos, (pos = pos+60)).replaceAll("\\s+",""));
-
             // Check if Student with this data already exists
+            pos += 2;
+
             if(sdb.hasStudent(stu)){
                 listOfRejected.add(stu);
                 continue;
             }
+
+            log.info(stu.getName() + "," + stu.getSurname() + "," + stu.getStudyProgram());
 
             // Register user for login
             UserLogin ul = new UserLogin();
