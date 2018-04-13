@@ -2,6 +2,7 @@ package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
 import beans.crud.*;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.*;
 import entities.address.Country;
 import entities.address.Municipality;
@@ -10,6 +11,8 @@ import entities.curriculum.Course;
 import entities.curriculum.Curriculum;
 import entities.curriculum.PartOfCurriculum;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,6 +31,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -58,13 +62,18 @@ public class CodelistSource {
     @Inject private CurriculumBean curriculumB;
     @Inject private PartOfCurriculumBean pocB;
 
-    @Operation(description = "Returns a list of codelists.", summary = "Get list of codelists", responses = {
+    @Operation(description = "Returns a list of codelists.", summary = "Get list of codelists",
+            responses = {
             @ApiResponse(responseCode = "200",
                     description = "List of codelists",
                     content = @Content(
                             schema = @Schema(implementation = CodelistsData.class))
-            )
-    })
+            )},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+            })
     @GET
     public Response getCodeLists(@Context HttpServletRequest requestContext) {
         /*
@@ -83,7 +92,7 @@ public class CodelistSource {
         // TODO: this can be optimized
 
         // države
-        cld.add(new CodelistsData("country", "Države", "countries", countryB.getCountries().size(), new Country().getColumnNames(), new Country().getColumnTypes()));
+        cld.add(new CodelistsData("country", "Države", "countries", countryB.getCountries(null).size(), new Country().getColumnNames(), new Country().getColumnTypes()));
         // TODO: občine
         cld.add(new CodelistsData("municipality", "Občine", "municipalities", municipalityB.getMunicipalities().size(), new Municipality().getColumnNames(), new Municipality().getColumnTypes()));
         // pošte

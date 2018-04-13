@@ -16,6 +16,7 @@
         <postgresql.version>42.2.2</postgresql.version>
         <kumuluzee-cors.version>1.0.3</kumuluzee-cors.version>
         <kumuluzee-openapi.version>1.0.0-SNAPSHOT</kumuluzee-openapi.version>
+        <kumuluzee-rest.version>1.1.0</kumuluzee-rest.version>
     </properties>
 
     <modules>
@@ -64,6 +65,11 @@
                 <groupId>com.kumuluz.ee.openapi</groupId>
                 <artifactId>kumuluzee-openapi-ui</artifactId>
                 <version>${kumuluzee-openapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kumuluz.ee.rest</groupId>
+                <artifactId>kumuluzee-rest-core</artifactId>
+                <version>${kumuluzee-rest.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

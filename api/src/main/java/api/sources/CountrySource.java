@@ -4,8 +4,11 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.CountryBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.address.Country;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -16,8 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,22 +33,35 @@ import javax.ws.rs.core.Response;
 @Tags(value = @Tag(name = "countries"))
 public class CountrySource {
 
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Context
+    protected UriInfo uriInfo;
+
     @Inject
     private CountryBean cb;
 
-    @Operation(description = "Returns a list of countries.", summary = "Get list of countries", responses = {
+    @Operation(description = "Returns a list of countries.", summary = "Get list of countries",
+            responses = {
             @ApiResponse(responseCode = "200",
                     description = "List of countries",
                     content = @Content(
-                            schema = @Schema(implementation
-                                    = Country.class))
-            )
-    })
+                            schema = @Schema(implementation = Country.class))
+            )},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+            }
+    )
     @GET
     public Response getCountries(@QueryParam("deleted") boolean deleted) {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
         if(deleted)
             return Response.ok().entity(cb.getDeletedCountries()).build();
-        return Response.ok().entity(cb.getCountries()).build();
+
+        return Response.ok().entity(cb.getCountries(query)).build();
     }
 
     @Operation(description = "Returns a country with specified id.", summary = "Get country by id", responses = {
