@@ -16,7 +16,7 @@ import java.util.List;
                 @NamedQuery(name = "Student.getAll", query = "SELECT st FROM student st"),
                 @NamedQuery(name = "Student.getByRegisterNumber", query = "SELECT st FROM student st WHERE st.registerNumber = :regno"),
                 @NamedQuery(name = "Student.getByLoginId", query = "SELECT st FROM student st WHERE st.loginData.id = :loginId"),
-                @NamedQuery(name = "Student.searchStudents", query = "SELECT st FROM student st WHERE st.registerNumber LIKE :sq OR st.name LIKE :sq OR st.surname LIKE :sq"),
+                @NamedQuery(name = "Student.searchStudents", query = "SELECT st FROM student st WHERE st.registerNumber LIKE :sq OR LOWER(st.name) LIKE :sq OR LOWER(st.surname) LIKE :sq"),
                 @NamedQuery(name = "Student.getAllReverse", query = "SELECT st FROM student st ORDER BY st.id DESC"),
                 @NamedQuery(name = "Student.getStudent", query = "SELECT st FROM student st WHERE st.name = :name AND st.surname = :surname AND st.studyProgram = :studyProgram AND st.email = :email")
         }

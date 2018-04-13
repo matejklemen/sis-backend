@@ -62,7 +62,7 @@ public class StudentBean {
         log.info("Searching: " + query);
         Query q = em.createNamedQuery("Student.searchStudents");
         q.setMaxResults(50);
-        q.setParameter("sq", "%" + query + "%");
+        q.setParameter("sq", "" + query.toLowerCase() + "%");
         return q.getResultList();
     }
 
