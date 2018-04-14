@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.StudyProgram;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -23,8 +25,10 @@ public class StudyProgramBean {
     }
 
     @Transactional
-    public List<StudyProgram> getStudyPrograms() {
-        return em.createNamedQuery("StudyProgram.getAll", StudyProgram.class).getResultList();
+    public List<StudyProgram> getStudyPrograms(QueryParameters query) {
+        List<StudyProgram> studyPrograms = JPAUtils.queryEntities(em, StudyProgram.class, query);
+
+        return studyPrograms;
     }
 
     @Transactional

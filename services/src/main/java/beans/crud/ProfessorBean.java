@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.Professor;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -18,10 +20,10 @@ public class ProfessorBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
-    public List<Professor> getAllProfessors() {
-        TypedQuery<Professor> q = em.createNamedQuery("Professor.getAllProfessors", Professor.class);
+    public List<Professor> getAllProfessors(QueryParameters query) {
+        List<Professor> professors = JPAUtils.queryEntities(em, Professor.class, query);
 
-        return q.getResultList();
+        return professors;
     }
 
     public List<Professor> getDeletedProfessors() {

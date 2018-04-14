@@ -67,9 +67,7 @@ public class CountrySource {
     @GET
     @Path("count")
     public Response getNumberOfAllCountries() {
-        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        return Response.status(Response.Status.OK).entity(cb.getCountries(query).size()).build();
+        return Response.status(Response.Status.OK).entity(cb.getCountries(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Returns a country with specified id.", summary = "Get country by id", responses = {

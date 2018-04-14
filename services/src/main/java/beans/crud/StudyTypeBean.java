@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.StudyType;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -20,10 +22,10 @@ public class StudyTypeBean {
     private EntityManager em;
 
     @Transactional
-    public List<StudyType> getStudyTypes() {
-        TypedQuery<StudyType> q = em.createNamedQuery("StudyType.getAll", StudyType.class);
-        //q.setMaxResults(100);
-        return q.getResultList();
+    public List<StudyType> getStudyTypes(QueryParameters query) {
+        List<StudyType> studyTypes = JPAUtils.queryEntities(em, StudyType.class, query);
+
+        return studyTypes;
     }
 
     @Transactional

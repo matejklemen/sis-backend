@@ -50,9 +50,7 @@ public class CourseOrganizationSource {
     @GET
     @Path("count")
     public Response getNumberOfCourseOrganizations() {
-        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        return Response.status(Response.Status.OK).entity(cob.getCourseOrganizations(query).size()).build();
+        return Response.status(Response.Status.OK).entity(cob.getCourseOrganizations(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Retrieves course organizations for particular course ID.", summary = "Get curriculum by course ID.", responses = {

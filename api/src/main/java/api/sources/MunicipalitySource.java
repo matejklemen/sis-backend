@@ -65,9 +65,7 @@ public class MunicipalitySource {
     @GET
     @Path("count")
     public Response getNumberOfMunicipalities() {
-        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        return Response.status(Response.Status.OK).entity(pab.getMunicipalities(query).size()).build();
+        return Response.status(Response.Status.OK).entity(pab.getMunicipalities(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Returns a municipality with specified id.", summary = "Get municipality by id", responses = {

@@ -4,8 +4,11 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.ProfessorBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.Professor;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -16,8 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,6 +33,11 @@ import javax.ws.rs.core.Response;
 @Tags(value = @Tag(name = "professor"))
 public class ProfessorSource {
 
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Context
+    protected UriInfo uriInfo;
+
     @Inject
     ProfessorBean pB;
 
@@ -35,13 +46,26 @@ public class ProfessorSource {
                     description = "List of professors",
                     content = @Content(
                             schema = @Schema(implementation = Professor.class))
-            )
-    })
+            )},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+            })
     @GET
     public Response getProfessors(@QueryParam("deleted") boolean deleted) {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
         if(deleted)
             return Response.ok(pB.getDeletedProfessors()).build();
-        return Response.ok(pB.getAllProfessors()).build();
+
+        return Response.ok(pB.getAllProfessors(query)).build();
+    }
+
+    @GET
+    @Path("count")
+    public Response getNumberOfProfessors() {
+        return Response.status(Response.Status.OK).entity(pB.getAllProfessors(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Returns a professor with specified id.", summary = "Get professor by id", responses = {

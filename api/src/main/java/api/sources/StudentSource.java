@@ -3,8 +3,11 @@ package api.sources;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.StudentBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.Student;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,9 +17,12 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,6 +32,11 @@ import java.util.List;
 @Tags(value = @Tag(name = "students"))
 public class StudentSource {
 
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Context
+    protected UriInfo uriInfo;
+
     @Inject
     private StudentBean sdB;
 
@@ -34,11 +45,23 @@ public class StudentSource {
                     description = "List of students",
                     content = @Content(
                             schema = @Schema(implementation = Student.class))
-            )
-    })
+            )},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+            })
     @GET
     public Response getStudents() {
-        return Response.ok(sdB.getStudents()).build();
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
+        return Response.ok(sdB.getStudents(query)).build();
+    }
+
+    @GET
+    @Path("count")
+    public Response getNumberOfStudents() {
+        return Response.status(Response.Status.OK).entity(sdB.getStudents(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Returns a student with specified id.", summary = "Get student by id", responses = {

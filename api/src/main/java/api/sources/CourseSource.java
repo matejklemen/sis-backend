@@ -64,9 +64,7 @@ public class CourseSource {
     @GET
     @Path("count")
     public Response getNumberOfCourses() {
-        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        return Response.status(Response.Status.OK).entity(cB.getCourses(query).size()).build();
+        return Response.status(Response.Status.OK).entity(cB.getCourses(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Returns a course with specified id.", summary = "Get course by id", responses = {

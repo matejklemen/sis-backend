@@ -66,9 +66,7 @@ public class CurriculumSource {
     @GET
     @Path("count")
     public Response getNumberOfCurriculums() {
-        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum(query).size()).build();
+        return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Retrieves curriculum by curriculum ID.", summary = "Get curriculum for curriculum ID", responses = {
