@@ -23,40 +23,48 @@ import java.io.Serializable;
                 @NamedQuery(name = "Curriculum.getByStudyProgramDegreeName", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.studyDegree.name = :name AND cur.deleted = false"),
                 @NamedQuery(name = "Curriculum.getFirstYear",
                         query = "SELECT cur FROM curriculum cur WHERE " +
-                                "cur.studyYear.name = :nameStudyYear " +
-                                "AND cur.idStudyProgram.id = :idStudyProgram " +
+                                "cur.studyYear.name = :name_study_year " +
+                                "AND cur.idStudyProgram.id = :id_study_program " +
                                 "AND cur.yearOfProgram = 1 " +
                                 "AND cur.deleted = false"),
                 /* Example use-case: get module courses for specific year for undergraduate UNI program */
-                @NamedQuery(name = "Curriculum.getModuleCourses",
+                @NamedQuery(name = "Curriculum.getAllModuleCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.poc.type = \"mod\" " +
-                                "AND cur.studyYear.name = :nameStudyYear " +
-                                "AND cur.idStudyProgram.id = :idStudyProgram " +
-                                "AND cur.yearOfProgram = :yearOfProgram " +
+                                "AND cur.studyYear.name = :name_study_year " +
+                                "AND cur.idStudyProgram.id = :id_study_program " +
+                                "AND cur.yearOfProgram = :year_of_program " +
                                 "AND cur.deleted = false"),
+                /* Example use-case: get module courses for module "Informacijski sistemi" in year 2017/2018 */
+                @NamedQuery(name = "Curriculum.getCurriculumByPOC",
+                            query = "SELECT cur FROM curriculum cur WHERE " +
+                                    "cur.poc.id = :id_poc " +
+                                    "AND cur.studyYear.name = :name_study_year " +
+                                    "AND cur.idStudyProgram.id = :id_study_program " +
+                                    "AND cur.yearOfProgram = :year_of_program " +
+                                    "AND cur.deleted = false"),
                 @NamedQuery(name = "Curriculum.getMandatoryCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.poc.type = \"obv\" " +
-                                "AND cur.studyYear.name = :nameStudyYear " +
-                                "AND cur.idStudyProgram.id = :idStudyProgram " +
-                                "AND cur.yearOfProgram = :yearOfProgram " +
+                                "AND cur.studyYear.name = :name_study_year " +
+                                "AND cur.idStudyProgram.id = :id_study_program " +
+                                "AND cur.yearOfProgram = :year_of_program " +
                                 "AND cur.deleted = false"),
                 /* Note: specialist elective courses = strokovni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getSpecialistElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.poc.type = \"siz\" " +
-                                "AND cur.studyYear.name = :nameStudyYear " +
-                                "AND cur.idStudyProgram.id = :idStudyProgram " +
-                                "AND cur.yearOfProgram = :yearOfProgram " +
+                                "AND cur.studyYear.name = :name_study_year " +
+                                "AND cur.idStudyProgram.id = :id_study_program " +
+                                "AND cur.yearOfProgram = :year_of_program " +
                                 "AND cur.deleted = false"),
                 /* Note: general elective courses = splošni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getGeneralElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.poc.type = \"piz\" " +
-                                "AND cur.studyYear.name = :nameStudyYear " +
-                                "AND cur.idStudyProgram.id = :idStudyProgram " +
-                                "AND cur.yearOfProgram = :yearOfProgram " +
+                                "AND cur.studyYear.name = :name_study_year " +
+                                "AND cur.idStudyProgram.id = :id_study_program " +
+                                "AND cur.yearOfProgram = :year_of_program " +
                                 "AND cur.deleted = false")
         }
 )
