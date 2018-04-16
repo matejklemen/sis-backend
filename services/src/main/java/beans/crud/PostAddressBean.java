@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.address.PostAddress;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,9 +19,10 @@ public class PostAddressBean {
     private EntityManager em;
 
     @Transactional
-    public List<PostAddress> getPostAddresses() {
-        TypedQuery<PostAddress> q = em.createNamedQuery("PostAddress.getAll", PostAddress.class);
-        return q.getResultList();
+    public List<PostAddress> getPostAddresses(QueryParameters query) {
+        List<PostAddress> postAdresses = JPAUtils.queryEntities(em, PostAddress.class, query);
+
+        return postAdresses;
     }
 
     @Transactional

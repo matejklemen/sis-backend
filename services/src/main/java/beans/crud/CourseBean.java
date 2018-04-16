@@ -1,6 +1,9 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.curriculum.Course;
+import entities.curriculum.CourseOrganization;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -8,6 +11,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,10 +24,10 @@ public class CourseBean {
     private EntityManager em;
 
     @Transactional
-    public List<Course> getCourses() {
-        TypedQuery<Course> q = em.createNamedQuery("Course.getAll", Course.class);
-        //q.setMaxResults(100);
-        return q.getResultList();
+    public List<Course> getCourses(QueryParameters query) {
+        List<Course> courses = JPAUtils.queryEntities(em, Course.class, query);
+
+        return courses;
     }
 
     @Transactional

@@ -4,9 +4,11 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.CurriculumBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.Curriculum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -17,10 +19,13 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,6 +35,11 @@ import java.util.List;
 @Tags(value = @Tag(name = "curriculum"))
 public class CurriculumSource {
 
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Context
+    protected UriInfo uriInfo;
+
     @Inject
     CurriculumBean cb;
 
@@ -37,13 +47,26 @@ public class CurriculumSource {
             @ApiResponse(responseCode = "200",
                     description = "Retrieved data",
                     content = @Content(
-                            schema = @Schema(implementation = Curriculum.class)))
-    })
+                            schema = @Schema(implementation = Curriculum.class)))},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+            })
     @GET
     public Response getEntireCurriculum(@QueryParam("deleted") boolean deleted) {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
         if(deleted)
             return Response.status(Response.Status.OK).entity(cb.getDeletedEntireCurriculum()).build();
-        return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum()).build();
+
+        return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum(query)).build();
+    }
+
+    @GET
+    @Path("count")
+    public Response getNumberOfCurriculums() {
+        return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Retrieves curriculum by curriculum ID.", summary = "Get curriculum for curriculum ID", responses = {
@@ -77,16 +100,16 @@ public class CurriculumSource {
                                 schema = @Schema(implementation = ResponseError.class)
                         ))
     })
-    @Path("studyprogram/{study-program-id}")
+    @Path("studyprogram/{study-program}")
     @GET
-    public Response getCurriculumByStudyProgramId(@PathParam(value = "study-program-id") String studyProgramId) {
+    public Response getCurriculumByStudyProgramId(@PathParam(value = "study-program") String studyProgramId) {
         List<Curriculum> c = cb.getCurriculumByStudyProgramId(studyProgramId);
 
         return c == null ? Response.status(Response.Status.NOT_FOUND).build():
                 Response.status(Response.Status.OK).entity(c).build();
     }
 
-    @Operation(description = "Retrieves curriculum for particular study program for particular study year and particular grade.", summary = "Get curriculum for specified study program, year and grade", responses = {
+    @Operation(description = "Retrieves curriculum for particular study program for particular study year and particular year of program.", summary = "Get curriculum for specified study program, year and grade", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Retrieved curriculum",
                     content = @Content(
@@ -102,10 +125,10 @@ public class CurriculumSource {
                             schema = @Schema(implementation = ResponseError.class)
                     ))
     })
-    @Path("{study-year}/{study-program-id}/{year-of-program}")
+    @Path("{study-year}/{study-program}/{year-of-program}")
     @GET
     public Response getAvailableCurriculumForProgramAndYear(@PathParam(value = "study-year") @Parameter(required = true, description = "Study year (for example 2017/2018) written without the dash (\"/\"), e.g. \"20172018\"") String studyYear,
-                                                   @PathParam(value = "study-program-id") String studyProgramId,
+                                                   @PathParam(value = "study-program") @Parameter(description = "EVS code for study program") String studyProgramId,
                                                    @PathParam(value = "year-of-program") @Parameter(description = "Grade that the student is in") int yearOfProgram) {
         if (studyYear.length() != 8)
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -176,6 +199,40 @@ public class CurriculumSource {
         if(c == null) throw new NoRequestBodyException();
         c = cb.updateCurriculum(c);
         return Response.ok().entity(c).build();
+    }
+
+    @Operation(description = "Retrieves courses from specific POC (in specific study year, study program and year of program).", summary = "Get courses by part of curriculum", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Retrieved curriculum",
+                    content = @Content(
+                            schema = @Schema(implementation = Curriculum.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "The year is written incorrectly. Make sure it is in format XXXXXXXX (8 numbers), for example 2016/2017 would be written as 20162017.",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)
+                    )),
+            @ApiResponse(responseCode = "404",
+                    description = "No curriculum found for specified parameters",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)
+                    ))
+    })
+    @Path("{study-year}/{study-program}/{year-of-program}/poc/{poc-id}")
+    @GET
+    public Response getCurriculumByPOC(@PathParam("study-year") @Parameter(description = "Study year (for example 2017/2018) written without the dash (\"/\"), e.g. \"20172018\")") String studyYear,
+                                              @PathParam("study-program") @Parameter(description = "EVS code for study program") String studyProgram,
+                                              @PathParam("year-of-program") int yearOfProgram,
+                                              @PathParam("poc-id") @Parameter(description = "ID of part of curriculum that you are interested in") int idPoc) {
+        if (studyYear.length() != 8)
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        // input is in format XXXXXXXX -> convert into XXXX/XXXX
+        studyYear = String.format("%s/%s", studyYear.substring(0, 4), studyYear.substring(4, 8));
+
+        List<Curriculum> currList = cb.getCurriculumByPOC(idPoc, studyYear, studyProgram, yearOfProgram);
+
+        return currList == null ? Response.status(Response.Status.NOT_FOUND).build():
+                Response.status(Response.Status.OK).entity(currList).build();
     }
 
 }

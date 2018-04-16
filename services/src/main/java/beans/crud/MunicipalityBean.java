@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.address.Municipality;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,9 +19,10 @@ public class MunicipalityBean {
     private EntityManager em;
 
     @Transactional
-    public List<Municipality> getMunicipalities() {
-        TypedQuery<Municipality> q = em.createNamedQuery("Municipality.getAll", Municipality.class);
-        return q.getResultList();
+    public List<Municipality> getMunicipalities(QueryParameters query) {
+        List<Municipality> countries = JPAUtils.queryEntities(em, Municipality.class, query);
+
+        return countries;
     }
 
     @Transactional

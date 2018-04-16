@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.curriculum.PartOfCurriculum;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -20,10 +22,10 @@ public class PartOfCurriculumBean {
     private EntityManager em;
 
     @Transactional
-    public List<PartOfCurriculum> getAllPOC() {
-        TypedQuery<PartOfCurriculum> q = em.createNamedQuery("PartOfCurriculum.getAll", PartOfCurriculum.class);
+    public List<PartOfCurriculum> getAllPOC(QueryParameters query) {
+        List<PartOfCurriculum> pocs = JPAUtils.queryEntities(em, PartOfCurriculum.class, query);
 
-        return q.getResultList();
+        return pocs;
     }
 
     @Transactional

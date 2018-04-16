@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.Enrolment;
 import entities.curriculum.StudentCourses;
 
@@ -20,9 +22,10 @@ public class StudentCoursesBean {
     private EntityManager em;
 
     @Transactional
-    public List<StudentCourses> getAllStudentCourses() {
-        TypedQuery<StudentCourses> q = em.createNamedQuery("StudentCourses.getAll", StudentCourses.class);
-        return q.getResultList();
+    public List<StudentCourses> getAllStudentCourses(QueryParameters query) {
+        List<StudentCourses> studentCourses = JPAUtils.queryEntities(em, StudentCourses.class, query);
+
+        return studentCourses;
     }
 
     @Transactional

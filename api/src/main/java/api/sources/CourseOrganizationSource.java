@@ -3,6 +3,7 @@ package api.sources;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.CourseOrganizationBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.CourseOrganization;
 import entities.curriculum.Curriculum;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,9 +17,12 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -28,8 +32,26 @@ import java.util.List;
 @Tags(value = @Tag(name = "course organization"))
 public class CourseOrganizationSource {
 
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Context
+    protected UriInfo uriInfo;
+
     @Inject
     CourseOrganizationBean cob;
+
+    @GET
+    public Response getCourseOrganizations() {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
+        return Response.status(Response.Status.OK).entity(cob.getCourseOrganizations(query)).build();
+    }
+
+    @GET
+    @Path("count")
+    public Response getNumberOfCourseOrganizations() {
+        return Response.status(Response.Status.OK).entity(cob.getCourseOrganizations(new QueryParameters()).size()).build();
+    }
 
     @Operation(description = "Retrieves course organizations for particular course ID.", summary = "Get curriculum by course ID.", responses = {
             @ApiResponse(responseCode = "200",

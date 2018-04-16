@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.KlasiusSrv;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,9 +19,10 @@ public class KlasiusSrvBean {
     private EntityManager em;
 
     @Transactional
-    public List<KlasiusSrv> getKlasiusSrvs() {
-        TypedQuery<KlasiusSrv> q = em.createNamedQuery("KlasiusSrv.getAll", KlasiusSrv.class);
-        return q.getResultList();
+    public List<KlasiusSrv> getKlasiusSrvs(QueryParameters query) {
+        List<KlasiusSrv> curriculums = JPAUtils.queryEntities(em, KlasiusSrv.class, query);
+
+        return curriculums;
     }
 
     @Transactional

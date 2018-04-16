@@ -1,11 +1,14 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.curriculum.CourseOrganization;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,6 +20,16 @@ public class CourseOrganizationBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    public List<CourseOrganization> getCourseOrganizations(QueryParameters query) {
+        try {
+            List<CourseOrganization> courseOrganizations = JPAUtils.queryEntities(em, CourseOrganization.class, query);
+
+            return courseOrganizations;
+        } catch (NotFoundException e) {
+            log.warning(e.toString());
+            throw e;
+        }
+    }
 
     public List<CourseOrganization> getCourseOrganizationsByCourseId(int courseId) {
         TypedQuery<CourseOrganization> q = em.createNamedQuery("CourseOrganization.getByCourseId", CourseOrganization.class);

@@ -4,8 +4,11 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.StudyTypeBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.StudyType;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -16,8 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,6 +33,11 @@ import javax.ws.rs.core.Response;
 @Tags(value = @Tag(name = "study types"))
 public class StudyTypeSource {
 
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Context
+    protected UriInfo uriInfo;
+
     @Inject
     private StudyTypeBean cB;
 
@@ -35,13 +46,26 @@ public class StudyTypeSource {
                     description = "List of study types",
                     content = @Content(
                             schema = @Schema(implementation = StudyType.class))
-            )
-    })
+            )},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+            })
     @GET
     public Response getStudyTypes(@QueryParam("deleted") boolean deleted) {
         if(deleted)
             return Response.ok(cB.getDeletedStudyTypes()).build();
-        return Response.ok(cB.getStudyTypes()).build();
+
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
+        return Response.ok(cB.getStudyTypes(query)).build();
+    }
+
+    @GET
+    @Path("count")
+    public Response getNumberOfStudyTypes() {
+        return Response.status(Response.Status.OK).entity(cB.getStudyTypes(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Returns a study type with specified id.", summary = "Get study type by id", responses = {

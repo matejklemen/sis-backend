@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.StudyKind;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,10 +19,10 @@ public class StudyKindBean {
     private EntityManager em;
 
     @Transactional
-    public List<StudyKind> getStudyKinds() {
-        TypedQuery<StudyKind> q = em.createNamedQuery("StudyKind.getAll", StudyKind.class);
-        //q.setMaxResults(100);
-        return q.getResultList();
+    public List<StudyKind> getStudyKinds(QueryParameters query) {
+        List<StudyKind> studyKinds = JPAUtils.queryEntities(em, StudyKind.class, query);
+
+        return studyKinds;
     }
 
     @Transactional

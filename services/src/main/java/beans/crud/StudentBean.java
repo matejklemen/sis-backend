@@ -1,5 +1,7 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.Student;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -33,10 +35,10 @@ public class StudentBean {
     }
 
     @Transactional
-    public List<Student> getStudents() {
-        TypedQuery<Student> q = em.createNamedQuery("Student.getAll", Student.class);
-        q.setMaxResults(100);
-        return q.getResultList();
+    public List<Student> getStudents(QueryParameters query) {
+        List<Student> students = JPAUtils.queryEntities(em, Student.class, query);
+
+        return students;
     }
 
     @Transactional

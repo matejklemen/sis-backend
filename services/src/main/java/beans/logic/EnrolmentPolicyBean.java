@@ -1,6 +1,7 @@
 package beans.logic;
 
 import beans.crud.*;
+import com.arjuna.ats.jta.exceptions.NotImplementedException;
 import entities.*;
 import entities.curriculum.Curriculum;
 import entities.logic.EnrolmentSheet;
@@ -8,11 +9,17 @@ import entities.logic.EnrolmentSheet;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static org.eclipse.persistence.config.TargetDatabase.Database;
 
 @ApplicationScoped
 public class EnrolmentPolicyBean {
+
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    private static final String BUN_RI = "1000468";
+    private static final String BUN_RM = "1000407";
 
     @Inject
     private GradeBean GradeBean;
@@ -70,12 +77,36 @@ public class EnrolmentPolicyBean {
         return false;
     }
 
+    boolean checkYearProgramModuleCombo(EnrolmentSheet es) throws NotImplementedException {
+        // TODO
+        if(es.getEnrolmentToken().getYear() == 3) {
+            String studyProgram = es.getEnrolmentToken().getStudyProgram().getId();
+            boolean hasFreeChoice = es.getEnrolmentToken().isFreeChoice();
+
+            if(studyProgram.equals(BUN_RI)) {
+
+            }
+
+            if(studyProgram.equals(BUN_RM)) {
+
+            }
+
+        }
+
+        throw new NotImplementedException("Method checkYearProgramModuleCombo() in EnrolmentPolicyBean not implemented yet");
+    }
+
     public List<String> checkEnrolment(EnrolmentSheet es, EnrolmentToken enToken){
         List<String> list = new ArrayList<>();
         if(enToken == null) {
             list.add("No token found");
             return list;
         }
+
+        // Preveri, da po končanem vnosu ni moč popravljati podatkov (izkoriščen žeton)
+        if(enToken.isUsed())
+            list.add("Enrolment token already used");
+
         if(!enToken.validEnrolmentToken(es.getEnrolmentToken())) {
             list.add("No valid token for given enrolment");
             return list;
@@ -153,8 +184,35 @@ public class EnrolmentPolicyBean {
             list.add(String.format("Trying to enrol into a nonexisting year of school for this program. %s only has %d years...",
                     es.getEnrolmentToken().getStudyProgram().getName(), maxNumberOfYearsProgramme));
 
-        // check that student can only select module courses in selected years
-        // TODO
+        // Preveri pravilnost kombinacije letnik+študijski program+modul
+        boolean validYearProgramModuleCombo = false;
+        try {
+            // TODO: not implemented -> remove try-catch and the thrown exception after implementing
+            validYearProgramModuleCombo = checkYearProgramModuleCombo(es);
+        }
+        catch (NotImplementedException e) {
+            log.info(e.getMessage());
+        }
+
+        if(!validYearProgramModuleCombo)
+            list.add("Invalid year of program + study program + module courses combination.");
+
+        // Preveri pravilnost kombinacije vrsta vpisa+letnik
+
+        // Preveri pravilnost kombinacije študijski program + vrsta študija (Klasius SRP)
+
+        // Preveri, da študent ne more vnesti vrste vpisa 98.
+        boolean invalidStudyType = es.getEnrolmentToken().getType().getId() == 98;
+        if(invalidStudyType)
+            list.add("Invalid study type (study type must not be \"98 Zaključek\")");
+
+        // Preveri, da so avtomatsko dodani obvezni predmeti.
+
+        // Preveri, da vpis še ni potrjen.
+
+        // Preveri seznam vpisanih.*
+
+        // Preveri izpis vpisnega lista.*
 
         return list;
     }

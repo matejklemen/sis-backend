@@ -4,8 +4,11 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.crud.MunicipalityBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.address.Municipality;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -16,8 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,6 +32,11 @@ import javax.ws.rs.core.Response;
 @LogApiCalls
 @Tags(value = @Tag(name = "municipalities"))
 public class MunicipalitySource {
+
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Context
+    protected UriInfo uriInfo;
 
     @Inject
     private MunicipalityBean pab;
@@ -36,13 +47,25 @@ public class MunicipalitySource {
                     content = @Content(
                             schema = @Schema(implementation
                                     = Municipality.class))
-            )
-    })
+            )},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+            })
     @GET
     public Response getMunicipalities(@QueryParam("deleted") boolean deleted) {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
         if(deleted)
             return Response.ok().entity(pab.getDeletedMunicipalities()).build();
-        return Response.ok().entity(pab.getMunicipalities()).build();
+        return Response.ok().entity(pab.getMunicipalities(query)).build();
+    }
+
+    @GET
+    @Path("count")
+    public Response getNumberOfMunicipalities() {
+        return Response.status(Response.Status.OK).entity(pab.getMunicipalities(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Returns a municipality with specified id.", summary = "Get municipality by id", responses = {
