@@ -33,6 +33,6 @@ mk3141 (at) student.uni-lj.si [študent/ka]
 
 fejk.mail (at) student.uni-lj.si [profesor/ica]
 
-ref (at) student.uni-lj.si [referent/ka]
+ref (at) fri.uni-lj.si [referent/ka]
 
 passwords for all 4 sample users in the system: 123
