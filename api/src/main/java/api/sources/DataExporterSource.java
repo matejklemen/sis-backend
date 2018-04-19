@@ -3,7 +3,7 @@ package api.sources;
 import api.interceptors.annotations.LogApiCalls;
 import api.mappers.ResponseError;
 import beans.logic.DataExporterBean;
-import entities.logic.Table;
+import entities.logic.TableData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,8 +21,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -49,7 +47,7 @@ public class DataExporterSource {
     @Path("tablepdf")
     @Produces("application/pdf")
     @POST
-    public Response returnTablePdf(@RequestBody Table table) throws Exception {
+    public Response returnTablePdf(@RequestBody TableData table) throws Exception {
         ByteArrayInputStream bios = dataExporterBean.generateTablePdf(table);
         Response.ResponseBuilder responseBuilder = Response.ok((Object) bios);
         responseBuilder.type("application/pdf");

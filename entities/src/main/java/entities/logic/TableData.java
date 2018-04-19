@@ -3,7 +3,7 @@ package entities.logic;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
 
-public class Table {
+public class TableData {
     @XmlElement
     private String tableName;
 
