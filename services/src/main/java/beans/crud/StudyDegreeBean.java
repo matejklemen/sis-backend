@@ -27,13 +27,7 @@ public class StudyDegreeBean {
     @Transactional
     public List<StudyDegree> getStudyDegrees(QueryParameters query) {
         List<StudyDegree> studyDegrees = JPAUtils.queryEntities(em, StudyDegree.class, query);
-
         return studyDegrees;
-    }
-
-    @Transactional
-    public List<StudyDegree> getDeletedStudyDegrees() {
-        return em.createNamedQuery("StudyDegree.getDeleted", StudyDegree.class).getResultList();
     }
 
     @Transactional

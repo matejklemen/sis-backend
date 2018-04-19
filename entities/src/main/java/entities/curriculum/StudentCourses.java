@@ -9,7 +9,6 @@ import java.io.Serializable;
 @Entity(name = "student_courses")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "StudentCourses.getAll", query = "SELECT c FROM student_courses c"),
                 @NamedQuery(name = "StudentCourses.getByEnrolmentId", query = "SELECT c FROM student_courses c WHERE c.enrolment = :enrolment")
         }
 )

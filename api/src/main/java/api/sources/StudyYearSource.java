@@ -54,11 +54,7 @@ public class StudyYearSource {
             })
     @GET
     public Response getStudyYears(@QueryParam("deleted") boolean deleted) {
-        if(deleted)
-            return Response.ok().entity(cb.getDeletedStudyYears()).build();
-
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
         return Response.ok().entity(cb.getStudyYears(query)).build();
     }
 

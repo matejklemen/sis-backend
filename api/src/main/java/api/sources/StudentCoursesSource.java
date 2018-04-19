@@ -52,9 +52,7 @@ public class StudentCoursesSource {
             })
     @GET
     public Response getAllStudentCourses() {
-
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
         return Response.ok(scB.getAllStudentCourses(query)).build();
     }
 

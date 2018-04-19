@@ -54,11 +54,7 @@ public class StudyProgramSource {
             })
     @GET
     public Response getStudyPrograms(@QueryParam("deleted") boolean deleted) {
-        if(deleted)
-            return Response.ok().entity(cb.getDeletedStudyPrograms()).build();
-
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
         return Response.ok().entity(cb.getStudyPrograms(query)).build();
     }
 

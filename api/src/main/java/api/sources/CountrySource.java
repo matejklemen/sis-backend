@@ -57,10 +57,6 @@ public class CountrySource {
     @GET
     public Response getCountries(@QueryParam("deleted") boolean deleted) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        if(deleted)
-            return Response.ok().entity(cb.getDeletedCountries()).build();
-
         return Response.ok().entity(cb.getCountries(query)).build();
     }
 

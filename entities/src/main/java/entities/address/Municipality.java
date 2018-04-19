@@ -6,12 +6,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity(name = "municipality")
-@NamedQueries(
-        value = {
-                @NamedQuery(name = "Municipality.getAll", query = "SELECT m FROM municipality m WHERE m.deleted = false"),
-                @NamedQuery(name = "Municipality.getDeleted", query = "SELECT m FROM municipality m WHERE m.deleted = true"),
-        }
-)
 public class Municipality implements Serializable, Codelistable {
 
     @Id

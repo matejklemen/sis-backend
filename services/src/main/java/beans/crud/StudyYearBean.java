@@ -42,14 +42,7 @@ public class StudyYearBean {
     @Transactional
     public List<StudyYear> getStudyYears(QueryParameters query) {
         List<StudyYear> studyYears = JPAUtils.queryEntities(em, StudyYear.class, query);
-
         return studyYears;
-    }
-
-    @Transactional
-    public List<StudyYear> getDeletedStudyYears() {
-        TypedQuery<StudyYear> q = em.createNamedQuery("StudyYear.getDeleted", StudyYear.class);
-        return q.getResultList();
     }
 
     @Transactional

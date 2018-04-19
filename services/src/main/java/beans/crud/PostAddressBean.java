@@ -21,14 +21,7 @@ public class PostAddressBean {
     @Transactional
     public List<PostAddress> getPostAddresses(QueryParameters query) {
         List<PostAddress> postAdresses = JPAUtils.queryEntities(em, PostAddress.class, query);
-
         return postAdresses;
-    }
-
-    @Transactional
-    public List<PostAddress> getDeletedPostAddresses() {
-        TypedQuery<PostAddress> q = em.createNamedQuery("PostAddress.getDeleted", PostAddress.class);
-        return q.getResultList();
     }
 
     @Transactional

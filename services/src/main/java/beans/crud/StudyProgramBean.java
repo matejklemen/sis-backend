@@ -27,13 +27,7 @@ public class StudyProgramBean {
     @Transactional
     public List<StudyProgram> getStudyPrograms(QueryParameters query) {
         List<StudyProgram> studyPrograms = JPAUtils.queryEntities(em, StudyProgram.class, query);
-
         return studyPrograms;
-    }
-
-    @Transactional
-    public List<StudyProgram> getDeletedStudyPrograms() {
-        return em.createNamedQuery("StudyProgram.getDeleted", StudyProgram.class).getResultList();
     }
 
     @Transactional

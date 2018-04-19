@@ -13,8 +13,6 @@ import java.io.Serializable;
 @Entity(name = "curriculum")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "Curriculum.getAll", query = "SELECT cur FROM curriculum cur WHERE cur.deleted = false"),
-                @NamedQuery(name = "Curriculum.getDeleted", query = "SELECT cur FROM curriculum cur WHERE cur.deleted = true"),
                 @NamedQuery(name = "Curriculum.getByIdCurriculum", query = "SELECT cur FROM curriculum cur WHERE cur.id = :id_curriculum AND cur.deleted = false"),
                 @NamedQuery(name = "Curriculum.getByStudyProgramId", query = "SELECT cur FROM curriculum cur WHERE cur.idStudyProgram.id = :id AND cur.deleted = false"),
                 /* Example use-case: get courses for BUN study program */

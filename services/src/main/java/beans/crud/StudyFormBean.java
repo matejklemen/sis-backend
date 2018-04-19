@@ -21,15 +21,7 @@ public class StudyFormBean {
     @Transactional
     public List<StudyForm> getStudyForms(QueryParameters query) {
         List<StudyForm> studyForms = JPAUtils.queryEntities(em, StudyForm.class, query);
-
         return studyForms;
-    }
-
-    @Transactional
-    public List<StudyForm> getDeletedStudyForms() {
-        TypedQuery<StudyForm> q = em.createNamedQuery("StudyForm.getDeleted", StudyForm.class);
-        //q.setMaxResults(100);
-        return q.getResultList();
     }
 
     @Transactional

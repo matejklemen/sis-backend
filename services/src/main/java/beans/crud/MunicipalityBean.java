@@ -21,14 +21,7 @@ public class MunicipalityBean {
     @Transactional
     public List<Municipality> getMunicipalities(QueryParameters query) {
         List<Municipality> countries = JPAUtils.queryEntities(em, Municipality.class, query);
-
         return countries;
-    }
-
-    @Transactional
-    public List<Municipality> getDeletedMunicipalities() {
-        TypedQuery<Municipality> q = em.createNamedQuery("Municipality.getDeleted", Municipality.class);
-        return q.getResultList();
     }
 
     @Transactional

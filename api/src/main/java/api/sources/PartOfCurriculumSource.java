@@ -58,14 +58,8 @@ public class PartOfCurriculumSource {
             })
     @GET
     public Response getAllPOC(@QueryParam("deleted") boolean deleted) {
-        if(deleted) {
-            return Response.ok(pocb.getDeletedAllPOC()).build();
-        }
-
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
         List<PartOfCurriculum> allPOC = pocb.getAllPOC(query);
-
         return allPOC == null ? Response.status(Response.Status.NOT_FOUND).build() :
                 Response.status(Response.Status.OK).entity(allPOC).build();
     }

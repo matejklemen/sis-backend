@@ -54,7 +54,6 @@ public class StudentSource {
     @GET
     public Response getStudents() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
         return Response.ok(sdB.getStudents(query)).build();
     }
 

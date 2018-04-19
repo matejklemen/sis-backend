@@ -55,9 +55,6 @@ public class KlasiusSrvSource {
     @GET
     public Response getKlasiusSrvs(@QueryParam("deleted") boolean deleted) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        if(deleted)
-            return Response.ok(cB.getDeletedKlasiusSrvs()).build();
         return Response.ok(cB.getKlasiusSrvs(query)).build();
     }
 

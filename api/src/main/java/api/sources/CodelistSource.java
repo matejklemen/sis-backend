@@ -68,12 +68,8 @@ public class CodelistSource {
                     description = "List of codelists",
                     content = @Content(
                             schema = @Schema(implementation = CodelistsData.class))
-            )},
-            parameters = {
-                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
-                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
-                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
-            })
+            )}
+    )
     @GET
     public Response getCodeLists(@Context HttpServletRequest requestContext) {
         /*

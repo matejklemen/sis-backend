@@ -21,15 +21,7 @@ public class StudyKindBean {
     @Transactional
     public List<StudyKind> getStudyKinds(QueryParameters query) {
         List<StudyKind> studyKinds = JPAUtils.queryEntities(em, StudyKind.class, query);
-
         return studyKinds;
-    }
-
-    @Transactional
-    public List<StudyKind> getDeletedStudyKinds() {
-        TypedQuery<StudyKind> q = em.createNamedQuery("StudyKind.getDeleted", StudyKind.class);
-        //q.setMaxResults(100);
-        return q.getResultList();
     }
 
     @Transactional

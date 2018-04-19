@@ -43,7 +43,6 @@ public class CourseOrganizationSource {
     @GET
     public Response getCourseOrganizations() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
         return Response.status(Response.Status.OK).entity(cob.getCourseOrganizations(query)).build();
     }
 

@@ -55,10 +55,6 @@ public class ProfessorSource {
     @GET
     public Response getProfessors(@QueryParam("deleted") boolean deleted) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        if(deleted)
-            return Response.ok(pB.getDeletedProfessors()).build();
-
         return Response.ok(pB.getAllProfessors(query)).build();
     }
 

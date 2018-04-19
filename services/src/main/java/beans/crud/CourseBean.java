@@ -26,15 +26,7 @@ public class CourseBean {
     @Transactional
     public List<Course> getCourses(QueryParameters query) {
         List<Course> courses = JPAUtils.queryEntities(em, Course.class, query);
-
         return courses;
-    }
-
-    @Transactional
-    public List<Course> getDeletedCourses() {
-        TypedQuery<Course> q = em.createNamedQuery("Course.getDeleted", Course.class);
-        //q.setMaxResults(100);
-        return q.getResultList();
     }
 
     @Transactional

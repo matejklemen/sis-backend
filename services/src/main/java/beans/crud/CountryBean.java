@@ -26,15 +26,7 @@ public class CountryBean {
     @Transactional
     public List<Country> getCountries(QueryParameters query) {
         List<Country> countries = JPAUtils.queryEntities(em, Country.class, query);
-
         return countries;
-    }
-
-    @Transactional
-    public List<Country> getDeletedCountries() {
-        TypedQuery<Country> q = em.createNamedQuery("Country.getDeleted", Country.class);
-        //q.setMaxResults(100);
-        return q.getResultList();
     }
 
     @Transactional

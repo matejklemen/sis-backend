@@ -23,14 +23,7 @@ public class CurriculumBean {
 
     public List<Curriculum> getEntireCurriculum(QueryParameters query) {
         List<Curriculum> curriculums = JPAUtils.queryEntities(em, Curriculum.class, query);
-
         return curriculums;
-    }
-
-    public List<Curriculum> getDeletedEntireCurriculum() {
-        TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getDeleted", Curriculum.class);
-
-        return q.getResultList();
     }
 
     public Curriculum getCurriculumByIdCurriculum(int idCurriculum) {

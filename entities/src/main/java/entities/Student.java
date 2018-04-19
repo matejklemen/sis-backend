@@ -13,7 +13,6 @@ import java.util.List;
 @Entity(name = "student")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "Student.getAll", query = "SELECT st FROM student st"),
                 @NamedQuery(name = "Student.getByRegisterNumber", query = "SELECT st FROM student st WHERE st.registerNumber = :regno"),
                 @NamedQuery(name = "Student.getByLoginId", query = "SELECT st FROM student st WHERE st.loginData.id = :loginId"),
                 @NamedQuery(name = "Student.searchStudents", query = "SELECT st FROM student st WHERE st.registerNumber LIKE :sq OR LOWER(st.name) LIKE :sq OR LOWER(st.surname) LIKE :sq"),

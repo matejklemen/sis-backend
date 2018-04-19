@@ -24,7 +24,6 @@ public class StudentCoursesBean {
     @Transactional
     public List<StudentCourses> getAllStudentCourses(QueryParameters query) {
         List<StudentCourses> studentCourses = JPAUtils.queryEntities(em, StudentCourses.class, query);
-
         return studentCourses;
     }
 

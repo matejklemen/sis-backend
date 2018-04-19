@@ -6,13 +6,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity(name = "klasius_srv")
-@NamedQueries(
-        value = {
-                @NamedQuery(name = "KlasiusSrv.getAll", query = "SELECT ks FROM klasius_srv ks WHERE ks.deleted = false"),
-                @NamedQuery(name = "KlasiusSrv.getDeleted", query = "SELECT ks FROM klasius_srv ks WHERE ks.deleted = true"),
-                @NamedQuery(name = "KlasiusSrv.getById", query = "SELECT ks FROM klasius_srv ks WHERE ks.id = :id AND ks.deleted = false"),
-        }
-)
 public class KlasiusSrv implements Serializable, Codelistable {
 
     @Id

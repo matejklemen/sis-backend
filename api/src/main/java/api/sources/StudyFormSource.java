@@ -53,12 +53,8 @@ public class StudyFormSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getStudyForms(@QueryParam("deleted") boolean deleted) {
-        if(deleted)
-            return Response.ok(cB.getDeletedStudyForms()).build();
-
-        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
+    public Response getStudyForms() {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).enableFilters(true).build();
         return Response.ok(cB.getStudyForms(query)).build();
     }
 

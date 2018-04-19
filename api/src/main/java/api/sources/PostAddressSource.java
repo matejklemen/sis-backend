@@ -55,11 +55,7 @@ public class PostAddressSource {
             })
     @GET
     public Response getPostAddresses(@QueryParam("deleted") boolean deleted) {
-        if(deleted)
-            return Response.ok().entity(pab.getDeletedPostAddresses()).build();
-
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
         return Response.ok().entity(pab.getPostAddresses(query)).build();
     }
 

@@ -24,15 +24,7 @@ public class PartOfCurriculumBean {
     @Transactional
     public List<PartOfCurriculum> getAllPOC(QueryParameters query) {
         List<PartOfCurriculum> pocs = JPAUtils.queryEntities(em, PartOfCurriculum.class, query);
-
         return pocs;
-    }
-
-    @Transactional
-    public List<PartOfCurriculum> getDeletedAllPOC() {
-        TypedQuery<PartOfCurriculum> q = em.createNamedQuery("PartOfCurriculum.getDeleted", PartOfCurriculum.class);
-
-        return q.getResultList();
     }
 
     @Transactional

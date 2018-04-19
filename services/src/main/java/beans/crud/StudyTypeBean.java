@@ -24,17 +24,8 @@ public class StudyTypeBean {
     @Transactional
     public List<StudyType> getStudyTypes(QueryParameters query) {
         List<StudyType> studyTypes = JPAUtils.queryEntities(em, StudyType.class, query);
-
         return studyTypes;
     }
-
-    @Transactional
-    public List<StudyType> getDeletedStudyTypes() {
-        TypedQuery<StudyType> q = em.createNamedQuery("StudyType.getDeleted", StudyType.class);
-        //q.setMaxResults(100);
-        return q.getResultList();
-    }
-
 
     @Transactional
     public StudyType getStudyType(int id) {

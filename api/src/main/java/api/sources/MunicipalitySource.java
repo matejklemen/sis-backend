@@ -56,9 +56,6 @@ public class MunicipalitySource {
     @GET
     public Response getMunicipalities(@QueryParam("deleted") boolean deleted) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        if(deleted)
-            return Response.ok().entity(pab.getDeletedMunicipalities()).build();
         return Response.ok().entity(pab.getMunicipalities(query)).build();
     }
 

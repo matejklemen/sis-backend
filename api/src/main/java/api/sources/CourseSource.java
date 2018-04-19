@@ -55,9 +55,6 @@ public class CourseSource {
     @GET
     public Response getCourses(@QueryParam("deleted") boolean deleted) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        if(deleted)
-            return Response.ok(cB.getDeletedCourses()).build();
         return Response.ok(cB.getCourses(query)).build();
     }
 

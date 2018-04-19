@@ -21,14 +21,7 @@ public class KlasiusSrvBean {
     @Transactional
     public List<KlasiusSrv> getKlasiusSrvs(QueryParameters query) {
         List<KlasiusSrv> curriculums = JPAUtils.queryEntities(em, KlasiusSrv.class, query);
-
         return curriculums;
-    }
-
-    @Transactional
-    public List<KlasiusSrv> getDeletedKlasiusSrvs() {
-        TypedQuery<KlasiusSrv> q = em.createNamedQuery("KlasiusSrv.getDeleted", KlasiusSrv.class);
-        return q.getResultList();
     }
 
     @Transactional

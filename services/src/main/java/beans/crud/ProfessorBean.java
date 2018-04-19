@@ -22,14 +22,7 @@ public class ProfessorBean {
 
     public List<Professor> getAllProfessors(QueryParameters query) {
         List<Professor> professors = JPAUtils.queryEntities(em, Professor.class, query);
-
         return professors;
-    }
-
-    public List<Professor> getDeletedProfessors() {
-        TypedQuery<Professor> q = em.createNamedQuery("Professor.getDeletedProfessors", Professor.class);
-
-        return q.getResultList();
     }
 
     public Professor getProfessor(int id) {

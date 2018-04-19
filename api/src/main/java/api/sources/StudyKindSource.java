@@ -54,11 +54,7 @@ public class StudyKindSource {
             })
     @GET
     public Response getStudyKinds(@QueryParam("deleted") boolean deleted) {
-        if(deleted)
-            return Response.ok(cB.getDeletedStudyKinds()).build();
-
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
         return Response.ok(cB.getStudyKinds(query)).build();
     }
 
