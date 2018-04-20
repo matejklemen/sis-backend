@@ -101,7 +101,7 @@ public class CodelistSource {
         // vrsta študija (KLASIUS SRV)
         cld.add(new CodelistsData("klasius_srv", "KLASIUS SRV", "klasius", klasiusSrvB.getKlasiusSrvs(new QueryParameters()).size(), new KlasiusSrv().getColumnNames(), new KlasiusSrv().getColumnTypes()));
         // vrsta vpisa
-        cld.add(new CodelistsData("study_type", "Vrste študija", "studytypes", studyTypeB.getStudyTypes(new QueryParameters()).size(), new StudyType().getColumnNames(), new StudyType().getColumnTypes()));
+        cld.add(new CodelistsData("study_type", "Vrste vpisa", "studytypes", studyTypeB.getStudyTypes(new QueryParameters()).size(), new StudyType().getColumnNames(), new StudyType().getColumnTypes()));
         // način študija
         cld.add(new CodelistsData("study_kind", "Načini študija", "studykinds", studyKindB.getStudyKinds(new QueryParameters()).size(), new StudyKind().getColumnNames(), new StudyKind().getColumnTypes()));
         // oblika študija

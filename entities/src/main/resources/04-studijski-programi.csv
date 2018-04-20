@@ -5,7 +5,7 @@ id;name;id_study_degree;semesters
 1000472;Kognitivna znanost (BM);L;4
 1001001;Multimedija (BUN);K;6
 100977;Pedagoško računalništvo in informatika (BM);L;4
--1;Predmetnik za tuje študente na izmenjavi;NULL;NULL
+1009999;Predmetnik za tuje študente na izmenjavi;NULL;NULL
 1000475;Računalništvo in informatika (predb UN);C;9
 1000425;Računalništvo in matematika (predb UN);C;8
 1000477;Računalništvo in informatika (predb VS);B;6
