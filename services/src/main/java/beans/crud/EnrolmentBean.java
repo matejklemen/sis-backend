@@ -25,7 +25,7 @@ public class EnrolmentBean {
     @Transactional
     public Enrolment putEnrolment(EnrolmentToken ent, List<Integer> cl){
         Enrolment en = new Enrolment();
-        en.setConfirmed(true);
+        en.setConfirmed(false);
         en.setForm(ent.getForm());
         en.setKind(ent.getKind());
         en.setStudent(ent.getStudent());

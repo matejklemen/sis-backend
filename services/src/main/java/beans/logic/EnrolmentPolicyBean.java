@@ -144,7 +144,7 @@ public class EnrolmentPolicyBean {
         }
 
         String date = es.getStudent().getDateOfBirth();
-        String EMSO = date.split("-")[2].substring(0, 2)+date.split("-")[1]+date.split("-")[0].substring(1,4)+(es.getStudent().getGender() == 'M' ? "50[0-4][0-9]{3}" : "505[5-9][0-9]{3}");
+        String EMSO = date.split("-")[2].substring(0, 2)+date.split("-")[1]+date.split("-")[0].substring(1,4)+(es.getStudent().getGender() == 'M' ? "50[0-4][0-9]{3}" : "50[5-9][0-9]{3}");
         if(!es.getStudent().getEmso().matches(EMSO)) {
             list.add("Invalid EMSO number");
         }
@@ -156,7 +156,7 @@ public class EnrolmentPolicyBean {
             list.add("Invalid surname format");
         }
 
-        if(municipalityBean.existsMunicipality(es.getStudent().getMunicipalityOfBirth().getId()) && !es.getStudent().getCountryOfBirth().getName().equals("Slovenija")) {
+        if(municipalityBean.existsMunicipality(es.getStudent().getMunicipalityOfBirth().getId()) && es.getStudent().getCountryOfBirth().getId() != 705) {
             list.add("Invalid country and municipality combination");
         }
 
@@ -165,6 +165,8 @@ public class EnrolmentPolicyBean {
         if(studentEnrolments.isEmpty() && es.getEnrolmentToken().getYear() != 1) {
             list.add("Invalid year for first enrolment for this student");
         } else {
+            /*
+            TO-DO: popravi, da deluje za prvi vpis v prvi letnik
             Enrolment maxEnrolment = Collections.max(studentEnrolments, new Comparator<Enrolment>() {
                 @Override
                 public int compare(Enrolment o1, Enrolment o2) {
@@ -176,6 +178,7 @@ public class EnrolmentPolicyBean {
             if(maxEnrolment.getYear() + 1 < es.getEnrolmentToken().getYear() ||  maxEnrolment.getYear() > es.getEnrolmentToken().getYear()) {
                 list.add("Invalid year for enrolment for this student");
             }
+            */
         }
 
         int maxNumberOfYearsProgramme = es.getEnrolmentToken().getStudyProgram().getSemesters() / 2;
@@ -185,7 +188,7 @@ public class EnrolmentPolicyBean {
                     es.getEnrolmentToken().getStudyProgram().getName(), maxNumberOfYearsProgramme));
 
         // Preveri pravilnost kombinacije letnik+študijski program+modul
-        boolean validYearProgramModuleCombo = false;
+        boolean validYearProgramModuleCombo = true;
         try {
             // TODO: not implemented -> remove try-catch and the thrown exception after implementing
             validYearProgramModuleCombo = checkYearProgramModuleCombo(es);
