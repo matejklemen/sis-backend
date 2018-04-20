@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.CurriculumBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.Curriculum;
@@ -54,9 +54,12 @@ public class CurriculumSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getEntireCurriculum(@QueryParam("deleted") boolean deleted) {
+    public Response getEntireCurriculum() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.status(Response.Status.OK).entity(cb.getEntireCurriculum(query)).build();
+        return Response
+                .ok(cb.getEntireCurriculum(query))
+                .header("X-Total-Count", cb.getEntireCurriculum(new QueryParameters()).size())
+                .build();
     }
 
     @GET

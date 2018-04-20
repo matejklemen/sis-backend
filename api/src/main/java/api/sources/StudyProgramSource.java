@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.StudyProgramBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.StudyProgram;
@@ -53,9 +53,12 @@ public class StudyProgramSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getStudyPrograms(@QueryParam("deleted") boolean deleted) {
+    public Response getStudyPrograms() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok().entity(cb.getStudyPrograms(query)).build();
+        return Response
+                .ok(cb.getStudyPrograms(query))
+                .header("X-Total-Count", cb.getStudyPrograms(new QueryParameters()).size())
+                .build();
     }
 
     @GET

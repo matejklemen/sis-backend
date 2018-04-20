@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.EnrolmentBean;
 import beans.crud.EnrolmentTokenBean;
 import beans.logic.EnrolmentPolicyBean;
@@ -25,7 +25,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)

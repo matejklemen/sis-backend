@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.ProfessorBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.Professor;
@@ -53,9 +53,12 @@ public class ProfessorSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getProfessors(@QueryParam("deleted") boolean deleted) {
+    public Response getProfessors() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok(pB.getAllProfessors(query)).build();
+        return Response
+                .ok(pB.getAllProfessors(query))
+                .header("X-Total-Count", pB.getAllProfessors(new QueryParameters()).size())
+                .build();
     }
 
     @GET

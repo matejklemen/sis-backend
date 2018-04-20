@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.StudyKindBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.StudyKind;
@@ -53,9 +53,12 @@ public class StudyKindSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getStudyKinds(@QueryParam("deleted") boolean deleted) {
+    public Response getStudyKinds() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok(cB.getStudyKinds(query)).build();
+        return Response
+                .ok(cB.getStudyKinds(query))
+                .header("X-Total-Count", cB.getStudyKinds(new QueryParameters()).size())
+                .build();
     }
 
     @GET

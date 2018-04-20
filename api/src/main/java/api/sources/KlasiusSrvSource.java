@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.KlasiusSrvBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.KlasiusSrv;
@@ -53,9 +53,12 @@ public class KlasiusSrvSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getKlasiusSrvs(@QueryParam("deleted") boolean deleted) {
+    public Response getKlasiusSrvs() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok(cB.getKlasiusSrvs(query)).build();
+        return Response
+                .ok(cB.getKlasiusSrvs(query))
+                .header("X-Total-Count", cB.getKlasiusSrvs(new QueryParameters()).size())
+                .build();
     }
 
     @GET

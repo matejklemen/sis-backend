@@ -1,5 +1,7 @@
 package api.mappers;
 
+import pojo.ResponseError;
+
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -12,6 +14,7 @@ public class PersistenceExceptionMapper implements ExceptionMapper<PersistenceEx
     @Override
     public Response toResponse(PersistenceException e) {
 
+        // TODO: what the fuck
         e.printStackTrace();
 
         int ioe = e.getMessage().indexOf("ERROR");

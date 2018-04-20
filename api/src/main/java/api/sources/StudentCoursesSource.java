@@ -1,7 +1,7 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.StudentCoursesBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.StudentCourses;

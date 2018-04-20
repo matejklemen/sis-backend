@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.PartOfCurriculumBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.PartOfCurriculum;
@@ -57,11 +57,14 @@ public class PartOfCurriculumSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getAllPOC(@QueryParam("deleted") boolean deleted) {
+    public Response getAllPOC() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List<PartOfCurriculum> allPOC = pocb.getAllPOC(query);
         return allPOC == null ? Response.status(Response.Status.NOT_FOUND).build() :
-                Response.status(Response.Status.OK).entity(allPOC).build();
+                Response
+                        .ok(allPOC)
+                        .header("X-Total-Count", allPOC.size())
+                        .build();
     }
 
     @GET

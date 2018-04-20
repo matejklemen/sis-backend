@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.StudyDegreeBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.StudyDegree;
@@ -53,9 +53,12 @@ public class StudyDegreeSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getStudyDegrees(@QueryParam("deleted") boolean deleted) {
+    public Response getStudyDegrees() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok().entity(cb.getStudyDegrees(query)).build();
+        return Response
+                .ok(cb.getStudyDegrees(query))
+                .header("X-Total-Count", cb.getStudyDegrees(new QueryParameters()).size())
+                .build();
     }
 
     @GET

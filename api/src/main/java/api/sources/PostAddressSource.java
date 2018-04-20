@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.PostAddressBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.address.PostAddress;
@@ -54,9 +54,12 @@ public class PostAddressSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getPostAddresses(@QueryParam("deleted") boolean deleted) {
+    public Response getPostAddresses() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok().entity(pab.getPostAddresses(query)).build();
+        return Response
+                .ok(pab.getPostAddresses(query))
+                .header("X-Total-Count", pab.getPostAddresses(new QueryParameters()).size())
+                .build();
     }
 
     @GET
