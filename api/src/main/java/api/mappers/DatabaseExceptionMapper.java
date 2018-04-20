@@ -1,6 +1,7 @@
 package api.mappers;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
+import pojo.ResponseError;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -15,6 +16,7 @@ public class DatabaseExceptionMapper implements ExceptionMapper<DatabaseExceptio
 
         e.printStackTrace();
 
+        // TODO: what the fuck
         int ioe = e.getMessage().indexOf("ERROR");
         String errorMessage = e.getMessage();
         if(ioe > 0) {

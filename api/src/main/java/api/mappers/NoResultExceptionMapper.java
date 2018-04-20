@@ -1,5 +1,7 @@
 package api.mappers;
 
+import pojo.ResponseError;
+
 import javax.persistence.NoResultException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -14,7 +16,7 @@ public class NoResultExceptionMapper implements ExceptionMapper<NoResultExceptio
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .header("Content-Type", MediaType.APPLICATION_JSON)
-                .entity(new ResponseError(404, e.getMessage()))
+                .entity(ResponseError.error404())
                 .build();
     }
 

@@ -2,7 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.CurriculumBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.Curriculum;

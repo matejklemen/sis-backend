@@ -1,18 +1,15 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.crud.ProfessorBean;
 import beans.crud.StudentBean;
 import beans.crud.UserLoginBean;
-import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import beans.crud.UserRoleBean;
 import entities.UserLogin;
 import entities.UserRole;
 import exceptions.UserBlacklistedException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -41,7 +38,7 @@ import java.util.logging.Logger;
 public class UserLoginSource {
 
     private Logger log = Logger.getLogger(getClass().getSimpleName());
-    private static final int TOKEN_VALIDITY_MINS_LOGIN = 15;
+    private static final int TOKEN_VALIDITY_MINS_LOGIN = 60 * 2;
     private static final int TOKEN_VALIDITY_MINS_RESET_PASSWORD = 1;
 
     @Inject

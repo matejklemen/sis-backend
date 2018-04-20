@@ -1,7 +1,7 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
-import api.mappers.ResponseError;
+import pojo.ResponseError;
 import beans.logic.DataExporterBean;
 import entities.logic.TableData;
 import io.swagger.v3.oas.annotations.Operation;
