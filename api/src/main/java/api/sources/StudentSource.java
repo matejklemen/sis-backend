@@ -49,7 +49,9 @@ public class StudentSource {
             parameters = {
                     @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
                     @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
-                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
+                    @Parameter(name = "filter", description = "Filter", in = ParameterIn.QUERY),
+                    @Parameter(name = "course", description = "Course id that students should be enrolled in", in = ParameterIn.QUERY)
             })
     @GET
     public Response getStudents() {
@@ -80,38 +82,6 @@ public class StudentSource {
     public Response getStudentById(@PathParam("id") int id) {
         Student sd = sdB.getStudentById(id);
         return Response.ok(sd).build();
-    }
-
-    @Operation(description = "Returns a student with specified register number.", summary = "Get student by register number", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Student by register number",
-                    content = @Content(
-                            schema = @Schema(implementation = Student.class))
-            ),
-            @ApiResponse(responseCode = "404",
-                    description = "Student by register number doesn't exist",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class))
-            )
-    })
-    @Path("s/{regno}")
-    @GET
-    public Response getStudentByRegisterNumber(@PathParam("regno") String regno) {
-        Student sd = sdB.getStudentByRegisterNumber(regno);
-        return Response.ok(sd).build();
-    }
-
-    @Operation(description = "Returns a list of students. Same as '/students'.", summary = "Get list of students", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "List of students",
-                    content = @Content(
-                            schema = @Schema(implementation = Student.class))
-            )
-    })
-    @Path("search")
-    @GET
-    public Response getStudentsWithEmptySearch() {
-        return getStudents();
     }
 
     @Operation(description = "Returns a list of students that match the search query. Query can partially match either the register number, name or surname. It's possible that the returned list is empty.", summary = "Get list of students by search query", responses = {
