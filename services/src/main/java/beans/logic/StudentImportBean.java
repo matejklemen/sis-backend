@@ -34,6 +34,7 @@ public class StudentImportBean {
         List<Student> listOfRejected = new ArrayList<>();
 
         GenerateNewStudentId();
+
         int pos = 0;
         while(pos < studentData.length()){
 
@@ -45,7 +46,8 @@ public class StudentImportBean {
             stu.setRegisterNumber(GenerateNewStudentId());
             stu.setEmail(studentData.substring(pos, (pos = pos+60)).replaceAll("\\s+",""));
             // Check if Student with this data already exists
-            pos += 2;
+
+            pos += System.lineSeparator().length();
 
             if(sdb.hasStudent(stu)){
                 listOfRejected.add(stu);
