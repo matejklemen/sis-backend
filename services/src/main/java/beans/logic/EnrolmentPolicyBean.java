@@ -4,6 +4,7 @@ import beans.crud.*;
 import com.arjuna.ats.jta.exceptions.NotImplementedException;
 import entities.*;
 import entities.curriculum.Curriculum;
+import entities.curriculum.ECTSDistribution;
 import entities.logic.EnrolmentSheet;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,9 +18,7 @@ import static org.eclipse.persistence.config.TargetDatabase.Database;
 public class EnrolmentPolicyBean {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
-
     private static final String BUN_RI = "1000468";
-    private static final String BUN_RM = "1000407";
 
     @Inject
     private GradeBean GradeBean;
@@ -51,6 +50,12 @@ public class EnrolmentPolicyBean {
     @Inject
     private StudyKindBean studyKindBean;
 
+    @Inject
+    private ECTSDistributionBean ectsDistributionBean;
+
+    @Inject
+    private CurriculumBean curriculumBean;
+
     public boolean hasStudentFreeChoiceOfCurriculum(Student s){
         if(enrolmentBean.getEnrolmentsForStudent(s.getId()).isEmpty())
             return false;
@@ -77,23 +82,116 @@ public class EnrolmentPolicyBean {
         return false;
     }
 
-    boolean checkYearProgramModuleCombo(EnrolmentSheet es) throws NotImplementedException {
-        // TODO
-        if(es.getEnrolmentToken().getYear() == 3) {
-            String studyProgram = es.getEnrolmentToken().getStudyProgram().getId();
-            boolean hasFreeChoice = es.getEnrolmentToken().isFreeChoice();
+    private List<String> checkCourses(EnrolmentSheet es, List<String> errList) {
+        String chosenStudyProgram = es.getEnrolmentToken().getStudyProgram().getId();
+        int chosenIdStudyYear = es.getEnrolmentToken().getStudyYear().getId();
+        int chosenYearOfProgram = es.getEnrolmentToken().getYear();
+        boolean hasStudentFreeModuleChoice = es.getEnrolmentToken().isFreeChoice();
 
-            if(studyProgram.equals(BUN_RI)) {
+        List<Integer> takenCourses = es.getCourses();
+        /* Object containing number of required mandatory, general
+           elective, specialist elective and module courses (in number of ECTS). */
+        ECTSDistribution requiredCourseDistribution = ectsDistributionBean.getECTSDistribution(
+                chosenIdStudyYear, chosenYearOfProgram, chosenStudyProgram);
 
+        int requiredObv = requiredCourseDistribution.getEctsObv(),
+                requiredPiz = requiredCourseDistribution.getEctsPiz(),
+                requiredSiz = requiredCourseDistribution.getEctsSiz(),
+                requiredMod = requiredCourseDistribution.getEctsMod();
+
+        log.info(String.format("Required course distribution: [obv=%d, piz=%d, siz=%d, mod=%d]",
+                requiredObv, requiredPiz, requiredSiz, requiredMod));
+
+        /* Check if the enrolment sheet contains the right amount of ECTS for mandatory, general
+           elective, specialist elective and module courses. */
+        int sumObv = 0, sumPiz = 0, sumSiz = 0, sumMod = 0;
+
+        HashMap<Integer, Integer> numOfCoursesPerModuleChosen = new HashMap<>();
+
+        for(Integer idCourse: takenCourses) {
+            if(idCourse == null) {
+                errList.add("A course is unspecified.");
+                log.severe("ID of a course is not specified (= null). How??");
+                continue;
             }
 
-            if(studyProgram.equals(BUN_RM)) {
+            Curriculum currCourse = curriculumBean.getCourseMetadata(idCourse, chosenYearOfProgram, chosenStudyProgram, chosenIdStudyYear);
+            String coursePocType = currCourse.getPoc().getType();
+            int courseECTS = currCourse.getIdCourse().getCreditPoints();
+            int moduleId = currCourse.getPoc().getId();
 
+            switch (coursePocType) {
+                case "obv": sumObv += courseECTS; break;
+                case "piz": sumPiz += courseECTS; break;
+                case "siz": sumSiz += courseECTS; break;
+                case "mod": {
+                    sumMod += courseECTS;
+
+                    // count how many distinct modules the enrolment sheet contains (if any)
+                    Integer numberOfExistingCoursesInModule = numOfCoursesPerModuleChosen.get(moduleId);
+                    if(numberOfExistingCoursesInModule == null)
+                        numOfCoursesPerModuleChosen.put(moduleId, 1);
+                    else
+                        numOfCoursesPerModuleChosen.put(moduleId, numberOfExistingCoursesInModule + 1);
+                    break;
+                }
             }
-
         }
 
-        throw new NotImplementedException("Method checkYearProgramModuleCombo() in EnrolmentPolicyBean not implemented yet");
+        log.info(String.format("Course distribution on the EnrolmentSheet: [obv=%d, piz=%d, siz=%d, mod=%d]...\n" +
+                        "That is without taking into account that sometimes part of points for siz can be moved to piz.",
+                sumObv, sumPiz, sumSiz, sumMod));
+
+        /* Check if the student chose to take an additional specialist elective course instead of taking general
+            elective courses. */
+        // Note: the check if study program is "BUN RI" might be redundant (not sure)
+        if(sumSiz > 0 && sumPiz != requiredPiz && chosenStudyProgram.equals(BUN_RI)) {
+            int diff = sumSiz - requiredSiz;
+
+            sumSiz -= diff;
+            sumPiz += diff;
+
+            if(sumPiz != requiredPiz) {
+                errList.add("You did not take enough courses from the general elective courses area.");
+            }
+            else
+                log.info("The student took an additional specialist elective course, the absolute madman/madwoman!");
+        }
+
+        int numberOfDistinctModules = numOfCoursesPerModuleChosen.size();
+        if(numberOfDistinctModules == 3) {
+            /* the only way a student with no free module choice is allowed to choose 3 distinct modules is by choosing
+                1 module course instead of a general elective course. */
+            if(!hasStudentFreeModuleChoice) {
+                int diff = requiredMod - sumMod;
+
+                sumPiz += diff;
+                sumMod -= diff;
+
+                if(sumPiz != requiredPiz) {
+                    errList.add("You do not have permission to choose more than two distinct modules.");
+                }
+            }
+        }
+
+        if(sumMod != requiredMod) {
+            errList.add(String.format("Number of chosen ECTS points for module courses (%d) does not equal the required " +
+                    "number of ECTS points for module courses (%d).", sumMod, requiredMod));
+        }
+        if(sumObv != requiredObv) {
+            errList.add(String.format("Number of chosen ECTS points for mandatory courses (%d) does not equal the required " +
+                    "number of ECTS points for mandatory courses (%d).", sumObv, requiredObv));
+        }
+        if(sumPiz != requiredPiz) {
+            errList.add(String.format("Number of chosen ECTS points for general elective courses (%d) does not equal the required " +
+                    "number of ECTS points for general elective courses (%d).", sumPiz, requiredPiz));
+        }
+        if(sumSiz != requiredSiz) {
+            errList.add(String.format("Number of chosen ECTS points for specialist elective courses (%d) does not equal the required " +
+                    "number of ECTS points for general elective courses (%d).", sumObv, requiredObv));
+        }
+
+        return errList;
     }
 
     public List<String> checkEnrolment(EnrolmentSheet es, EnrolmentToken enToken){
@@ -188,17 +286,7 @@ public class EnrolmentPolicyBean {
                     es.getEnrolmentToken().getStudyProgram().getName(), maxNumberOfYearsProgramme));
 
         // Preveri pravilnost kombinacije letnik+študijski program+modul
-        boolean validYearProgramModuleCombo = true;
-        try {
-            // TODO: not implemented -> remove try-catch and the thrown exception after implementing
-            validYearProgramModuleCombo = checkYearProgramModuleCombo(es);
-        }
-        catch (NotImplementedException e) {
-            log.info(e.getMessage());
-        }
-
-        if(!validYearProgramModuleCombo)
-            list.add("Invalid year of program + study program + module courses combination.");
+        list = checkCourses(es, list);
 
         // Preveri pravilnost kombinacije vrsta vpisa+letnik
 

@@ -53,6 +53,7 @@ public class ExamSignUpBean {
     }
 
     /*
+        TODO: rewrite this (and update doc)
         - examDate is exam date in UNIX timestamp format (i.e. number of seconds since 1. 1. 1970)
         - we do not physically delete exam sign ups, we invalidate them
     */

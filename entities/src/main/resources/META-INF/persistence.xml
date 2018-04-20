@@ -17,7 +17,6 @@
         <class>entities.StudyYear</class>
         <class>entities.UserLogin</class>
         <class>entities.UserRole</class>
-        <class>entities.Candidate</class>
 
         <class>entities.address.Address</class>
         <class>entities.address.Country</class>
@@ -31,6 +30,7 @@
         <class>entities.curriculum.CourseOrganization</class>
         <class>entities.curriculum.CourseExamTerm</class>
         <class>entities.curriculum.ExamSignUp</class>
+        <class>entities.curriculum.ECTSDistribution</class>
 
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>

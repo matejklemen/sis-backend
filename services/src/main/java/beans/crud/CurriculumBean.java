@@ -44,6 +44,24 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    public Curriculum getCourseMetadata(int idCourse, int yearOfProgram, String idStudyProgram, int idStudyYear) {
+        TypedQuery<Curriculum> q = em.createQuery("SELECT cur FROM curriculum cur WHERE " +
+                "cur.idCourse.id = :id_course AND cur.yearOfProgram = :year_of_program AND " +
+                "cur.idStudyProgram.id = :id_study_program AND cur.studyYear.id = :id_study_year", Curriculum.class);
+
+        q.setParameter("id_course", idCourse);
+        q.setParameter("year_of_program", yearOfProgram);
+        q.setParameter("id_study_program", idStudyProgram);
+        q.setParameter("id_study_year", idStudyYear);
+
+        List<Curriculum> results = q.getResultList();
+
+        if(results != null && !results.isEmpty())
+            return results.get(0);
+
+        return null;
+    }
+
     public List<Curriculum> getCurriculumByStudyProgramName(String studyProgramName) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByStudyProgramName", Curriculum.class);
         q.setParameter("name", studyProgramName);
