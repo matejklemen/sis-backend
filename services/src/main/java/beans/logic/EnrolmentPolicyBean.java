@@ -259,24 +259,23 @@ public class EnrolmentPolicyBean {
         }
 
         List<Enrolment> studentEnrolments = enrolmentBean.getEnrolmentsForStudent(es.getStudent().getId());
-        // student is enrolling for the first time, but is apparently not enrolling into 1st year of school
-        if(studentEnrolments.isEmpty() && es.getEnrolmentToken().getYear() != 1) {
-            list.add("Invalid year for first enrolment for this student");
+        if(studentEnrolments.isEmpty()) {
+            // student is enrolling for the first time, but is apparently not enrolling into 1st year of school
+            if(es.getEnrolmentToken().getYear() != 1)
+                list.add("Invalid year for first enrolment for this student");
         } else {
-            /*
-            TO-DO: popravi, da deluje za prvi vpis v prvi letnik
             Enrolment maxEnrolment = Collections.max(studentEnrolments, new Comparator<Enrolment>() {
                 @Override
                 public int compare(Enrolment o1, Enrolment o2) {
                     return Integer.compare(o1.getYear(), o2.getYear());
                 }
             });
-            // first condition: make sure student doesn't try to skip a year in school
-            // second condition: student is somehow enrolling into a year that he already passed
-            if(maxEnrolment.getYear() + 1 < es.getEnrolmentToken().getYear() ||  maxEnrolment.getYear() > es.getEnrolmentToken().getYear()) {
-                list.add("Invalid year for enrolment for this student");
-            }
-            */
+
+            // year of enrolment is either same or higher by 1 than the latest enrolment ('maxEnrolment')
+            int yearOfProgramDiff = es.getEnrolmentToken().getYear() - maxEnrolment.getYear();
+
+            if(yearOfProgramDiff < 0 || yearOfProgramDiff > 1)
+                list.add("Invalid year of enrolment for this student");
         }
 
         int maxNumberOfYearsProgramme = es.getEnrolmentToken().getStudyProgram().getSemesters() / 2;

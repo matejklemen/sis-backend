@@ -101,7 +101,7 @@ id;credit_points;deleted;name;semester
 63752;3;false;Računalništvo v praksi 1;bločni
 63242;3;false;Računalništvo v praksi 2;bločni
 63202;6;false;Osnove matematične analize;zimski
-63710;6;false;Osnove verjetnosti in statistike;zimski
+63710;6;false;Osnove verjetnosti in statistike;poletni
 63213;6;false;Verjetnost in statistika;zimski
 63207;6;false;Linearna algebra;poletni
 63205;6;false;Fizika;zimski
@@ -112,3 +112,4 @@ id;credit_points;deleted;name;semester
 63225;6;false;Izbrana poglavja iz računalništva in informatike: Analiza omrežij;bločni
 63750;3;false;Športna vzgoja;zimski
 63208;6;false;Osnove podatkovnih baz;zimski
+63704;6;false;Matematika;zimski
