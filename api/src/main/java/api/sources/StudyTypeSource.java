@@ -99,7 +99,7 @@ public class StudyTypeSource {
     public Response createStudyType(@RequestBody StudyType c) {
         if(c == null) throw new NoRequestBodyException();
         if(cB.existsStudyType(c.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseError.errorIdAlreadyExists()).build();
         }
         c = cB.insertStudyType(c);
         return Response.ok().entity(c).build();

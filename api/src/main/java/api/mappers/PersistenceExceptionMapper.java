@@ -7,29 +7,38 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Provider
 public class PersistenceExceptionMapper implements ExceptionMapper<PersistenceException> {
 
+    private static Pattern[] patterns = {
+            Pattern.compile("null value in column \"(.+)\" violates not-null constraint"),
+    };
+
+    private static String[] responses = {
+            "Polje '%s' ne sme biti prazno.",
+    };
+
     @Override
     public Response toResponse(PersistenceException e) {
 
-        // TODO: what the fuck
-        e.printStackTrace();
+        String exMessage = e.getMessage();
+        String reMessage = null;
 
-        int ioe = e.getMessage().indexOf("ERROR");
-        String errorMessage = e.getMessage();
-        if(ioe > 0) {
-            errorMessage = e.getMessage().substring(ioe);
-            if(errorMessage.length() > 100)
-                errorMessage = errorMessage.substring(0, 100) + "...";
+        for(int i = 0; i < patterns.length; i++) {
+            Matcher m = patterns[i].matcher(exMessage);
+            if(m.find()) {
+                reMessage = String.format(responses[i], m.group(1));
+            }
         }
 
-
         return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                .status(reMessage != null ? Response.Status.BAD_REQUEST : Response.Status.INTERNAL_SERVER_ERROR)
                 .header("Content-Type", MediaType.APPLICATION_JSON)
-                .entity(new ResponseError(500, errorMessage))
+                .entity(reMessage != null ? new ResponseError(400, reMessage) : ResponseError.error500())
                 .build();
     }
 

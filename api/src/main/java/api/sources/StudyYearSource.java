@@ -99,7 +99,7 @@ public class StudyYearSource {
     public Response createStudyYear(@RequestBody StudyYear c) {
         if(c == null) throw new NoRequestBodyException();
         if(cb.existsStudyYear(c.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseError.errorIdAlreadyExists()).build();
         }
         c = cb.insertStudyYear(c);
         return Response.ok().entity(c).build();

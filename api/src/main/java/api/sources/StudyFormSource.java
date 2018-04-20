@@ -99,7 +99,7 @@ public class StudyFormSource {
     public Response createStudyForm(@RequestBody StudyForm c) {
         if(c == null) throw new NoRequestBodyException();
         if(cB.existsStudyForm(c.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseError.errorIdAlreadyExists()).build();
         }
         c = cB.insertStudyForm(c);
         return Response.ok().entity(c).build();

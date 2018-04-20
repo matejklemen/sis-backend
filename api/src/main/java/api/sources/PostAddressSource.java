@@ -100,7 +100,7 @@ public class PostAddressSource {
     public Response createPostAddress(@RequestBody PostAddress pa) {
         if(pa == null) throw new NoRequestBodyException();
         if(pab.existsPostAddress(pa.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseError.errorIdAlreadyExists()).build();
         }
         pa = pab.insertPostAddress(pa);
         return Response.ok().entity(pa).build();

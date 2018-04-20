@@ -99,7 +99,7 @@ public class StudyDegreeSource {
     public Response createStudyDegree(@RequestBody StudyDegree c) {
         if(c == null) throw new NoRequestBodyException();
         if(cb.existsStudyDegree(c.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseError.errorIdAlreadyExists()).build();
         }
         c = cb.insertStudyDegree(c);
         return Response.ok().entity(c).build();

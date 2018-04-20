@@ -110,7 +110,7 @@ public class PartOfCurriculumSource {
     public Response createPartOfCurriculum(@RequestBody PartOfCurriculum c) {
         if(c == null) throw new NoRequestBodyException();
         if(pocb.existsPartOfCurriculum(c.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseError.errorIdAlreadyExists()).build();
         }
         c = pocb.insertPartOfCurriculum(c);
         return Response.ok().entity(c).build();
