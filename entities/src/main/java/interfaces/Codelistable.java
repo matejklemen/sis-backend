@@ -14,10 +14,10 @@ public interface Codelistable {
     @XmlTransient
     String[] getColumnTypes();
 
-    @XmlTransient
+    //@XmlTransient
     boolean getDeleted();
 
-    @XmlTransient
+    //@XmlTransient
     void setDeleted(boolean deleted);
 
 }

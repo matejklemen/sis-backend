@@ -45,8 +45,6 @@ import java.util.logging.Logger;
 @Tags(value = @Tag(name = "codelists"))
 public class CodelistSource {
 
-    private Logger log = Logger.getLogger(getClass().getSimpleName());
-
     @Inject private CountryBean countryB;
     @Inject private PostAddressBean postAddressB;
     @Inject private CourseBean courseB;

@@ -100,7 +100,7 @@ public class MunicipalitySource {
     public Response createMunicipality(@RequestBody Municipality pa) {
         if(pa == null) throw new NoRequestBodyException();
         if(pab.existsMunicipality(pa.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseError.errorIdAlreadyExists()).build();
         }
         pa = pab.insertMunicipality(pa);
         return Response.ok().entity(pa).build();

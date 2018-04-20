@@ -101,7 +101,7 @@ public class KlasiusSrvSource {
     public Response createKlasiusSrv(@RequestBody KlasiusSrv c) {
         if(c == null) throw new NoRequestBodyException();
         if(cB.existsKlasiusSrv(c.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ID already exists")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseError.errorIdAlreadyExists()).build();
         }
         c = cB.insertKlasiusSrv(c);
         return Response.ok().entity(c).build();

@@ -32,6 +32,10 @@ public class ResponseError {
         return new ResponseError(400, "Poslan je bil neveljaven zahtevek.");
     }
 
+    public static ResponseError errorIdAlreadyExists() {
+        return new ResponseError(400, "Id že obstaja.");
+    }
+
     public static ResponseError error404() {
         return new ResponseError(404, "Zahtevek ni vrnil nobenega rezultata.");
     }
