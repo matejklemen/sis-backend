@@ -55,7 +55,10 @@ public class StudyFormSource {
     @GET
     public Response getStudyForms() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).enableFilters(true).build();
-        return Response.ok(cB.getStudyForms(query)).build();
+        return Response
+                .ok(cB.getStudyForms(query))
+                .header("X-Total-Count", cB.getStudyForms(new QueryParameters()).size())
+                .build();
     }
 
     @GET

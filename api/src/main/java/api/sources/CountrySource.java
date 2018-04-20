@@ -55,9 +55,12 @@ public class CountrySource {
             }
     )
     @GET
-    public Response getCountries(@QueryParam("deleted") boolean deleted) {
+    public Response getCountries() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok().entity(cb.getCountries(query)).build();
+        return Response
+                .ok(cb.getCountries(query))
+                .header("X-Total-Count", cb.getCountries(new QueryParameters()).size())
+                .build();
     }
 
     @GET

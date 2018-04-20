@@ -53,9 +53,12 @@ public class CourseSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getCourses(@QueryParam("deleted") boolean deleted) {
+    public Response getCourses() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok(cB.getCourses(query)).build();
+        return Response
+                .ok(cB.getCourses(query))
+                .header("X-Total-Count", cB.getCourses(new QueryParameters()).size())
+                .build();
     }
 
     @GET

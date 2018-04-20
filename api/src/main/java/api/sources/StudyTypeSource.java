@@ -53,9 +53,12 @@ public class StudyTypeSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getStudyTypes(@QueryParam("deleted") boolean deleted) {
+    public Response getStudyTypes() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok(cB.getStudyTypes(query)).build();
+        return Response
+                .ok(cB.getStudyTypes(query))
+                .header("X-Total-Count", cB.getStudyTypes(new QueryParameters()).size())
+                .build();
     }
 
     @GET

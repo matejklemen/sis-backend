@@ -53,9 +53,12 @@ public class StudyYearSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getStudyYears(@QueryParam("deleted") boolean deleted) {
+    public Response getStudyYears() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok().entity(cb.getStudyYears(query)).build();
+        return Response
+                .ok(cb.getStudyYears(query))
+                .header("X-Total-Count", cb.getStudyYears(new QueryParameters()).size())
+                .build();
     }
 
     @GET

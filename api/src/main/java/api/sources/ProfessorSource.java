@@ -53,9 +53,12 @@ public class ProfessorSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getProfessors(@QueryParam("deleted") boolean deleted) {
+    public Response getProfessors() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok(pB.getAllProfessors(query)).build();
+        return Response
+                .ok(pB.getAllProfessors(query))
+                .header("X-Total-Count", pB.getAllProfessors(new QueryParameters()).size())
+                .build();
     }
 
     @GET

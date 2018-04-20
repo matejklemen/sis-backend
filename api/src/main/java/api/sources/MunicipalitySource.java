@@ -54,9 +54,12 @@ public class MunicipalitySource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getMunicipalities(@QueryParam("deleted") boolean deleted) {
+    public Response getMunicipalities() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.ok().entity(pab.getMunicipalities(query)).build();
+        return Response
+                .ok(pab.getMunicipalities(query))
+                .header("X-Total-Count", pab.getMunicipalities(new QueryParameters()).size())
+                .build();
     }
 
     @GET
