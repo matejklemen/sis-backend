@@ -234,17 +234,13 @@ public class EnrolmentPolicyBean {
         Country countryOfBirth = es.getStudent().getCountryOfBirth();
         /* "Kraj rojstva" either empty because the student forgot to fill it or the student is from a foreign country */
         if(munOfBirth == null)
-            if(countryOfBirth.getId() == SLO_COUNTRY_ID)
-                list.add("Municipality of birth is empty!");
+            list.add("Municipality of birth is empty!");
         else {
-            if(countryOfBirth.getId() != SLO_COUNTRY_ID)
-                list.add("You should leave the municipality of birth empty, because you selected a country " +
-                        "of birth that is not Slovenia");
+            if(munOfBirth.getId() == 999 && countryOfBirth.getId() == SLO_COUNTRY_ID)
+                list.add("Chose Slovenia as country of birth but a non-Slovene municipality of birth.");
 
             if(!municipalityBean.existsMunicipality(munOfBirth.getId()))
-                list.add(String.format("Invalid municipality code for country %s", countryOfBirth.getName()));
-            if(municipalityBean.existsMunicipality(munOfBirth.getId()) && countryOfBirth.getId() != 705)
-                list.add("Invalid country and municipality combination");
+                list.add("Invalid municipality code");
         }
 
         if(!countryBean.existsCountry(countryOfBirth.getId()))
@@ -338,28 +334,28 @@ public class EnrolmentPolicyBean {
 
         // Preveri pravilnost kombinacije študijski program + vrsta študija (Klasius SRP)
         String enteredStudyProgram = es.getEnrolmentToken().getStudyProgram().getId();
-        Integer enteredKlasius = es.getEnrolmentToken().getKlasiusSrv().getId();
+        KlasiusSrv enteredKlasius = es.getEnrolmentToken().getKlasiusSrv();
 
         if(enteredKlasius == null)
-            list.add("KLASIUS SRV field is empty.");
+            list.add("KLASIUS SRV field is empty. You should contact the student's office as this is their fault.");
         else {
             switch (enteredStudyProgram) {
                 case BVS_RI: {
-                    if(enteredKlasius != 16203)
+                    if(enteredKlasius.getId() != 16203)
                         list.add("Invalid KLASIUS SRV selected.");
                     break;
                 }
                 case BUN_RI: {
-                    if(enteredKlasius != 16204)
+                    if(enteredKlasius.getId() != 16204)
                         list.add("Invalid KLASIUS SRV selected.");
                     break;
                 }
                 case BM_RI: {
-                    if(enteredKlasius != 17003)
+                    if(enteredKlasius.getId() != 17003)
                         list.add("Invalid KLASIUS SRV selected.");
                     break;
                 }
-                default: log.info("Warning: unimplemented study program - klasius srv check... Default action is NOP.");
+                default: log.info("Warning: unimplemented study program - KLASIUS SRV check... Default action is NOP.");
             }
         }
 

@@ -151,6 +151,7 @@ public class EnrolmentToken implements Serializable {
         et.setType(e.getType());
         et.setYear(e.getYear());
         et.setForm(e.getForm());
+        et.setKlasiusSrv(e.getKlasiusSrv());
         et.setFreeChoice(false);
         return et;
     }

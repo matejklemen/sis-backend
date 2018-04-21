@@ -52,14 +52,16 @@ public class DataExporterSource {
         return responseBuilder.build();
     }
 
-    /*
     @Path("tablecsv")
     @Produces("text/csv")
     @POST
-    public Response returnTableCsv(@RequestBody Table table) {
-        return Response.ok(dataExporterBean.generateTableCsv(table)).build();
+    public Response returnTableCsv(@RequestBody TableData table) {
+        ByteArrayInputStream bios = dataExporterBean.generateTableCsv(table);
+        Response.ResponseBuilder responseBuilder = Response.ok((Object) bios);
+        responseBuilder.type("text/csv");
+        responseBuilder.header("Content-Disposition", "filename=test.csv");
+        return responseBuilder.build();
     }
-    */
 
     @Operation(description = "Returns enrolment sheet in pdf form", summary = "Generates enrolment sheet in pdf form for student with given studenId. NOTE: studentId != registerNumber", responses = {
             @ApiResponse(responseCode = "200",
@@ -83,5 +85,4 @@ public class DataExporterSource {
         responseBuilder.header("Content-Disposition", "filename=vpisni-list"+12345678+".pdf");
         return responseBuilder.build();
     }
-
 }
