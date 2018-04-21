@@ -45,7 +45,7 @@ public class EnrolmentTokenSource {
     @Inject private StudyFormBean sfb;
     @Inject private StudyKindBean skb;
     @Inject private StudyTypeBean stb;
-
+    @Inject private KlasiusSrvBean ksb;
 
 
     @Operation(description = "Returns newly created enrolment token for given id", summary = "Create enrolment token by student id", responses = {
@@ -103,6 +103,14 @@ public class EnrolmentTokenSource {
 
         et.setFreeChoice(false);
 
+        // try to infer the default KLASIUS SRV
+        StudyProgram sp = s.getStudyProgram();
+        Integer idDefaultKlasius = 16204;
+
+        if(sp != null)
+            idDefaultKlasius = sp.getId().equals("1000470") ? 16203: 16204;
+
+        et.setKlasiusSrv(ksb.getKlasiusSrv(idDefaultKlasius));
         et = etb.putEnrolmentToken(et);
 
         return Response.ok().entity(et).build();
