@@ -8,7 +8,6 @@ import com.itextpdf.text.pdf.PdfWriter;
 import entities.logic.TableData;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.New;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -64,6 +63,41 @@ public class DataExporterBean {
             return null;
         }
 
+    }
+
+    public ByteArrayInputStream generateEnrolmentSheet(){
+        try{
+            Document document = new Document();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter.getInstance(document, baos);
+            document.open();
+
+            BaseFont base = BaseFont.createFont("arial.ttf", "Cp1250", BaseFont.NOT_EMBEDDED);
+            Font font1 = new Font(base, 14);
+            Font font2 = new Font(base, 8);
+
+            /* HEADER */
+            document.add(new Paragraph("VPISNI LIST 2014/2015",font1)); //TODO: date
+            document.add(new Paragraph("za študente", font2));
+            document.add(new Paragraph("Fakulteta za računalništvo in informatiko", font2));
+
+            /* LOGO */
+            Image img = Image.getInstance("services/src/logo-ulj.png"); //TODO: should prob. handle diff. for deployment
+            img.setAbsolutePosition(
+                    (PageSize.A4.getWidth() - img.getScaledWidth()) / 2,
+                    PageSize.A4.getHeight() - 130);
+            document.add(img);
+
+
+            document.close();
+
+            byte[] pdf = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(pdf);
+            return bais;
+        }catch(Exception e){
+            log.severe(e.getMessage());
+            return null;
+        }
     }
 
     private void addTableHeader(PdfPTable table, Font font, List<String> names) {
