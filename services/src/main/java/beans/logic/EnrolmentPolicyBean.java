@@ -3,6 +3,8 @@ package beans.logic;
 import beans.crud.*;
 import com.arjuna.ats.jta.exceptions.NotImplementedException;
 import entities.*;
+import entities.address.Country;
+import entities.address.Municipality;
 import entities.curriculum.Curriculum;
 import entities.curriculum.ECTSDistribution;
 import entities.logic.EnrolmentSheet;
@@ -19,6 +21,9 @@ public class EnrolmentPolicyBean {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
     private static final String BUN_RI = "1000468";
+    private static final String BVS_RI = "1000470";
+    private static final String BM_RI = "1000471";
+    private static final int SLO_COUNTRY_ID = 705;
 
     @Inject
     private GradeBean GradeBean;
@@ -116,6 +121,14 @@ public class EnrolmentPolicyBean {
             }
 
             Curriculum currCourse = curriculumBean.getCourseMetadata(idCourse, chosenYearOfProgram, chosenStudyProgram, chosenIdStudyYear);
+
+            // will only happen if database is unpopulated with data for a course in specific year
+            if(currCourse == null) {
+                errList.add(String.format("A course you selected (%d) is not planned to be carried out in selected year.",
+                        idCourse));
+                continue;
+            }
+
             String coursePocType = currCourse.getPoc().getType();
             int courseECTS = currCourse.getIdCourse().getCreditPoints();
             int moduleId = currCourse.getPoc().getId();
@@ -216,12 +229,23 @@ public class EnrolmentPolicyBean {
         if(es.getStudent().getAddress2() != null && !postAddressBean.existsPostAddress(es.getStudent().getAddress2().getPost().getId())) {
             list.add("Address2 invalid post code");
         }
-        if(!municipalityBean.existsMunicipality(es.getStudent().getMunicipalityOfBirth().getId())) {
-            list.add("Invalid municipality code");
+
+        Municipality munOfBirth = es.getStudent().getMunicipalityOfBirth();
+        Country countryOfBirth = es.getStudent().getCountryOfBirth();
+        /* "Kraj rojstva" either empty because the student forgot to fill it or the student is from a foreign country */
+        if(munOfBirth == null)
+            list.add("Municipality of birth is empty!");
+        else {
+            if(munOfBirth.getId() == 999 && countryOfBirth.getId() == SLO_COUNTRY_ID)
+                list.add("Chose Slovenia as country of birth but a non-Slovene municipality of birth.");
+
+            if(!municipalityBean.existsMunicipality(munOfBirth.getId()))
+                list.add("Invalid municipality code");
         }
-        if(!countryBean.existsCountry(es.getStudent().getCountryOfBirth().getId())) {
+
+        if(!countryBean.existsCountry(countryOfBirth.getId()))
             list.add("Invalid country code");
-        }
+
         if(!studyProgramBean.existsStudyProgram(es.getEnrolmentToken().getStudyProgram().getId())) {
             list.add("Invalid study program code");
         }
@@ -241,10 +265,32 @@ public class EnrolmentPolicyBean {
             list.add("Invalid year range");
         }
 
-        String date = es.getStudent().getDateOfBirth();
-        String EMSO = date.split("-")[2].substring(0, 2)+date.split("-")[1]+date.split("-")[0].substring(1,4)+(es.getStudent().getGender() == 'M' ? "50[0-4][0-9]{3}" : "50[5-9][0-9]{3}");
-        if(!es.getStudent().getEmso().matches(EMSO)) {
-            list.add("Invalid EMSO number");
+        String inputEMSO = es.getStudent().getEmso();
+
+        if (inputEMSO == null)
+            list.add("You did not enter an EMSO number.");
+        else if(inputEMSO.length() != 13)
+            list.add("EMSO must contain 13 numbers.");
+        else {
+            int weightedSum = 0;
+            // multiplying numbers: 7 6 5 4 3 2 7 6 5 4 3 2
+            for(int i = 0; i < 12; i++) {
+                int currMultiplier = (11 - i) % 6 + 2;
+                weightedSum += (int)(inputEMSO.charAt(i) - '0') * currMultiplier;
+            }
+
+            int controlNumber = 11 - (weightedSum % 11);
+
+            String[] dateSplit = es.getStudent().getDateOfBirth().split("-");
+            String dd = dateSplit[2].substring(0, 2);
+            String mm = dateSplit[1];
+            String yyy = dateSplit[0].substring(1, 4);
+
+            String reconstructedEMSO = String.format("%s%s%s%s%d",
+                    dd, mm, yyy, (es.getStudent().getGender() == 'M' ? "50[0-4][0-9]{3}" : "50[5-9][0-9]{3}"), controlNumber);
+
+            if(!inputEMSO.matches(reconstructedEMSO))
+                list.add("Invalid EMSO number");
         }
 
         if(!es.getStudent().getName().matches("[A-Ž][a-ž]+")) {
@@ -252,10 +298,6 @@ public class EnrolmentPolicyBean {
         }
         if(!es.getStudent().getSurname().matches("[A-Ž][a-ž]+")) {
             list.add("Invalid surname format");
-        }
-
-        if(municipalityBean.existsMunicipality(es.getStudent().getMunicipalityOfBirth().getId()) && es.getStudent().getCountryOfBirth().getId() != 705) {
-            list.add("Invalid country and municipality combination");
         }
 
         List<Enrolment> studentEnrolments = enrolmentBean.getEnrolmentsForStudent(es.getStudent().getId());
@@ -288,17 +330,41 @@ public class EnrolmentPolicyBean {
         list = checkCourses(es, list);
 
         // Preveri pravilnost kombinacije vrsta vpisa+letnik
+        // ??
 
         // Preveri pravilnost kombinacije študijski program + vrsta študija (Klasius SRP)
+        String enteredStudyProgram = es.getEnrolmentToken().getStudyProgram().getId();
+        KlasiusSrv enteredKlasius = es.getEnrolmentToken().getKlasiusSrv();
+
+        if(enteredKlasius == null)
+            list.add("KLASIUS SRV field is empty. You should contact the student's office as this is their fault.");
+        else {
+            switch (enteredStudyProgram) {
+                case BVS_RI: {
+                    if(enteredKlasius.getId() != 16203)
+                        list.add("Invalid KLASIUS SRV selected.");
+                    break;
+                }
+                case BUN_RI: {
+                    if(enteredKlasius.getId() != 16204)
+                        list.add("Invalid KLASIUS SRV selected.");
+                    break;
+                }
+                case BM_RI: {
+                    if(enteredKlasius.getId() != 17003)
+                        list.add("Invalid KLASIUS SRV selected.");
+                    break;
+                }
+                default: log.info("Warning: unimplemented study program - KLASIUS SRV check... Default action is NOP.");
+            }
+        }
 
         // Preveri, da študent ne more vnesti vrste vpisa 98.
-        boolean invalidStudyType = es.getEnrolmentToken().getType().getId() == 98;
+        boolean invalidStudyType = (es.getEnrolmentToken().getType().getId() == 98);
         if(invalidStudyType)
             list.add("Invalid study type (study type must not be \"98 Zaključek\")");
 
-        // Preveri, da so avtomatsko dodani obvezni predmeti.
-
-        // Preveri, da vpis še ni potrjen.
+        // Preveri, da so avtomatsko dodani obvezni predmeti. [DONE]
 
         // Preveri seznam vpisanih.*
 
