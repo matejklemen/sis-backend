@@ -8,8 +8,10 @@ import com.itextpdf.text.pdf.PdfWriter;
 import entities.logic.TableData;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.New;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +22,10 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class DataExporterBean {
     private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    private  final String CHARSET = "UTF8";
+    private final String DELIMETER = ";";
+    private  final String NEW_LINE = "\r\n";
 
     public ByteArrayInputStream generateTablePdf(TableData tableData){
         try {
@@ -79,6 +85,49 @@ public class DataExporterBean {
                 table.addCell(new Paragraph(cellIt.next(), font));
             }
         }
+    }
+
+    public ByteArrayInputStream generateTableCsv(TableData tableData){
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(baos);
+
+            try {
+                Iterator<String> namesIt = tableData.getColoumnNames().iterator();
+                while (namesIt.hasNext()) {
+                    out.write(namesIt.next().getBytes(CHARSET));
+                    if(namesIt.hasNext()) {
+                        out.write(DELIMETER.getBytes(CHARSET));
+                    } else {
+                        out.write(NEW_LINE.getBytes(CHARSET));
+                    }
+                }
+                Iterator<List<String>> rowIt = tableData.getRows().iterator();
+                while (rowIt.hasNext()) {
+                    Iterator<String> cellIt = rowIt.next().iterator();
+                    while (cellIt.hasNext()) {
+                        out.write(cellIt.next().getBytes(CHARSET));
+                        if(cellIt.hasNext()) {
+                            out.write(DELIMETER.getBytes(CHARSET));
+                        } else {
+                            out.write(NEW_LINE.getBytes(CHARSET));
+                        }
+                    }
+                }
+                baos.flush();
+                baos.close();
+            } catch (Exception e) {
+                log.severe(e.getMessage());
+                return null;
+            }
+            byte[] csv = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(csv);
+            return bais;
+        } catch (Exception e) {
+            log.severe(e.getMessage());
+            return null;
+        }
+
     }
 
 }

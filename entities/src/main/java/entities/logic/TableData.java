@@ -35,4 +35,13 @@ public class TableData {
     public void setRows(List<List<String>> rows) {
         this.rows = rows;
     }
+
+    @Override
+    public String toString() {
+        return "TableData{" +
+                "tableName='" + tableName + '\'' +
+                ", coloumnNames=" + coloumnNames +
+                ", rows=" + rows +
+                '}';
+    }
 }
