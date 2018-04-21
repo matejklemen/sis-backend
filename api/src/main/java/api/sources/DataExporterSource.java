@@ -14,10 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
@@ -63,4 +60,28 @@ public class DataExporterSource {
         return Response.ok(dataExporterBean.generateTableCsv(table)).build();
     }
     */
+
+    @Operation(description = "Returns enrolment sheet in pdf form", summary = "Generates enrolment sheet in pdf form for student with given studenId. NOTE: studentId != registerNumber", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Pdf file stream"
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Failed to generate pdf",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class))
+            )
+    })
+    @Path("enrolmentSheet/{studentId}")
+    @GET
+    @Produces("application/pdf")
+    public Response returnEnrolmentSheet(@PathParam("studentId") int studentId){
+        //get enrolment
+        ByteArrayInputStream bais = dataExporterBean.generateEnrolmentSheet();
+
+        Response.ResponseBuilder responseBuilder = Response.ok((Object) bais);
+        responseBuilder.type("application/pdf");
+        responseBuilder.header("Content-Disposition", "filename=vpisni-list"+12345678+".pdf");
+        return responseBuilder.build();
+    }
+
 }
