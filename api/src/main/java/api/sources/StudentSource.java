@@ -1,7 +1,6 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
-import pojo.ResponseError;
 import beans.crud.StudentBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.Student;
@@ -13,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -84,19 +84,27 @@ public class StudentSource {
         return Response.ok(sd).build();
     }
 
-    @Operation(description = "Returns a list of students that match the search query. Query can partially match either the register number, name or surname. It's possible that the returned list is empty.", summary = "Get list of students by search query", responses = {
+    @Operation(description = "Returns a list of students that match the search query. Query can match the start of either the register number, name or surname. It's possible that the returned list is empty.", summary = "Get list of students by search query", responses = {
             @ApiResponse(responseCode = "200",
                     description = "List of students by search query",
                     content = @Content(
                             schema = @Schema(implementation
                                     = Student.class))
-            )
-    })
+            )},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
+            })
     @Path("search/{query}")
     @GET
-    public Response getStudents(@PathParam("query") String query) {
-        List sdl = sdB.searchStudents(query);
-        return Response.ok(sdl).build();
+    public Response searchStudents(@PathParam("query") String searchQuery) {
+        QueryParameters paramQuery = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+        List sdl = sdB.searchStudents(paramQuery, searchQuery);
+        return Response
+                .ok(sdl)
+                .header("X-Total-Count", sdl.size())
+                .build();
     }
 
 }

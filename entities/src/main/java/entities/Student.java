@@ -8,14 +8,11 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity(name = "student")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "Student.getByRegisterNumber", query = "SELECT st FROM student st WHERE st.registerNumber = :regno"),
                 @NamedQuery(name = "Student.getByLoginId", query = "SELECT st FROM student st WHERE st.loginData.id = :loginId"),
-                @NamedQuery(name = "Student.searchStudents", query = "SELECT st FROM student st WHERE st.registerNumber LIKE :sq OR LOWER(st.name) LIKE :sq OR LOWER(st.surname) LIKE :sq"),
                 @NamedQuery(name = "Student.getAllReverse", query = "SELECT st FROM student st ORDER BY st.id DESC"),
                 @NamedQuery(name = "Student.getStudent", query = "SELECT st FROM student st WHERE st.name = :name AND st.surname = :surname AND st.studyProgram = :studyProgram AND st.email = :email")
         }

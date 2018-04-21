@@ -1,11 +1,15 @@
 package beans.crud;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.interfaces.CriteriaFilter;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.Student;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.logging.Logger;
@@ -37,7 +41,6 @@ public class StudentBean {
     @Transactional
     public List<Student> getStudents(QueryParameters query) {
         List<Student> students = JPAUtils.queryEntities(em, Student.class, query);
-
         return students;
     }
 
@@ -50,22 +53,22 @@ public class StudentBean {
     }
 
     @Transactional
-    public Student getStudentByRegisterNumber(String regno) {
-        log.info("Getting by student_id: " + regno);
-
-        Query q = em.createNamedQuery("Student.getByRegisterNumber");
-        q.setParameter("regno", regno);
-
-        return (Student) q.getSingleResult();
-    }
-
-    @Transactional
-    public List searchStudents(String query) {
-        log.info("Searching: " + query);
-        Query q = em.createNamedQuery("Student.searchStudents");
-        q.setMaxResults(50);
-        q.setParameter("sq", "" + query.toLowerCase() + "%");
-        return q.getResultList();
+    public List searchStudents(QueryParameters paramQuery, String searchQuery) {
+        List<Student> queryResult = JPAUtils.queryEntities(em, Student.class, paramQuery, new CriteriaFilter<Student>() {
+            @Override
+            public Predicate createPredicate(Predicate predicate, CriteriaBuilder cBuilder, Root<Student> root) {
+                // build LIKE statements
+                String searchQueryL = searchQuery.toLowerCase() + "%";
+                Predicate[] likes = {
+                        cBuilder.like(cBuilder.lower(root.get("name")), searchQueryL),
+                        cBuilder.like(cBuilder.lower(root.get("surname")), searchQueryL),
+                        cBuilder.like(cBuilder.lower(root.get("registerNumber")), searchQueryL),
+                };
+                // join LIKE statements with OR and add them to existing criterias with AND
+                return cBuilder.and(predicate, cBuilder.or(likes));
+            }
+        });
+        return queryResult;
     }
 
     @Transactional
