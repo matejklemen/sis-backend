@@ -287,7 +287,7 @@ public class EnrolmentPolicyBean {
             String yyy = dateSplit[0].substring(1, 4);
 
             String reconstructedEMSO = String.format("%s%s%s%s%d",
-                    dd, mm, yyy, (es.getStudent().getGender() == 'M' ? "50[0-4][0-9]{3}" : "50[5-9][0-9]{3}"), controlNumber);
+                    dd, mm, yyy, (es.getStudent().getGender() == 'M' ? "50[0-4][0-9]{2}" : "50[5-9][0-9]{2}"), controlNumber);
 
             if(!inputEMSO.matches(reconstructedEMSO))
                 list.add("Invalid EMSO number");
