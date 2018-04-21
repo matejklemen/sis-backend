@@ -16,7 +16,7 @@ A student information system made for a software engineering course.
 	5.  Password: postgres
 	6.  Test Connection
 * In `entities/src/main/resources/config.yaml`, update jdbc/sisTestDB `connection-url` parameter's IP to match your docker IP.
-* **(Ta korak ni nujen? Tabele se naredijo same)** [Create all tables id db](doc/databaseTables.md) and assign data source (Persistence Tab)
+* Optional: assign data source (Persistence Tab)
 
 ## Development cycle:
 1.  `docker start postgres-jdbc`
@@ -26,13 +26,17 @@ A student information system made for a software engineering course.
 The project uses OpenAPI specification 3. Documentation hosted on:
 http://localhost:8080/api-specs/ui (when running locally)
 
+## Using API filters
+
+Examples on how to use filters, offsets and limits are availiable at [kumuluzee-rest#examples](https://github.com/kumuluz/kumuluzee-rest#examples).
+
 ## Sample users
-joze1 [administrator/ka]
+- `joze1` (Skrbnik/ca)
+- `fejk.mail@fri.uni-lj.si` (Profesor/ica)
+- `ref@fri.uni-lj.si` (Referent/ka)
+- `janez@nov.ak` (Študent/ka)
+- `peter@kopljem.net` (Študent/ka)
+- `marta@pod.streho` (Študent/ka)
+- `steff@ff.fff` (Študent/ka)
 
-mk3141 (at) student.uni-lj.si [študent/ka]
-
-fejk.mail (at) student.uni-lj.si [profesor/ica]
-
-ref (at) fri.uni-lj.si [referent/ka]
-
-passwords for all 4 sample users in the system: 123
+Sample password for all users above is `123`.
