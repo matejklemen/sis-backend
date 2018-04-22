@@ -34,4 +34,21 @@ public class StudentCoursesBean {
         q.setParameter("enrolment", e);
         return q.getResultList();
     }
+
+    @Transactional
+    public void deleteStudentCourse(StudentCourses course){
+        log.info("Will delete StudentCourse: "+course.getIdStudentCourses());
+
+        em.remove(course);
+        em.flush();
+    }
+
+    @Transactional
+    public StudentCourses insertCourse(StudentCourses sc){
+        log.info("Will insert new StudentCourse: "+sc.getCourse().getId()+" + "+sc.getEnrolment().getId());
+
+        em.persist(sc);
+        em.flush();
+        return sc;
+    }
 }
