@@ -109,6 +109,10 @@ public class EnrolmentTokenSource {
 
         if(sp != null)
             idDefaultKlasius = sp.getId().equals("1000470") ? 16203: 16204;
+        else {
+            // study program is not selected so set default value (= BUN RI)
+            et.setStudyProgram(spb.getStudyProgram("1000468"));
+        }
 
         et.setKlasiusSrv(ksb.getKlasiusSrv(idDefaultKlasius));
         et = etb.putEnrolmentToken(et);
@@ -188,6 +192,15 @@ public class EnrolmentTokenSource {
     @POST
     public Response postToken(@RequestBody EnrolmentToken token){
         if(!etb.getEnrolmentTokenById(token.getId()).isUsed()) {
+            // update KLASIUS SRV
+            StudyProgram sp = token.getStudyProgram();
+            Integer idDefaultKlasius = 16204;
+
+            if(sp != null)
+                idDefaultKlasius = sp.getId().equals("1000470") ? 16203: 16204;
+
+            token.setKlasiusSrv(ksb.getKlasiusSrv(idDefaultKlasius));
+
             token.setStudent(etb.getEnrolmentTokenById(token.getId()).getStudent());
             EnrolmentToken et = etb.updateEnrolmentToken(token);
             return Response.ok().entity(et).build();
