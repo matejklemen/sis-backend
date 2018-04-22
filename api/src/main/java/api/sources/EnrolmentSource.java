@@ -2,12 +2,12 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import beans.crud.EnrolmentBean;
-import beans.crud.EnrolmentTokenBean;
-import beans.crud.StudentBean;
+import beans.crud.*;
 import beans.logic.EnrolmentPolicyBean;
 import entities.Enrolment;
 import entities.EnrolmentToken;
+import entities.curriculum.Course;
+import entities.curriculum.StudentCourses;
 import entities.logic.EnrolmentSheet;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,17 +38,12 @@ public class EnrolmentSource {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
-    @Inject
-    private StudentBean sB;
-
-    @Inject
-    private EnrolmentBean enB;
-
-    @Inject
-    private EnrolmentTokenBean enrolmentTokenBean;
-
-    @Inject
-    private EnrolmentPolicyBean enrolmentPolicyBean;
+    @Inject private StudentBean sB;
+    @Inject private EnrolmentBean enB;
+    @Inject private EnrolmentTokenBean enrolmentTokenBean;
+    @Inject private EnrolmentPolicyBean enrolmentPolicyBean;
+    @Inject private StudentCoursesBean scB;
+    @Inject private CourseBean cB;
 
     @Operation(description = "Returns enrolments for student. If order and studyProgramId are given, returns one Enrolment. Order can be one of [\"first\",\"last\"]", summary = "Get enrolment(-s) by studentId and/or query parameters",
             parameters = {
@@ -120,4 +115,68 @@ public class EnrolmentSource {
             return Response.status(400).entity(new ResponseError(400, list.toArray(new String[0]))).build();
         }
     }
+
+    @Operation(description = "Update and confirm enrolment", summary = "Update and confirm enrolment for student",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Enrolment successful"
+                    ),
+                    @ApiResponse(responseCode = "404",
+                            description = "Enrolment for student failed"
+                    )
+            })
+    @POST
+    @Path("confirm/{id}")
+    public Response UpdateAndConfirmEnrolment(@RequestBody EnrolmentSheet es){
+        if(es == null) throw new NoRequestBodyException();
+
+        // update student
+        sB.updateStudent(es.getStudent());
+
+        // set enrolment as confirmed
+        Enrolment e = enB.getLastEnrolmentByStudentId(es.getStudent().getId());
+        e.setConfirmed(true);
+
+        EnrolmentToken newET = es.getEnrolmentToken();
+        e.setForm(newET.getForm());
+        e.setKind(newET.getKind());
+        e.setKlasiusSrv(newET.getKlasiusSrv());
+        e.setStudyProgram(newET.getStudyProgram());
+        e.setStudyYear(newET.getStudyYear());
+        e.setType(newET.getType());
+        e.setYear(newET.getYear());
+
+
+        enB.updateEnrolment(e);
+
+        // Update courses
+        List<Integer> upcomingCourses = es.getCourses();
+        List<StudentCourses> sc = scB.getStudentCoursesByEnrolmentId(e.getId());
+        for ( StudentCourses course : sc) {
+            Integer oldCourseId = course.getCourse().getId();
+            // No change was made
+            if(upcomingCourses.contains(oldCourseId)){
+                // Remove from list
+                upcomingCourses.remove((oldCourseId));
+            }else{
+                // Remove old
+                scB.deleteStudentCourse(course);
+            }
+        }
+
+        for(Integer newCourseId : upcomingCourses){
+            Course c = cB.getCourse(newCourseId);
+            StudentCourses studentCourse = new StudentCourses();
+
+            studentCourse.setCourse(c);
+            studentCourse.setEnrolment(e);
+
+            scB.insertCourse(studentCourse);
+        }
+
+
+        return Response.ok(es).build();
+
+    }
 }
+

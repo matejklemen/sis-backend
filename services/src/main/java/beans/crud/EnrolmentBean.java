@@ -78,4 +78,14 @@ public class EnrolmentBean {
     public List<Enrolment> getEnrolmentsForStudent(int studentId) {
         return em.createNamedQuery("Enrolment.getByStudentId", Enrolment.class).setParameter("id", studentId).getResultList();
     }
+
+    @Transactional
+    public Enrolment updateEnrolment(Enrolment e){
+        log.info("Will update enrolment with id: "+e.getId());
+
+        em.merge(e);
+        em.flush();
+        return e;
+
+    }
 }
