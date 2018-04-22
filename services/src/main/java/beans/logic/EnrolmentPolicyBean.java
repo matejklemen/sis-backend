@@ -174,11 +174,16 @@ public class EnrolmentPolicyBean {
         }
 
         int numberOfDistinctModules = numOfCoursesPerModuleChosen.size();
+        log.info(String.format("Number of distinct modules chosen is: %d", numberOfDistinctModules));
         if(numberOfDistinctModules == 3) {
             /* the only way a student with no free module choice is allowed to choose 3 distinct modules is by choosing
                 1 module course instead of a general elective course. */
             if(!hasStudentFreeModuleChoice) {
-                int diff = requiredMod - sumMod;
+                int diff = sumMod - requiredMod;
+                diff = diff > 0 ? diff: 0;
+
+                log.info(String.format("Difference between required module courses and chosen module courses is: %d...",
+                        diff));
 
                 sumPiz += diff;
                 sumMod -= diff;
@@ -216,6 +221,10 @@ public class EnrolmentPolicyBean {
             return list;
         }
 
+        String taxNumber = es.getStudent().getTaxNumber();
+        if(taxNumber == null || taxNumber.length() == 0)
+            list.add("davčna številka ni vpisana");
+
         // Preveri, da po končanem vnosu ni moč popravljati podatkov (izkoriščen žeton)
         if(enToken.isUsed())
             list.add("vpisni žeton je že porabljen");
@@ -240,6 +249,9 @@ public class EnrolmentPolicyBean {
         else {
             if(munOfBirth.getId() == 999 && countryOfBirth.getId() == SLO_COUNTRY_ID)
                 list.add("izbrana država rojstva je Slovenija, a izbrana občina rojstva ni v Sloveniji");
+
+            if(munOfBirth.getId() != 999 && countryOfBirth.getId() != SLO_COUNTRY_ID)
+                list.add("izbrana slovenska občina rojstva, a tuja država rojstva");
 
             if(!municipalityBean.existsMunicipality(munOfBirth.getId()))
                 list.add("neveljavna koda občine rojstva");
@@ -362,9 +374,7 @@ public class EnrolmentPolicyBean {
         }
 
         // Preveri, da študent ne more vnesti vrste vpisa 98.
-        boolean invalidStudyType = (es.getEnrolmentToken().getType().getId() == 98);
-        if(invalidStudyType)
-            list.add("neveljavna vrsta vpisa"); // TODO: referentka lahko vnese 98, študent pa ne?
+        // [DONE] -> onemogočeno na FE, na BE ne vidim preproste rešitve, ki bi onemogočala izbiro 98 SAMO študentu.
 
         // Preveri, da so avtomatsko dodani obvezni predmeti. [DONE]
 
