@@ -11,6 +11,7 @@ import entities.logic.EnrolmentSheet;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -282,7 +283,7 @@ public class EnrolmentPolicyBean {
 
             int controlNumber = 11 - (weightedSum % 11);
 
-            String[] dateSplit = es.getStudent().getDateOfBirth().split("-");
+            String[] dateSplit = new SimpleDateFormat("yyyy-MM-dd").format(es.getStudent().getDateOfBirth()).split("-");
             String dd = dateSplit[2].substring(0, 2);
             String mm = dateSplit[1];
             String yyy = dateSplit[0].substring(1, 4);

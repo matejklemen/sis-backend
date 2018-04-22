@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import java.io.Serializable;
+import java.sql.Date;
 
 @Entity(name = "student")
 @NamedQueries(
@@ -36,7 +37,7 @@ public class Student implements Serializable {
 
     @Column(name = "date_of_birth", columnDefinition = "DATE")
     // ! note: String formatted as: YYYY-MM-DD
-    private String dateOfBirth;
+    private Date dateOfBirth;
 
     @Column(name = "place_of_birth")
     private String placeOfBirth;
@@ -119,11 +120,11 @@ public class Student implements Serializable {
         this.surname = surname;
     }
 
-    public String getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

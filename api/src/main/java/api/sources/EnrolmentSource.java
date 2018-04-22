@@ -4,6 +4,7 @@ import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import beans.crud.EnrolmentBean;
 import beans.crud.EnrolmentTokenBean;
+import beans.crud.StudentBean;
 import beans.logic.EnrolmentPolicyBean;
 import entities.Enrolment;
 import entities.EnrolmentToken;
@@ -36,6 +37,9 @@ import java.util.logging.Logger;
 public class EnrolmentSource {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Inject
+    private StudentBean sB;
 
     @Inject
     private EnrolmentBean enB;
@@ -103,10 +107,15 @@ public class EnrolmentSource {
         EnrolmentToken enToken = enrolmentTokenBean.getEnrolmentTokenByStudentId(es.getStudent().getId());
         List<String> list = enrolmentPolicyBean.checkEnrolment(es, enToken);
         if(list.isEmpty()) {
+            // set token as used
             enToken.setUsed(true);
             enrolmentTokenBean.updateEnrolmentToken(enToken);
+            // add an enrolment and courses for the used token
             enB.putEnrolment(es.getEnrolmentToken(), es.getCourses());
-            return Response.ok().entity(es).build();
+            // update student from sheet
+            sB.updateStudent(es.getStudent());
+            
+            return Response.ok(es).build();
         } else {
             return Response.status(400).entity(new ResponseError(400, list.toArray(new String[0]))).build();
         }
