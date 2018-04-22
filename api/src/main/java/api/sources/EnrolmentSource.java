@@ -2,7 +2,6 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import pojo.ResponseError;
 import beans.crud.EnrolmentBean;
 import beans.crud.EnrolmentTokenBean;
 import beans.logic.EnrolmentPolicyBean;
@@ -18,6 +17,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -108,7 +108,7 @@ public class EnrolmentSource {
             enB.putEnrolment(es.getEnrolmentToken(), es.getCourses());
             return Response.ok().entity(es).build();
         } else {
-            return Response.status(404).entity(list).build();
+            return Response.status(400).entity(new ResponseError(400, list.toArray(new String[0]))).build();
         }
     }
 }
