@@ -1,15 +1,18 @@
 package pojo;
 
-import javax.xml.ws.Response;
-
 public class ResponseError {
 
     private int status;
-    private String message;
+    private String[] messages;
 
     public ResponseError(int status, String message) {
         this.status = status;
-        this.message = message;
+        this.messages = new String[]{message};
+    }
+
+    public ResponseError(int status, String[] messages) {
+        this.status = status;
+        this.messages = messages;
     }
 
     public int getStatus() {
@@ -20,12 +23,12 @@ public class ResponseError {
         this.status = status;
     }
 
-    public String getMessage() {
-        return message;
+    public String[] getMessages() {
+        return messages;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessages(String[] messages) {
+        this.messages = messages;
     }
 
     public static ResponseError error400() {

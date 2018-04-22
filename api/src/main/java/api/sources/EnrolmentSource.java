@@ -2,9 +2,9 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import pojo.ResponseError;
 import beans.crud.EnrolmentBean;
 import beans.crud.EnrolmentTokenBean;
+import beans.crud.StudentBean;
 import beans.logic.EnrolmentPolicyBean;
 import entities.Enrolment;
 import entities.EnrolmentToken;
@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -36,6 +37,9 @@ import java.util.logging.Logger;
 public class EnrolmentSource {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
+
+    @Inject
+    private StudentBean sB;
 
     @Inject
     private EnrolmentBean enB;
@@ -103,12 +107,17 @@ public class EnrolmentSource {
         EnrolmentToken enToken = enrolmentTokenBean.getEnrolmentTokenByStudentId(es.getStudent().getId());
         List<String> list = enrolmentPolicyBean.checkEnrolment(es, enToken);
         if(list.isEmpty()) {
+            // set token as used
             enToken.setUsed(true);
             enrolmentTokenBean.updateEnrolmentToken(enToken);
+            // add an enrolment and courses for the used token
             enB.putEnrolment(es.getEnrolmentToken(), es.getCourses());
-            return Response.ok().entity(es).build();
+            // update student from sheet
+            sB.updateStudent(es.getStudent());
+            
+            return Response.ok(es).build();
         } else {
-            return Response.status(404).entity(list).build();
+            return Response.status(400).entity(new ResponseError(400, list.toArray(new String[0]))).build();
         }
     }
 }

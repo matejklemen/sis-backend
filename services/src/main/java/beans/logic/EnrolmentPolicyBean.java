@@ -11,6 +11,7 @@ import entities.logic.EnrolmentSheet;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -115,6 +116,7 @@ public class EnrolmentPolicyBean {
 
         for(Integer idCourse: takenCourses) {
             if(idCourse == null) {
+                // TODO: throw 500?
                 errList.add("A course is unspecified.");
                 log.severe("ID of a course is not specified (= null). How??");
                 continue;
@@ -210,67 +212,67 @@ public class EnrolmentPolicyBean {
     public List<String> checkEnrolment(EnrolmentSheet es, EnrolmentToken enToken){
         List<String> list = new ArrayList<>();
         if(enToken == null) {
-            list.add("No token found");
+            list.add("napaka v zahtevku: ni vpisnega žetona");
             return list;
         }
 
         // Preveri, da po končanem vnosu ni moč popravljati podatkov (izkoriščen žeton)
         if(enToken.isUsed())
-            list.add("Enrolment token already used");
+            list.add("vpisni žeton je že porabljen");
 
         if(!enToken.validEnrolmentToken(es.getEnrolmentToken())) {
-            list.add("No valid token for given enrolment");
+            list.add("ni veljavnega vpisnega žetona za izbran vpis");
             return list;
         }
 
-        if(!postAddressBean.existsPostAddress(es.getStudent().getAddress1().getPost().getId())) {
-            list.add("Address1 invalid post code");
+        if(es.getStudent().getAddress1() != null && !postAddressBean.existsPostAddress(es.getStudent().getAddress1().getPost().getId())) {
+            list.add("neveljavna poštna številka za stalno bivališče");
         }
         if(es.getStudent().getAddress2() != null && !postAddressBean.existsPostAddress(es.getStudent().getAddress2().getPost().getId())) {
-            list.add("Address2 invalid post code");
+            list.add("neveljavna poštna številka za začasno bivališče");
         }
 
         Municipality munOfBirth = es.getStudent().getMunicipalityOfBirth();
         Country countryOfBirth = es.getStudent().getCountryOfBirth();
         /* "Kraj rojstva" either empty because the student forgot to fill it or the student is from a foreign country */
         if(munOfBirth == null)
-            list.add("Municipality of birth is empty!");
+            list.add("občina rojstva ni izbrana");
         else {
             if(munOfBirth.getId() == 999 && countryOfBirth.getId() == SLO_COUNTRY_ID)
-                list.add("Chose Slovenia as country of birth but a non-Slovene municipality of birth.");
+                list.add("izbrana država rojstva je Slovenija, a izbrana občina rojstva ni v Sloveniji");
 
             if(!municipalityBean.existsMunicipality(munOfBirth.getId()))
-                list.add("Invalid municipality code");
+                list.add("neveljavna koda občine rojstva");
         }
 
         if(!countryBean.existsCountry(countryOfBirth.getId()))
-            list.add("Invalid country code");
+            list.add("neveljavna koda države rojstva");
 
         if(!studyProgramBean.existsStudyProgram(es.getEnrolmentToken().getStudyProgram().getId())) {
-            list.add("Invalid study program code");
+            list.add("neveljavna koda študijskega programa");
         }
         if(!studyTypeBean.existsStudyType(es.getEnrolmentToken().getType().getId())) {
-            list.add("Invalid study type code");
+            list.add("neveljavna koda vrste vpisa");
         }
         if(es.getEnrolmentToken().getKlasiusSrv() != null && !klasiusSrvBean.existsKlasiusSrv(es.getEnrolmentToken().getKlasiusSrv().getId())) {
-            list.add("Invalid klasius_srv code");
+            list.add("neveljavna koda vrste študija (klasius)");
         }
         if(!studyFormBean.existsStudyForm(es.getEnrolmentToken().getForm().getId())) {
-            list.add("Invalid study form code");
+            list.add("neveljavna koda oblike študija");
         }
         if(!studyKindBean.existsStudyKind(es.getEnrolmentToken().getKind().getId())) {
-            list.add("Invalid study kind code");
+            list.add("neveljavna koda načina študija");
         }
         if(es.getEnrolmentToken().getYear() < 1 || es.getEnrolmentToken().getYear() > 3) {
-            list.add("Invalid year range");
+            list.add("neveljaven izbran letnik študija");
         }
 
         String inputEMSO = es.getStudent().getEmso();
 
         if (inputEMSO == null)
-            list.add("You did not enter an EMSO number.");
+            list.add("EMŠO ni vnesen");
         else if(inputEMSO.length() != 13)
-            list.add("EMSO must contain 13 numbers.");
+            list.add("EMŠO mora vsebovati točno 13 števk");
         else {
             int weightedSum = 0;
             // multiplying numbers: 7 6 5 4 3 2 7 6 5 4 3 2
@@ -281,7 +283,7 @@ public class EnrolmentPolicyBean {
 
             int controlNumber = 11 - (weightedSum % 11);
 
-            String[] dateSplit = es.getStudent().getDateOfBirth().split("-");
+            String[] dateSplit = new SimpleDateFormat("yyyy-MM-dd").format(es.getStudent().getDateOfBirth()).split("-");
             String dd = dateSplit[2].substring(0, 2);
             String mm = dateSplit[1];
             String yyy = dateSplit[0].substring(1, 4);
@@ -290,21 +292,21 @@ public class EnrolmentPolicyBean {
                     dd, mm, yyy, (es.getStudent().getGender() == 'M' ? "50[0-4][0-9]{2}" : "50[5-9][0-9]{2}"), controlNumber);
 
             if(!inputEMSO.matches(reconstructedEMSO))
-                list.add("Invalid EMSO number");
+                list.add("neveljaven EMŠO");
         }
 
         if(!es.getStudent().getName().matches("[A-Ž][a-ž]+")) {
-            list.add("Invalid name format");
+            list.add("neveljaven vnos za ime");
         }
         if(!es.getStudent().getSurname().matches("[A-Ž][a-ž]+")) {
-            list.add("Invalid surname format");
+            list.add("neveljaven vnos za priimek");
         }
 
         List<Enrolment> studentEnrolments = enrolmentBean.getEnrolmentsForStudent(es.getStudent().getId());
         if(studentEnrolments.isEmpty()) {
             // student is enrolling for the first time, but is apparently not enrolling into 1st year of school
             if(es.getEnrolmentToken().getYear() != 1)
-                list.add("Invalid year for first enrolment for this student");
+                list.add("neveljaven letnik za prvi vpis");
         } else {
             Enrolment maxEnrolment = Collections.max(studentEnrolments, new Comparator<Enrolment>() {
                 @Override
@@ -317,13 +319,13 @@ public class EnrolmentPolicyBean {
             int yearOfProgramDiff = es.getEnrolmentToken().getYear() - maxEnrolment.getYear();
 
             if(yearOfProgramDiff < 0 || yearOfProgramDiff > 1)
-                list.add("Invalid year of enrolment for this student");
+                list.add("neveljaven letnik vpisa");
         }
 
         int maxNumberOfYearsProgramme = es.getEnrolmentToken().getStudyProgram().getSemesters() / 2;
         // example that this prevents: student should not be able to enrol into 6th year of a 2 year program
         if(es.getEnrolmentToken().getYear() > maxNumberOfYearsProgramme)
-            list.add(String.format("Trying to enrol into a nonexisting year of school for this program. %s only has %d years...",
+            list.add(String.format("neveljaven letnik vpisa za študijski program - %s ima samo %d letnika/-e/-ov",
                     es.getEnrolmentToken().getStudyProgram().getName(), maxNumberOfYearsProgramme));
 
         // Preveri pravilnost kombinacije letnik+študijski program+modul
@@ -337,22 +339,22 @@ public class EnrolmentPolicyBean {
         KlasiusSrv enteredKlasius = es.getEnrolmentToken().getKlasiusSrv();
 
         if(enteredKlasius == null)
-            list.add("KLASIUS SRV field is empty. You should contact the student's office as this is their fault.");
+            list.add("nedefinirana koda vrste študija (klasius)");
         else {
             switch (enteredStudyProgram) {
                 case BVS_RI: {
                     if(enteredKlasius.getId() != 16203)
-                        list.add("Invalid KLASIUS SRV selected.");
+                        list.add("neveljavna koda vrste študija za izbran študijski program");
                     break;
                 }
                 case BUN_RI: {
                     if(enteredKlasius.getId() != 16204)
-                        list.add("Invalid KLASIUS SRV selected.");
+                        list.add("neveljavna koda vrste študija za izbran študijski program");
                     break;
                 }
                 case BM_RI: {
                     if(enteredKlasius.getId() != 17003)
-                        list.add("Invalid KLASIUS SRV selected.");
+                        list.add("neveljavna koda vrste študija za izbran študijski program");
                     break;
                 }
                 default: log.info("Warning: unimplemented study program - KLASIUS SRV check... Default action is NOP.");
@@ -362,7 +364,7 @@ public class EnrolmentPolicyBean {
         // Preveri, da študent ne more vnesti vrste vpisa 98.
         boolean invalidStudyType = (es.getEnrolmentToken().getType().getId() == 98);
         if(invalidStudyType)
-            list.add("Invalid study type (study type must not be \"98 Zaključek\")");
+            list.add("neveljavna vrsta vpisa"); // TODO: referentka lahko vnese 98, študent pa ne?
 
         // Preveri, da so avtomatsko dodani obvezni predmeti. [DONE]
 
