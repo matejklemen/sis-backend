@@ -58,6 +58,7 @@ public class UserLoginSource {
         - TOO_MANY_REQUESTS(429) if user attempted to login too many times in a short period.
      */
     @POST
+    @Produces(MediaType.TEXT_PLAIN)
     public Response authenticateUser(@Context HttpServletRequest requestContext, UserLoginRequest ulreq){
         // add "-Djava.net.preferIPv4Stack=true" to VM options to get IPv4 addresses
         String ip = requestContext.getRemoteAddr();
@@ -78,15 +79,35 @@ public class UserLoginSource {
         if(user == null)
             return Response.status(Response.Status.FORBIDDEN).build();
 
-        String jwtToken = AuthUtils.issueJWTToken(user, TOKEN_VALIDITY_MINS_LOGIN);
+        HashMap<String, Object> tokenBodyItems = new HashMap<>();
+        tokenBodyItems.put("username", user.getUsername());
+        tokenBodyItems.put("loginId", user.getId());
+        tokenBodyItems.put("role", user.getRole());
+        // get user's "identity" - for a student, it's registerNumber
+        // identity is used on FE for redirecting to /student/{registerNumber}
+        // when student logs in.
+        switch (user.getRole().getId()) {
+            case 1:
+                // TODO
+                break;
+            case 2:
+                log.info(user.getId() + "");
+                tokenBodyItems.put("identity", sB.getStudentByLoginId(user.getId()).getRegisterNumber());
+                break;
+            case 3:
+                // TODO don't know if this is necessary
+                tokenBodyItems.put("identity", pB.getProfessorByLoginId(user.getId()).getId());
+                break;
+            case 4:
+                // TODO
+                break;
+            default:
+                break;
+        }
 
-        // build a Map instead of creating a class for response
-        Map<String, String> responseBody = new HashMap<String, String>();
-        responseBody.put("username", user.getUsername());
-        responseBody.put("role", user.getRole().getName());
-        responseBody.put("token", jwtToken);
+        String jwtToken = AuthUtils.issueJWTToken(tokenBodyItems, TOKEN_VALIDITY_MINS_LOGIN);
 
-        return Response.ok().entity(responseBody).build();
+        return Response.ok(jwtToken).build();
     }
 
     @POST
@@ -104,7 +125,7 @@ public class UserLoginSource {
         List<UserLogin> ul = ulB.getUserLoginInfoByUsername(ulreq.getUsername());
 
         if(ul.size() > 0)
-            ulB.sendToken(ulreq.getUsername(), AuthUtils.issueJWTToken(ul.get(0), TOKEN_VALIDITY_MINS_RESET_PASSWORD));
+            ulB.sendToken(ulreq.getUsername(), AuthUtils.issueJWTToken(null, TOKEN_VALIDITY_MINS_RESET_PASSWORD));
         else
             log.severe(String.format("User %s could not be found, therefore I am not sending a password reset mail.\n", ulreq.getUsername()));
 
@@ -150,27 +171,4 @@ public class UserLoginSource {
                 Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    @Path("{loginId}")
-    @GET
-    public Response getPersonByLoginId(@PathParam("loginId") int loginId, @QueryParam("roleId") int roleId) {
-
-        UserRole ur = urB.getRoleById(roleId);
-        if(ur == null) {
-            return Response.status(400).entity(new ResponseError(400, "No roleId defined")).build();
-        }
-        switch (ur.getId()) {
-            case 1:
-                // TODO
-                return Response.status(400).entity(new ResponseError(400, "Not implemented for this role")).build();
-            case 2:
-                return Response.ok(sB.getStudentByLoginId(loginId)).build();
-            case 3:
-                return Response.ok(pB.getProfessorByLoginId(loginId)).build();
-            case 4:
-                // TODO
-                return Response.status(400).entity(new ResponseError(400, "Not implemented for this role")).build();
-            default:
-                return Response.status(400).entity(new ResponseError(400, "Unknown roleId.")).build();
-        }
-    }
 }

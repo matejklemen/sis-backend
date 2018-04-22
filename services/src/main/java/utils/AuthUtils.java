@@ -5,6 +5,7 @@ import entities.UserLogin;
 import io.jsonwebtoken.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
@@ -26,22 +27,25 @@ public class AuthUtils {
         return Jwts.parser().setSigningKey(serverSecret).parseClaimsJws(jwtToken);
     }
 
-    public static String issueJWTToken(UserLogin user, int duration) {
+    public static String issueJWTToken(HashMap<String, Object> tokenBodyItems, int duration) {
         Date issuedDate = new Date();
 
         Date expiredDate = new Date(issuedDate.getTime() + duration * 60 * 1000);
 
-        String jwtToken = Jwts.builder()
-                .setSubject(user.getUsername())
+        JwtBuilder jwtBuilder = Jwts.builder()
                 .setIssuer(TOKEN_ISSUER)
                 .setIssuedAt(issuedDate)
-                .setExpiration(expiredDate)
-                .claim("role", user.getRole())
-                .claim("loginid", user.getId())
+                .setExpiration(expiredDate);
+
+        if(tokenBodyItems != null) {
+            for (HashMap.Entry<String, Object> entry : tokenBodyItems.entrySet()) {
+                jwtBuilder.claim(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return jwtBuilder
                 .signWith(SignatureAlgorithm.HS512, serverSecret) /* server secret is set in the config file */
                 .compact();
-
-        return jwtToken;
     }
 
     public static boolean hasProperRole(String jwtToken, HashSet<String> allowedRoles) {

@@ -80,6 +80,10 @@ public class ProfessorBean {
     }
 
     public Professor getProfessorByLoginId(int loginId) {
-        return em.createNamedQuery("Professor.getByLoginId", Professor.class).setParameter("loginId", loginId).getSingleResult();
+        try {
+            return em.createNamedQuery("Professor.getByLoginId", Professor.class).setParameter("loginId", loginId).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }
