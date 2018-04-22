@@ -117,7 +117,7 @@ public class EnrolmentPolicyBean {
         for(Integer idCourse: takenCourses) {
             if(idCourse == null) {
                 // TODO: throw 500?
-                errList.add("A course is unspecified.");
+                errList.add("ID predmeta ni naveden (interna napaka)");
                 log.severe("ID of a course is not specified (= null). How??");
                 continue;
             }
@@ -126,7 +126,7 @@ public class EnrolmentPolicyBean {
 
             // will only happen if database is unpopulated with data for a course in specific year
             if(currCourse == null) {
-                errList.add(String.format("A course you selected (%d) is not planned to be carried out in selected year.",
+                errList.add(String.format("predmet z ID %d se v izbranem študijskem letu ne bo izvajal",
                         idCourse));
                 continue;
             }
@@ -167,7 +167,7 @@ public class EnrolmentPolicyBean {
             sumPiz += diff;
 
             if(sumPiz != requiredPiz) {
-                errList.add("You did not take enough courses from the general elective courses area.");
+                errList.add("nepravilno število izbranih splošnih izbirnih predmetov");
             }
             else
                 log.info("The student took an additional specialist elective course, the absolute madman/madwoman!");
@@ -189,26 +189,26 @@ public class EnrolmentPolicyBean {
                 sumMod -= diff;
 
                 if(sumPiz != requiredPiz) {
-                    errList.add("You do not have permission to choose more than two distinct modules.");
+                    errList.add("nimate dovoljenja za izbiro predmetov iz več kot dveh različnih modulov");
                 }
             }
         }
 
         if(sumMod != requiredMod) {
-            errList.add(String.format("Number of chosen ECTS points for module courses (%d) does not equal the required " +
-                    "number of ECTS points for module courses (%d).", sumMod, requiredMod));
+            errList.add(String.format("število izbranih KT za modulske predmete (%d) ni enako zahtevanim KT " +
+                    "za modulske predmete (%d)", sumMod, requiredMod));
         }
         if(sumObv != requiredObv) {
-            errList.add(String.format("Number of chosen ECTS points for mandatory courses (%d) does not equal the required " +
-                    "number of ECTS points for mandatory courses (%d).", sumObv, requiredObv));
+            errList.add(String.format("število izbranih KT za obvezne predmete (%d) ni enako zahtevanim KT " +
+                    "za obvezne predmete (%d)", sumObv, requiredObv));
         }
         if(sumPiz != requiredPiz) {
-            errList.add(String.format("Number of chosen ECTS points for general elective courses (%d) does not equal the required " +
-                    "number of ECTS points for general elective courses (%d).", sumPiz, requiredPiz));
+            errList.add(String.format("število izbranih KT za splošne izbirne predmete (%d) ni enako zahtevanim KT " +
+                    "za splošne izbirne predmete (%d).", sumPiz, requiredPiz));
         }
         if(sumSiz != requiredSiz) {
-            errList.add(String.format("Number of chosen ECTS points for specialist elective courses (%d) does not equal the required " +
-                    "number of ECTS points for general elective courses (%d).", sumObv, requiredObv));
+            errList.add(String.format("število izbranih KT za strokovne izbirne predmete (%d) ni enako zahtevanim KT " +
+                    "za strokovne izbirne predmete (%d).", sumObv, requiredObv));
         }
 
         return errList;
