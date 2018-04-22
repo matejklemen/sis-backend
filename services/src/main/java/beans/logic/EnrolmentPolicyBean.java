@@ -175,24 +175,23 @@ public class EnrolmentPolicyBean {
 
         int numberOfDistinctModules = numOfCoursesPerModuleChosen.size();
         log.info(String.format("Number of distinct modules chosen is: %d", numberOfDistinctModules));
-        if(numberOfDistinctModules == 3) {
+        if((!hasStudentFreeModuleChoice && numberOfDistinctModules == 3) ||
+                hasStudentFreeModuleChoice) {
             /* the only way a student with no free module choice is allowed to choose 3 distinct modules is by choosing
                 1 module course instead of a general elective course. */
-            if(!hasStudentFreeModuleChoice) {
-                int diff = sumMod - requiredMod;
-                diff = diff > 0 ? diff: 0;
+            int diff = sumMod - requiredMod;
+            if(diff < 0)
+                diff = 0;
+            
+            log.info(String.format("Difference between required module courses and chosen module courses is: %d...",
+                    diff));
 
-                log.info(String.format("Difference between required module courses and chosen module courses is: %d...",
-                        diff));
-
-                sumPiz += diff;
-                sumMod -= diff;
-
-                if(sumPiz != requiredPiz) {
-                    errList.add("nimate dovoljenja za izbiro predmetov iz več kot dveh različnih modulov");
-                }
-            }
+            sumPiz += diff;
+            sumMod -= diff;
         }
+
+        if(!hasStudentFreeModuleChoice && numberOfDistinctModules > 3)
+            errList.add("izbranih preveč različnih modulov (nimate dovoljenja za prosto izbiro predmetov)");
 
         if(sumMod != requiredMod) {
             errList.add(String.format("število izbranih KT za modulske predmete (%d) ni enako zahtevanim KT " +
