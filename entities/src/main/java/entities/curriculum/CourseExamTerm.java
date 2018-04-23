@@ -26,6 +26,8 @@ public class CourseExamTerm implements Serializable {
     @JoinColumn(name = "id_course_organization")
     CourseOrganization course;
 
+    private boolean deleted = false;
+
     public int getId() {
         return id;
     }
@@ -56,5 +58,13 @@ public class CourseExamTerm implements Serializable {
 
     public void setCourse(CourseOrganization course) {
         this.course = course;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

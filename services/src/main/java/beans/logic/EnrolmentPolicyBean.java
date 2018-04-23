@@ -182,7 +182,7 @@ public class EnrolmentPolicyBean {
             int diff = sumMod - requiredMod;
             if(diff < 0)
                 diff = 0;
-            
+
             log.info(String.format("Difference between required module courses and chosen module courses is: %d...",
                     diff));
 
