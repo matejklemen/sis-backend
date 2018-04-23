@@ -11,3 +11,6 @@ INSERT INTO student(register_number, name, surname, date_of_birth, place_of_birt
 
 -- enrolments
 INSERT INTO enrolment (id_student, id_study_year, id_study_program, year, id_study_type, id_study_kind, id_study_form, id_klasius_srv, confirmed) VALUES (1, 1, '1000468', 1, 1, 1, 1, 16204, true), (3, 1, '1000468', 1, 1, 1, 1, 16204, true), (3, 2, '1000468', 2, 1, 1, 1, 16204, true), (3, 3, '1000468', 2, 2, 1, 1, 16204, true), (4, 1, '1000468', 1, 1, 1, 1, 16204, true), (4, 2, '1000468', 2, 1, 1, 1, 16204, true);
+
+--connect professor with login ID
+UPDATE professor SET id_login = 3 WHERE professor.id = 17;
