@@ -2,6 +2,7 @@ package beans.crud;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import entities.Enrolment;
 import entities.curriculum.Course;
 import entities.curriculum.CourseOrganization;
 
@@ -65,5 +66,4 @@ public class CourseBean {
         em.flush();
         return c;
     }
-
 }

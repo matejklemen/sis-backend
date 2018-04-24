@@ -1,6 +1,5 @@
 package beans.crud;
 
-import entities.Enrolment;
 import entities.EnrolmentToken;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -28,9 +27,12 @@ public class EnrolmentTokenBean {
     }
 
     @Transactional
-    public EnrolmentToken getEnrolmentTokenByStudentId(int id){
-        log.info("Geting enrolment token for student id: " + id);
-        return em.createNamedQuery("EnrolmentToken.getByStudentId", EnrolmentToken.class).setParameter("id", id).getSingleResult();
+    public EnrolmentToken getLastEnrolmentTokenByStudentId(int id){
+        log.info("Geting last enrolment token for student id: " + id);
+        return em.createNamedQuery("EnrolmentToken.getLastByStudentId", EnrolmentToken.class)
+                .setParameter("id", id)
+                .setMaxResults(1)
+                .getSingleResult();
     }
 
     @Transactional

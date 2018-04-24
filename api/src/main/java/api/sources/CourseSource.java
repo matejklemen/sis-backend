@@ -2,6 +2,7 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
+import beans.crud.StudentCoursesBean;
 import pojo.ResponseError;
 import beans.crud.CourseBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
@@ -40,6 +41,9 @@ public class CourseSource {
 
     @Inject
     private CourseBean cB;
+
+    @Inject
+    StudentCoursesBean scB;
 
     @Operation(description = "Returns a list of courses.", summary = "Get list of courses", responses = {
             @ApiResponse(responseCode = "200",
@@ -135,4 +139,15 @@ public class CourseSource {
         return Response.ok().entity(c).build();
     }
 
+    @Operation(description = "Returns a list of courses for enrolment id.", summary = "Get list of courses for enrolment id.", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "List of courses",
+                    content = @Content(
+                            schema = @Schema(implementation = Course.class))
+            )})
+    @GET
+    @Path("enrolment/{id}")
+    public Response getCoursesByEnrolmentId(@PathParam("id") int id) {
+        return Response.ok().entity(scB.getStudentCoursesByEnrolmentId(id)).build();
+    }
 }

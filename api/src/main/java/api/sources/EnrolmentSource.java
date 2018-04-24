@@ -99,7 +99,7 @@ public class EnrolmentSource {
     @POST
     public Response CreateEnrolmentAndAddCourses(@RequestBody EnrolmentSheet es) {
         if(es == null) throw new NoRequestBodyException();
-        EnrolmentToken enToken = enrolmentTokenBean.getEnrolmentTokenByStudentId(es.getStudent().getId());
+        EnrolmentToken enToken = enrolmentTokenBean.getLastEnrolmentTokenByStudentId(es.getStudent().getId());
         List<String> list = enrolmentPolicyBean.checkEnrolment(es, enToken);
         if(list.isEmpty()) {
             // set token as used

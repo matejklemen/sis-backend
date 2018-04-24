@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -58,10 +59,15 @@ public class EnrolmentBean {
     @Transactional
     public Enrolment getLastEnrolmentByStudentId(int studentId) {
         log.info("Getting last enrolment for student id: " + studentId);
-        return em.createNamedQuery("Enrolment.getLastByStudentId", Enrolment.class)
+        List<Enrolment> en = em.createNamedQuery("Enrolment.getLastByStudentId", Enrolment.class)
                 .setParameter("id", studentId)
                 .setMaxResults(1)
-                .getSingleResult();
+                .getResultList();
+
+        if(en == null || en.size() == 0)
+            throw new NotFoundException("No enrolment fot this student id");
+
+        return en.get(0);
     }
 
     @Transactional

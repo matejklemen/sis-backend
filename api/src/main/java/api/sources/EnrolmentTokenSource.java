@@ -140,7 +140,7 @@ public class EnrolmentTokenSource {
     })
     @GET
     public Response getToken(@QueryParam("studentId") int studentId){
-        EnrolmentToken et = etb.getEnrolmentTokenByStudentId(studentId);
+        EnrolmentToken et = etb.getLastEnrolmentTokenByStudentId(studentId);
         return Response.ok().entity(et).build();
     }
 
