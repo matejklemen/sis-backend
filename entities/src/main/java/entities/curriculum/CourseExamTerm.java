@@ -18,7 +18,7 @@ public class CourseExamTerm implements Serializable {
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     // ! note: String formatted as: YYYY-MM-DD HH:MM:SS
-    private String date;
+    private Date date;
 
     private int duration; /* in minutes */
 
@@ -36,11 +36,11 @@ public class CourseExamTerm implements Serializable {
         this.id = id;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
