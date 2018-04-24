@@ -14,3 +14,5 @@ INSERT INTO enrolment (id_student, id_study_year, id_study_program, year, id_stu
 
 --connect professor with login ID
 UPDATE professor SET id_login = 3 WHERE professor.id = 2;
+
+ALTER SEQUENCE course_exam_term_id_course_exam_term_seq RESTART WITH 10;
