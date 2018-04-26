@@ -10,10 +10,7 @@ import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -45,6 +42,15 @@ public class CourseExamTermSource {
         else
             return Response.status(Response.Status.BAD_REQUEST).entity(
                     new ResponseError(400, errors.toArray(new String[0]))).build();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response getExamTermByIdExamTerm(@PathParam("id") int id) {
+        CourseExamTerm cet = cetb.getExamTermById(id);
+
+        return cet == null? Response.status(Response.Status.NOT_FOUND).build():
+                Response.status(Response.Status.OK).entity(cet).build();
     }
 
 }
