@@ -64,7 +64,7 @@ public class StudentImportBean {
 
             ul = ulb.insertUserLoginSingle(ul.getUsername(), ul.getPassword(), ul.getRole());
             stu.setLoginData(ul);
-            sdb.putStudent(stu);
+            sdb.insertStudent(stu);
 
             listOfCandidates.add(stu);
         }

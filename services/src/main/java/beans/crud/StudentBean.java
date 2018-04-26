@@ -3,11 +3,15 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.interfaces.CriteriaFilter;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import entities.Enrolment;
 import entities.Student;
+import entities.curriculum.Course;
+import entities.curriculum.StudentCourses;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
@@ -23,33 +27,37 @@ public class StudentBean {
     private EntityManager em;
 
     @Transactional
-    public Student putStudent(Student st){
-        log.info("Putting: " + st.toString());
-        em.persist(st);
-        em.flush();
-        return st;
-    }
-
-    @Transactional
-    public Student updateStudent(Student st){
-        log.info("Updating: " + st.toString());
-        em.merge(st);
-        em.flush();
-        return st;
-    }
-
-    @Transactional
     public List<Student> getStudents(QueryParameters query) {
         List<Student> students = JPAUtils.queryEntities(em, Student.class, query);
         return students;
     }
 
     @Transactional
-    public Student getStudentById(int id) {
-        log.info("Getting by id: " + id);
-        Student sd = em.find(Student.class, id);
-        if(sd == null) throw new NoResultException("No student by this id");
-        return sd;
+    public Student getStudent(int id) {
+        Student s = em.find(Student.class, id);
+        if(s == null) throw new NoResultException("No student by this id");
+        return s;
+    }
+
+    @Transactional
+    public boolean existsStudent(int id) {
+        return em.find(Student.class, id) != null;
+    }
+
+    @Transactional
+    public Student insertStudent(Student st) {
+        log.info("Inserting: " + st.toString());
+        em.persist(st);
+        em.flush();
+        return st;
+    }
+
+    @Transactional
+    public Student updateStudent(Student st) {
+        log.info("Updating: " + st.toString());
+        em.merge(st);
+        em.flush();
+        return st;
     }
 
     @Transactional
@@ -92,17 +100,38 @@ public class StudentBean {
 
     @Transactional
     public boolean hasStudent(Student stu) {
-        try{
-            Query q = em.createNamedQuery("Student.getStudent", Student.class)
-                    .setParameter("name", stu.getName())
-                    .setParameter("surname", stu.getSurname())
-                    .setParameter("studyProgram", stu.getStudyProgram())
-                    .setParameter("email", stu.getEmail());
+        Query q = em.createNamedQuery("Student.getStudent", Student.class)
+                .setParameter("name", stu.getName())
+                .setParameter("surname", stu.getSurname())
+                .setParameter("studyProgram", stu.getStudyProgram())
+                .setParameter("email", stu.getEmail());
 
-            q.getSingleResult();
-            return true;
-        } catch(NoResultException e) {
-            return false;
-        }
+        return q.getResultList().size() > 0;
+    }
+
+    @Transactional
+    public List<Student> getStudentsByCourse(QueryParameters queryParameters, int courseId, int studyYearId) {
+        List<Student> queryResult = JPAUtils.queryEntities(em, Student.class, queryParameters, new CriteriaFilter<Student>() {
+            @Override
+            public Predicate createPredicate(Predicate predicate, CriteriaBuilder cBuilder, Root<Student> root) {
+
+                CriteriaQuery cq = cBuilder.createQuery();
+                Root rootEnrolment = cq.from(Enrolment.class);
+                Root rootStudentCourses = cq.from(StudentCourses.class);
+                Root rootCourse = cq.from(Course.class);
+
+                Predicate[] keys = {
+                        cBuilder.equal(root.get("id"), rootEnrolment.get("student").get("id")), // student.id = enrolment.student.id
+                        cBuilder.equal(rootEnrolment.get("id"), rootStudentCourses.get("enrolment").get("id")), // enrolment.id = studentcourses.enrolment.id
+                        cBuilder.equal(rootStudentCourses.get("course").get("id"), rootCourse.get("id")), // studentcourses.course.id = course.id
+                };
+
+                Predicate coursePredicate = cBuilder.equal(rootCourse.get("id"), courseId);
+                Predicate studyYearPredicate = cBuilder.equal(rootEnrolment.get("studyYear").get("id"), studyYearId);
+
+                return cBuilder.and(predicate, cBuilder.and(keys), coursePredicate, studyYearPredicate);
+            }
+        });
+        return queryResult;
     }
 }

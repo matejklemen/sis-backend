@@ -51,7 +51,6 @@ public class StudentSource {
                     @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
                     @Parameter(name = "filter", description = "Filter", in = ParameterIn.QUERY),
-                    @Parameter(name = "course", description = "Course id that students should be enrolled in", in = ParameterIn.QUERY)
             })
     @GET
     public Response getStudents() {
@@ -80,7 +79,7 @@ public class StudentSource {
     @Path("{id}")
     @GET
     public Response getStudentById(@PathParam("id") int id) {
-        Student sd = sdB.getStudentById(id);
+        Student sd = sdB.getStudent(id);
         return Response.ok(sd).build();
     }
 
@@ -106,5 +105,40 @@ public class StudentSource {
                 .header("X-Total-Count", sdl.size())
                 .build();
     }
+
+    @Operation(description = "Returns a list of students that are enrolled to specified course in specified study year.", summary = "Get list of students enrolled to course", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "List of students",
+                    content = @Content(
+                            schema = @Schema(implementation = Student.class))
+            ),
+            @ApiResponse(responseCode = "400",
+                    description = "course or study_year parameter missing",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class))
+            )},
+            parameters = {
+                    @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+                    @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
+                    @Parameter(name = "filter", description = "Filter", in = ParameterIn.QUERY),
+                    @Parameter(name = "course", description = "Course id that students are enrolled in", in = ParameterIn.QUERY),
+                    @Parameter(name = "study_year", description = "Study year id that students are enrolled in", in = ParameterIn.QUERY)
+            })
+    @Path("enrolled")
+    @GET
+    public Response getStudentsByCourse(@QueryParam("course") Integer courseId, @QueryParam("study_year") Integer studyYearId) {
+        if(courseId == null || studyYearId == null) {
+            return Response.status(400).entity(new ResponseError(400, "Manjkata parametra course in study_year.")).build();
+        }
+        QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+        List sdl = sdB.getStudentsByCourse(queryParameters, courseId, studyYearId);
+        return Response
+                .ok(sdl)
+                .header("X-Total-Count", sdl.size())
+                .build();
+    }
+
+
 
 }
