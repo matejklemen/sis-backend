@@ -124,6 +124,7 @@ public class StudentBean {
                         cBuilder.equal(root.get("id"), rootEnrolment.get("student").get("id")), // student.id = enrolment.student.id
                         cBuilder.equal(rootEnrolment.get("id"), rootStudentCourses.get("enrolment").get("id")), // enrolment.id = studentcourses.enrolment.id
                         cBuilder.equal(rootStudentCourses.get("course").get("id"), rootCourse.get("id")), // studentcourses.course.id = course.id
+                        cBuilder.equal(rootEnrolment.get("confirmed"), true) // enrolment must be confirmed
                 };
 
                 Predicate coursePredicate = cBuilder.equal(rootCourse.get("id"), courseId);
