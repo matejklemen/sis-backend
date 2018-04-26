@@ -34,7 +34,7 @@ public class CourseExamTermBean {
 
     public List<CourseExamTerm> getExamTermsByCourse(int idCourseOrganization) {
         TypedQuery<CourseExamTerm> q = em.createQuery("SELECT cet FROM course_exam_term cet WHERE " +
-                "cet.course.idCourseOrganization = :id_course_organization",
+                "cet.course.id = :id_course_organization",
                 CourseExamTerm.class);
 
         q.setParameter("id_course_organization", idCourseOrganization);

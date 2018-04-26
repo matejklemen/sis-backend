@@ -17,7 +17,7 @@ public class CourseExamTermValidationBean {
     @Inject private CourseExamTermBean cetb;
 
     private List<String> validateDate(CourseExamTerm cet, List<String> errList) {
-        Date enteredDatetime = cet.getDate();
+        Date enteredDatetime = cet.getDatetimeObject();
         Date currDate = new Date();
 
         // date of exam needs to be in the future
@@ -25,11 +25,11 @@ public class CourseExamTermValidationBean {
             errList.add("datum izpita je že mimo");
 
         // bonus: date between 2 consecutive exams for the same course organization needs to be at least 7 days apart
-        List<CourseExamTerm> examTerms = cetb.getExamTermsByCourse(cet.getCourse().getIdCourseOrganization());
+        List<CourseExamTerm> examTerms = cetb.getExamTermsByCourse(cet.getCourse().getId());
         if(examTerms != null)
             for(CourseExamTerm term: examTerms) {
-                log.info(String.format("Term date: %s", term.getDate().toString()));
-                long timeDiff = enteredDatetime.getTime() - term.getDate().getTime();
+                log.info(String.format("Term date: %s", term.getDatetime()));
+                long timeDiff = enteredDatetime.getTime() - term.getDatetimeObject().getTime();
                 int daysDiff = (int) (timeDiff / (1000 * 60 * 60 * 24));
                 log.info(String.format("Days diff is %d", daysDiff));
 

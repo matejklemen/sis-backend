@@ -1,14 +1,16 @@
 package entities.curriculum;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 /* "izpitni rok" */
 @Entity(name = "course_exam_term")
 @NamedQueries(value = {
-    @NamedQuery(name = "CourseExamTerm.getTermsBetweenDates", query = "SELECT cet FROM course_exam_term cet WHERE cet.date >= :datetime1 AND cet.date <= :datetime2"),
-    @NamedQuery(name = "CourseExamTerm.getTermsByCourseId", query = "SELECT cet FROM course_exam_term cet WHERE cet.course.course.id = :course_id AND cet.date >= :datetime")
+    @NamedQuery(name = "CourseExamTerm.getTermsBetweenDates", query = "SELECT cet FROM course_exam_term cet WHERE cet.datetime >= :datetime1 AND cet.datetime <= :datetime2"),
+    @NamedQuery(name = "CourseExamTerm.getTermsByCourseId", query = "SELECT cet FROM course_exam_term cet WHERE cet.course.course.id = :course_id AND cet.datetime >= :datetime")
 })
 public class CourseExamTerm implements Serializable {
     @Id
@@ -17,8 +19,8 @@ public class CourseExamTerm implements Serializable {
     private int id;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
-    // ! note: String formatted as: YYYY-MM-DD HH:MM:SS
-    private Date date;
+    // ! note: String formatted as: YYYY-MM-DDTHH:MM:SS
+    private Timestamp datetime;
 
     private int duration; /* in minutes */
 
@@ -36,12 +38,18 @@ public class CourseExamTerm implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public String getDatetime() {
+        // format for JSON output
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(datetime);
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    @XmlTransient // we are sending formatted datetime instead of this one
+    public Timestamp getDatetimeObject() {
+        return datetime;
+    }
+
+    public void setDatetime(Timestamp date) {
+        this.datetime = date;
     }
 
     public int getDuration() {

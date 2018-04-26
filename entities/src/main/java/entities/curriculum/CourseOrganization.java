@@ -17,7 +17,7 @@ public class CourseOrganization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_course_organization")
-    private int idCourseOrganization;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "id_study_year", nullable = false)
@@ -39,12 +39,12 @@ public class CourseOrganization {
     @JoinColumn(name = "id_course", nullable = false)
     private Course course;
 
-    public int getIdCourseOrganization() {
-        return idCourseOrganization;
+    public int getId() {
+        return id;
     }
 
-    public void setIdCourseOrganization(int idCourseOrganization) {
-        this.idCourseOrganization = idCourseOrganization;
+    public void setId(int idCourseOrganization) {
+        this.id = idCourseOrganization;
     }
 
     public StudyYear getStudyYear() {
