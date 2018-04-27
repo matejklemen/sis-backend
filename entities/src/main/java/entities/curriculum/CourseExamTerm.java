@@ -1,5 +1,7 @@
 package entities.curriculum;
 
+import entities.Professor;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
@@ -16,7 +18,7 @@ public class CourseExamTerm implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_course_exam_term")
-    private int id;
+    private Integer id;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     // ! note: String formatted as: YYYY-MM-DDTHH:MM:SS
@@ -25,16 +27,23 @@ public class CourseExamTerm implements Serializable {
     private int duration; /* in minutes */
 
     @ManyToOne
+    @JoinColumn(name = "id_exam_organizer")
+    Professor organizer;
+
+    @ManyToOne
     @JoinColumn(name = "id_course_organization")
     CourseOrganization course;
 
+    @Column(name = "type")
+    String type;
+
     private boolean deleted = false;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -74,5 +83,21 @@ public class CourseExamTerm implements Serializable {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Professor getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(Professor organizer) {
+        this.organizer = organizer;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

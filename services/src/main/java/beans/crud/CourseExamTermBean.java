@@ -1,9 +1,12 @@
 package beans.crud;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.curriculum.CourseExamTerm;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
@@ -17,9 +20,14 @@ public class CourseExamTermBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    public List<CourseExamTerm> getAllExamTerms(QueryParameters query) {
+        List<CourseExamTerm> examTerms = JPAUtils.queryEntities(em, CourseExamTerm.class, query);
+        return examTerms;
+    }
+
     public CourseExamTerm getExamTermById(int idCourseExamTerm) {
         TypedQuery<CourseExamTerm> q = em.createQuery("SELECT cet FROM course_exam_term cet WHERE " +
-                "cet.id = :id_course_exam_term", CourseExamTerm.class);
+                "cet.id = :id_course_exam_term AND cet.deleted = false", CourseExamTerm.class);
 
         q.setParameter("id_course_exam_term", idCourseExamTerm);
         q.setMaxResults(1);
@@ -67,6 +75,17 @@ public class CourseExamTermBean {
             log.severe("An error occurred while updating exam term!");
             log.severe(e.getMessage());
             return null;
+        }
+    }
+
+    @Transactional
+    public void deleteExamTerm(int id) {
+        CourseExamTerm cet = em.find(CourseExamTerm.class, id);
+        if(cet != null) {
+            cet.setDeleted(!cet.isDeleted());
+            em.merge(cet);
+        } else {
+            throw new NoResultException("CourseExamTerm by ID doesn't exist");
         }
     }
 }

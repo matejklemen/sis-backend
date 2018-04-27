@@ -26,8 +26,14 @@ public class CourseExamTermValidationBean {
 
         // bonus: date between 2 consecutive exams for the same course organization needs to be at least 7 days apart
         List<CourseExamTerm> examTerms = cetb.getExamTermsByCourse(cet.getCourse().getId());
-        if(examTerms != null)
-            for(CourseExamTerm term: examTerms) {
+        if(examTerms != null) {
+            Integer idCourseOrganization = cet.getId();
+
+            for (CourseExamTerm term : examTerms) {
+                // when updating an entity, skip the check with the same entity (before it was updated)
+                if(term.getId() == idCourseOrganization)
+                    continue;
+
                 log.info(String.format("Term date: %s", term.getDatetime()));
                 long timeDiff = enteredDatetime.getTime() - term.getDatetimeObject().getTime();
                 int daysDiff = (int) (timeDiff / (1000 * 60 * 60 * 24));
@@ -39,7 +45,7 @@ public class CourseExamTermValidationBean {
                     break;
                 }
             }
-
+        }
         return errList;
     }
 
