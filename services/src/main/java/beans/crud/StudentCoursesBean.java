@@ -39,7 +39,9 @@ public class StudentCoursesBean {
     public void deleteStudentCourse(StudentCourses course){
         log.info("Will delete StudentCourse: "+course.getIdStudentCourses());
 
-        em.remove(course);
+        StudentCourses c = em.find(StudentCourses.class, course.getIdStudentCourses());
+
+        em.remove(c);
         em.flush();
     }
 

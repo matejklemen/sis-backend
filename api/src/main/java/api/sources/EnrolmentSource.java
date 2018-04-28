@@ -130,6 +130,12 @@ public class EnrolmentSource {
     public Response UpdateAndConfirmEnrolment(@RequestBody EnrolmentSheet es){
         if(es == null) throw new NoRequestBodyException();
 
+        // Check if confirmed enrolment meets basic requirements
+        List<String> list = enrolmentPolicyBean.checkConfirmedEnrolment(es);
+
+        if(!list.isEmpty())
+            return Response.status(400).entity(new ResponseError(400, list.toArray(new String[0]))).build();
+
         // update student
         sB.updateStudent(es.getStudent());
 

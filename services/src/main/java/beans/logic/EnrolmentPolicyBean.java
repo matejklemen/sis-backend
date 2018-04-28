@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import static org.eclipse.persistence.config.TargetDatabase.Database;
 
@@ -380,6 +381,106 @@ public class EnrolmentPolicyBean {
         // Preveri seznam vpisanih.*
 
         // Preveri izpis vpisnega lista.*
+
+        return list;
+    }
+
+    public List<String> checkConfirmedEnrolment(EnrolmentSheet es) {
+        List<String> list = new ArrayList<>();
+
+        Student student = es.getStudent();
+        EnrolmentToken enrolmentToken = es.getEnrolmentToken();
+        List<Integer> courses = es.getCourses();
+
+        // Check that name and surname are just letters
+        if (student.getName() == null || !student.getName().matches("[A-Ž][a-ž]+")) {
+            list.add("neveljaven vnos za ime");
+        }
+        if (student.getName() == null || !student.getSurname().matches("[A-Ž][a-ž]+")) {
+            list.add("neveljaven vnos za priimek");
+        }
+
+        // Check that all fields are filled in
+        if (student.getRegisterNumber() == null || student.getRegisterNumber().isEmpty() ||
+                student.getDateOfBirth() == null ||
+                student.getPlaceOfBirth() == null || student.getPlaceOfBirth().isEmpty() ||
+
+                student.getMunicipalityOfBirth() == null ||
+                student.getCitizenship() == null ||
+                student.getCountryOfBirth() == null ||
+
+                student.getEmso() == null || student.getEmso().isEmpty() ||
+                !(student.getGender() == 'M' || student.getGender() == 'Ž') ||
+                student.getTaxNumber() == null || student.getTaxNumber().isEmpty() ||
+
+                student.getEmail() == null || student.getEmail().isEmpty() ||
+                student.getPhoneNumber() == null || student.getPhoneNumber().isEmpty() ||
+
+                student.getAddress1() == null) {
+            list.add("vnesite vse osebne podatke");
+        }
+
+        if (enrolmentToken.getStudyProgram() == null ||
+                enrolmentToken.getKind() == null ||
+                enrolmentToken.getForm() == null ||
+                enrolmentToken.getStudyYear() == null ||
+                enrolmentToken.getKlasiusSrv() == null ||
+                enrolmentToken.getType() == null) {
+            list.add("vnesite vse podatke o vpisu");
+        }
+
+        // Check the consistency of the state and municipality of birth
+        if (student.getAddress1() != null && !postAddressBean.existsPostAddress(student.getAddress1().getPost().getId())) {
+            list.add("neveljavna poštna številka za stalno bivališče");
+        }
+        if (student.getAddress2() != null && !postAddressBean.existsPostAddress(student.getAddress2().getPost().getId())) {
+            list.add("neveljavna poštna številka za začasno bivališče");
+        }
+
+        Municipality munOfBirth = student.getMunicipalityOfBirth();
+        Country countryOfBirth = student.getCountryOfBirth();
+        /* "Kraj rojstva" either empty because the student forgot to fill it or the student is from a foreign country */
+        if (munOfBirth == null)
+            list.add("občina rojstva ni izbrana");
+        else {
+            if (munOfBirth.getId() == 999 && countryOfBirth.getId() == SLO_COUNTRY_ID)
+                list.add("izbrana država rojstva je Slovenija, a izbrana občina rojstva ni v Sloveniji");
+
+            if (munOfBirth.getId() != 999 && countryOfBirth.getId() != SLO_COUNTRY_ID)
+                list.add("izbrana slovenska občina rojstva, a tuja država rojstva");
+
+            if (!municipalityBean.existsMunicipality(munOfBirth.getId()))
+                list.add("neveljavna koda občine rojstva");
+        }
+
+
+        // Check combination of study program + Klasius SRP
+        String enteredStudyProgram = enrolmentToken.getStudyProgram().getId();
+        KlasiusSrv enteredKlasius = enrolmentToken.getKlasiusSrv();
+
+        if (enteredKlasius == null)
+            list.add("nedefinirana koda vrste študija (klasius)");
+        else {
+            switch (enteredStudyProgram) {
+                case BVS_RI: {
+                    if (enteredKlasius.getId() != 16203)
+                        list.add("neveljavna koda vrste študija za izbran študijski program");
+                    break;
+                }
+                case BUN_RI: {
+                    if (enteredKlasius.getId() != 16204)
+                        list.add("neveljavna koda vrste študija za izbran študijski program");
+                    break;
+                }
+                case BM_RI: {
+                    if (enteredKlasius.getId() != 17003)
+                        list.add("neveljavna koda vrste študija za izbran študijski program");
+                    break;
+                }
+                default:
+                    log.info("Warning: unimplemented study program - KLASIUS SRV check... Default action is NOP.");
+            }
+        }
 
         return list;
     }
