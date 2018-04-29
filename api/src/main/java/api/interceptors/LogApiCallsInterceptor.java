@@ -5,7 +5,6 @@ import api.interceptors.annotations.LogApiCalls;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 @Interceptor
@@ -16,7 +15,18 @@ public class LogApiCallsInterceptor {
 
     @AroundInvoke
     public Object logApiCall(InvocationContext context) throws Exception {
-        log.info(String.format("API Call of method [[ %s ]] with parameters: %s", context.getMethod().getName(), Arrays.toString(context.getParameters())));
+        StringBuilder b = new StringBuilder();
+        b.append("API Call of method [[ ").append(context.getMethod().getName()).append(" ]]");
+        b.append(" Parameters: [");
+        for(int i = 0; i< context.getParameters().length; i++) {
+            Object v = context.getParameters()[i];
+            if(i != 0) b.append(", ");
+            b.append(v);
+        }
+        b.append("]");
+
+        log.info(b.toString());
+
         return context.proceed();
     }
 

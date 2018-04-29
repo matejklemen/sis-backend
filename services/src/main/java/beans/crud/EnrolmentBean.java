@@ -71,7 +71,7 @@ public class EnrolmentBean {
     }
 
     @Transactional
-    public Enrolment getFirstEnrolmentByStudentIdAndProgram(int studentId, String studyProgramId) {
+    public Enrolment getFirstEnrolmentByStudentIdAndProgram(int studentId, int studyProgramId) {
         log.info("Getting last enrolment for student id: " + studentId);
         return em.createNamedQuery("Enrolment.getFirstByStudentId", Enrolment.class)
                 .setParameter("id", studentId)
@@ -81,7 +81,7 @@ public class EnrolmentBean {
     }
 
     @Transactional
-    public List<Enrolment> getEnrolmentsForStudent(int studentId) {
+    public List<Enrolment> getEnrolmentsByStudentId(int studentId) {
         return em.createNamedQuery("Enrolment.getByStudentId", Enrolment.class).setParameter("id", studentId).getResultList();
     }
 
@@ -93,5 +93,13 @@ public class EnrolmentBean {
         em.flush();
         return e;
 
+    }
+
+    public Enrolment getEnrolment(int studentId, int studyYearId) {
+        return em.createNamedQuery("Enrolment.getByStudentIdAndStudyYearId", Enrolment.class)
+                .setParameter("studentId", studentId)
+                .setParameter("studyYearId", studyYearId)
+                .setMaxResults(1)
+                .getSingleResult();
     }
 }

@@ -1,7 +1,6 @@
 package beans.logic;
 
 import beans.crud.*;
-import com.arjuna.ats.jta.exceptions.NotImplementedException;
 import entities.*;
 import entities.address.Country;
 import entities.address.Municipality;
@@ -14,9 +13,6 @@ import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
-
-import static org.eclipse.persistence.config.TargetDatabase.Database;
 
 @ApplicationScoped
 public class EnrolmentPolicyBean {
@@ -64,10 +60,10 @@ public class EnrolmentPolicyBean {
     private CurriculumBean curriculumBean;
 
     public boolean hasStudentFreeChoiceOfCurriculum(Student s){
-        if(enrolmentBean.getEnrolmentsForStudent(s.getId()).isEmpty())
+        if(enrolmentBean.getEnrolmentsByStudentId(s.getId()).isEmpty())
             return false;
 
-        Iterator<Enrolment> iters = enrolmentBean.getEnrolmentsForStudent(s.getId()).iterator();
+        Iterator<Enrolment> iters = enrolmentBean.getEnrolmentsByStudentId(s.getId()).iterator();
         int maxYear = 0;
         while(iters.hasNext()){
             int tmp = iters.next().getYear();
@@ -314,7 +310,7 @@ public class EnrolmentPolicyBean {
             list.add("neveljaven vnos za priimek");
         }
 
-        List<Enrolment> studentEnrolments = enrolmentBean.getEnrolmentsForStudent(es.getStudent().getId());
+        List<Enrolment> studentEnrolments = enrolmentBean.getEnrolmentsByStudentId(es.getStudent().getId());
         if(studentEnrolments.isEmpty()) {
             // student is enrolling for the first time, but is apparently not enrolling into 1st year of school
             if(es.getEnrolmentToken().getYear() != 1)

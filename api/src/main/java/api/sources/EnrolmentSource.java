@@ -45,10 +45,11 @@ public class EnrolmentSource {
     @Inject private StudentCoursesBean scB;
     @Inject private CourseBean cB;
 
-    @Operation(description = "Returns enrolments for student. If order and studyProgramId are given, returns one Enrolment. Order can be one of [\"first\",\"last\"]", summary = "Get enrolment(-s) by studentId and/or query parameters",
+    @Operation(description = "Returns enrolment(s) for student. You can get a specific enrolment by adding query params [order, studyProgramId] or [studyYearId]. Note that you can't query both order and studyYearId. Order can be one of ['first','last'].", summary = "Get enrolment(-s) by studentId and/or query parameters",
             parameters = {
-                    @Parameter(name = "studyProgramId", description = "studyProgram Id", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
-                    @Parameter(name = "order", description = "can be last or first. Last is default", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+                    @Parameter(name = "studyProgramId", description = "Study program id", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+                    @Parameter(name = "order", description = "Can be 'last' or 'first'", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+                    @Parameter(name = "studyYearId", description = "Study year id. Does NOT work together with order parameter!", in = ParameterIn.QUERY, schema = @Schema(type = "string")),
             },
             responses = {
                     @ApiResponse(responseCode = "200",
@@ -64,7 +65,7 @@ public class EnrolmentSource {
             })
     @Path("{studentId}")
     @GET
-    public Response getEnrolment(@PathParam("studentId") int studentId, @QueryParam("order") String order, @QueryParam("studyProgramId") String studyProgramId) {
+    public Response getEnrolment(@PathParam("studentId") int studentId, @QueryParam("order") String order, @QueryParam("studyProgramId") Integer studyProgramId, @QueryParam("studyYearId") Integer studyYearId) {
         Enrolment en;
 
         if(order != null) {
@@ -79,7 +80,11 @@ public class EnrolmentSource {
             }
             return Response.ok(en).build();
         } else {
-            return Response.ok(enB.getEnrolmentsForStudent(studentId)).build();
+            if(studyYearId != null) {
+                return Response.ok(enB.getEnrolment(studentId, studyYearId)).build();
+            } else {
+                return Response.ok(enB.getEnrolmentsByStudentId(studentId)).build();
+            }
         }
     }
 

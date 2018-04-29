@@ -122,8 +122,8 @@ public class StudentSource {
                     @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
                     @Parameter(name = "filter", description = "Filter", in = ParameterIn.QUERY),
-                    @Parameter(name = "course", description = "Course id that students are enrolled in", in = ParameterIn.QUERY),
-                    @Parameter(name = "study_year", description = "Study year id that students are enrolled in", in = ParameterIn.QUERY)
+                    @Parameter(name = "course", required = true, description = "Course id that students are enrolled in", in = ParameterIn.QUERY),
+                    @Parameter(name = "study_year", required = true, description = "Study year id that students are enrolled in", in = ParameterIn.QUERY)
             })
     @Path("enrolled")
     @GET
@@ -132,7 +132,7 @@ public class StudentSource {
             return Response.status(400).entity(new ResponseError(400, "Manjkata parametra course in study_year.")).build();
         }
         QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        List sdl = sdB.getStudentsByCourse(queryParameters, courseId, studyYearId);
+        List<Student> sdl = sdB.getStudentsByCourse(queryParameters, courseId, studyYearId);
         return Response
                 .ok(sdl)
                 .header("X-Total-Count", sdl.size())

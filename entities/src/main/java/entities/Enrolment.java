@@ -9,7 +9,8 @@ import java.io.Serializable;
         value = {
                 @NamedQuery(name = "Enrolment.getLastByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id ORDER BY e.id DESC"),
                 @NamedQuery(name = "Enrolment.getFirstByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id AND e.studyProgram.id=:studyProgramId ORDER BY e.studyYear.id ASC"),
-                @NamedQuery(name = "Enrolment.getByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id")
+                @NamedQuery(name = "Enrolment.getByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id"),
+                @NamedQuery(name = "Enrolment.getByStudentIdAndStudyYearId", query = "SELECT e FROM enrolment e WHERE e.student.id=:studentId AND e.studyYear.id=:studyYearId"),
         }
 )
 public class Enrolment implements Serializable {
@@ -133,3 +134,6 @@ public class Enrolment implements Serializable {
     }
 
 }
+
+
+
