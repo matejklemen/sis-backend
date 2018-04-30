@@ -43,7 +43,17 @@ public class CourseOrganizationSource {
     @GET
     public Response getCourseOrganizations() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        return Response.status(Response.Status.OK).entity(cob.getCourseOrganizations(query)).build();
+        // clone the query, but remove the 'offset' and 'limit' part, so we get the actual count
+        // instead of the count without the already seen values
+        QueryParameters defaultQuery = new QueryParameters();
+
+        QueryParameters q2 = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+        q2.setOffset(defaultQuery.getLimit());
+        q2.setLimit(defaultQuery.getOffset());
+
+        return Response.status(Response.Status.OK)
+                .entity(cob.getCourseOrganizations(q2))
+                .build();
     }
 
     @GET
