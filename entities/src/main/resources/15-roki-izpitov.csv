@@ -1,7 +1,7 @@
 course_exam_term
 id_course_exam_term;datetime;duration;id_course_organization;type;id_exam_organizer;deleted
-1;2018-01-24 17:00:00;60;1;pisni;5;false
-2;2018-02-08 16:00:00;60;1;pisni;5;false
+1;2018-01-22 18:00:00;60;1;pisni;5;false
+2;2018-02-06 14:00:00;60;1;pisni;5;false
 3;2018-09-03 16:00:00;60;1;pisni;5;false
 4;2018-01-24 08:00:00;90;2;pisni;2;false
 5;2018-02-10 08:00:00;90;2;pisni;2;false
@@ -9,3 +9,24 @@ id_course_exam_term;datetime;duration;id_course_organization;type;id_exam_organi
 7;2018-06-13 10:00:00;45;5;pisni;4;false
 8;2018-06-18 9:00:00;60;4;pisni;3;false
 9;2018-06-19 13:00:00;60;7;ustni;9;false
+10;2018-06-13 8:00:00;45;27;pisni;20;false
+11;2018-06-28 8:00:00;45;27;pisni;20;false
+12;2018-08-22 8:00:00;45;27;pisni;20;false
+13;2018-06-18 10:00:00;180;16;ustni;29;false
+14;2018-07-03 10:00:00;180;16;ustni;29;false
+15;2018-08-21 10:00:00;180;16;ustni;29;false
+16;2018-06-19 14:00:00;60;46;pisni;57;false
+17;2018-07-04 14:00:00;60;46;pisni;57;false
+18;2018-08-23 14:00:00;60;46;pisni;57;false
+19;2018-01-24 10:00:00;70;18;pisni;18;false
+20;2018-02-13 14:00:00;70;18;pisni;18;false
+21;2018-09-12 14:00:00;70;18;pisni;18;false
+22;2018-01-26 10:15:00;45;5;pisni;4;false
+23;2018-02-12 10:15:00;45;5;pisni;4;false
+24;2018-08-21 10:15:00;45;5;pisni;4;false
+25;2018-01-23 10:00:00;60;38;pisni;48;false
+26;2018-02-07 10:00:00;60;38;pisni;48;false
+27;2018-09-05 10:15:00;60;38;pisni;48;false
+28;2018-01-30 11:00:00;70;48;pisni;35;false
+29;2018-02-21 9:00:00;70;48;pisni;35;false
+30;2018-08-30 10:00:00;70;48;pisni;35;false
