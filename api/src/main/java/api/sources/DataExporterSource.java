@@ -78,7 +78,7 @@ public class DataExporterSource {
     @Produces("application/pdf")
     public Response returnEnrolmentSheet(@PathParam("studentId") int studentId){
         //get enrolment
-        ByteArrayInputStream bais = dataExporterBean.generateEnrolmentSheet();
+        ByteArrayInputStream bais = dataExporterBean.generateEnrolmentSheet(studentId);
 
         Response.ResponseBuilder responseBuilder = Response.ok((Object) bais);
         responseBuilder.type("application/pdf");
