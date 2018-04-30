@@ -40,9 +40,17 @@ public class CourseExamTermSource {
     @GET
     public Response getAllExamTerms() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+
+        // clone the query, but remove the 'offset' and 'limit' part, so we get the actual count
+        // instead of the count without the already seen values
+        QueryParameters defaultQuery = new QueryParameters();
+
+        QueryParameters q2 = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+        q2.setLimit(defaultQuery.getLimit());
+        q2.setOffset(defaultQuery.getOffset());
         return Response
                 .ok(cetb.getAllExamTerms(query))
-                .header("X-Total-Count", cetb.getAllExamTerms(new QueryParameters()).size())
+                .header("X-Total-Count", cetb.getAllExamTerms(q2).size())
                 .build();
     }
 
