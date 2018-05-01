@@ -39,6 +39,18 @@ public class StudentBean {
         return s;
     }
 
+    public Student getStudentByRegisterNumber(String regNumber) {
+        TypedQuery<Student> q = em.createQuery("SELECT s FROM student s WHERE s.registerNumber = :reg_number", Student.class);
+        q.setParameter("reg_number", regNumber);
+
+        List<Student> res = q.getResultList();
+
+        if(res != null && !res.isEmpty())
+            return res.get(0);
+
+        return null;
+    }
+
     @Transactional
     public boolean existsStudent(int id) {
         return em.find(Student.class, id) != null;

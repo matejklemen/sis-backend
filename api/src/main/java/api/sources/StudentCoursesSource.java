@@ -1,6 +1,7 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
+import beans.logic.ExamSignUpLogicBean;
 import pojo.ResponseError;
 import beans.crud.StudentCoursesBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -38,6 +40,8 @@ public class StudentCoursesSource {
 
     @Inject
     private StudentCoursesBean scB;
+    @Inject
+    private ExamSignUpLogicBean esulB;
 
     @Operation(description = "Returns a list of student's courses.", summary = "Get list of student's courses", responses = {
             @ApiResponse(responseCode = "200",
@@ -78,6 +82,15 @@ public class StudentCoursesSource {
     @GET
     public Response getStudentCoursesByEnrolmentId(@PathParam("enrolment_id") int enrolment_id) {
         return Response.ok(scB.getStudentCoursesByEnrolmentId(enrolment_id)).build();
+    }
+
+    @GET
+    @Path("student/{regNumber}")
+    public Response getCurrentStudentCoursesByRegisterNumber(@PathParam("regNumber") String registerNumber) {
+        List<StudentCourses> res = esulB.getCoursesByRegisterNumber(registerNumber);
+
+        return res == null? Response.status(Response.Status.NOT_FOUND).build():
+                Response.status(Response.Status.OK).entity(res).build();
     }
 
 }
