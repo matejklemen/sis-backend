@@ -1,12 +1,15 @@
 package beans.logic;
 
 import beans.crud.EnrolmentBean;
+import beans.crud.StudentCoursesBean;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import entities.Enrolment;
+import entities.curriculum.Course;
+import entities.curriculum.StudentCourses;
 import entities.logic.TableData;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +35,9 @@ public class DataExporterBean {
 
     @Inject
     EnrolmentBean eB;
+
+    @Inject
+    StudentCoursesBean scB;
 
     public ByteArrayInputStream generateTablePdf(TableData tableData){
         try {
@@ -76,6 +83,8 @@ public class DataExporterBean {
         if(enrolment == null) {
             return null;
         }
+        Enrolment firstEnrolment = eB.getFirstEnrolmentByStudentIdAndProgram(studentId, enrolment.getStudyProgram().getId());
+        List<StudentCourses> studentCourses = scB.getStudentCoursesByEnrolmentId(enrolment.getId());
         try{
             Document document = new Document();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -85,6 +94,7 @@ public class DataExporterBean {
             BaseFont base = BaseFont.createFont("arial.ttf", "Cp1250", BaseFont.NOT_EMBEDDED);
             Font font1 = new Font(base, 12);
             Font font2 = new Font(base, 10, Font.NORMAL, BaseColor.GRAY);
+            Font font3 = new Font(base, 10);
 
             PdfPTable table = new PdfPTable(3);
             table.setWidthPercentage(100);
@@ -144,8 +154,51 @@ public class DataExporterBean {
             table.setWidthPercentage(100);
             addSpacing("PODATKI O VPISU", table, 2, font1);
 
-            /*TODO*/
+            table.addCell(getCell("Študijski program:", enrolment.getStudyProgram().getId()+" - "+enrolment.getStudyProgram().getName(), PdfPCell.ALIGN_LEFT, font1, font2));
+            table.addCell(getCell("Kraj izvajanja:", "Ljubljana", PdfPCell.ALIGN_RIGHT, font1, font2));
+
+            table.addCell(getCell("Vrsta študija:", enrolment.getKlasiusSrv().getId()+" - "+enrolment.getKlasiusSrv().getName(), PdfPCell.ALIGN_LEFT, font1, font2));
+            table.addCell(getCell("Vrsta vpisa:", enrolment.getType().getName(), PdfPCell.ALIGN_RIGHT, font1, font2));
+
+            table.addCell(getCell("Letnik/dodatno leto:", String.valueOf(enrolment.getYear()), PdfPCell.ALIGN_LEFT, font1, font2));
+            table.addCell(getCell("Način študija:", enrolment.getKind().getName(), PdfPCell.ALIGN_RIGHT, font1, font2));
+
+            table.addCell(getCell("Oblika študija:", enrolment.getForm().getName(), PdfPCell.ALIGN_LEFT, font1, font2));
+            table.addCell(getCell("Študijsko leto prvega vpisa v ta študijski program:", firstEnrolment.getStudyYear().getName(), PdfPCell.ALIGN_RIGHT, font1, font2));
             document.add(table);
+            document.newPage();
+
+            document.add(new Paragraph("Priloga 1: Predmetnik\n\n", font1));
+            table = new PdfPTable(4);
+            float[] columnWidths = new float[] {10f, 40f, 30f, 20f};
+            table.setWidths(columnWidths);
+            table.setWidthPercentage(100);
+            List<String> header = new ArrayList<>();
+            header.add("#");
+            header.add("Ime");
+            header.add("Semester");
+            header.add("KT");
+            addTableHeader(table, font3, header);
+
+            List<List<String>> rows = new ArrayList<>();
+            Iterator<StudentCourses> studentCoursesItr = studentCourses.iterator();
+            int index = 1;
+            int KD = 0;
+            while (studentCoursesItr.hasNext()) {
+                List<String> row = new ArrayList<>();
+                Course course = studentCoursesItr.next().getCourse();
+                row.add(String.valueOf(index));
+                row.add(course.getName());
+                row.add(course.getSemester());
+                KD += course.getCreditPoints();
+                row.add(String.valueOf(course.getCreditPoints()));
+                rows.add(row);
+                index++;
+            }
+            addRows(table, font3, rows);
+            document.add(table);
+
+            document.add(new Paragraph("Skupaj izbranih kreditnih točk: "+KD+"/60", font1));
 
             document.close();
 
@@ -174,7 +227,7 @@ public class DataExporterBean {
             cell.addElement(new Paragraph(text2,font1));
         }
         cell.setPadding(0);
-        //cell.setHorizontalAlignment(alignment);
+        cell.setHorizontalAlignment(alignment);
         cell.setBorder(PdfPCell.NO_BORDER);
         return cell;
     }
@@ -184,7 +237,6 @@ public class DataExporterBean {
         while (namesIt.hasNext()) {
             PdfPCell header = new PdfPCell();
             header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-            header.setBorderWidth(2);
             header.setPhrase(new Phrase(namesIt.next(), font));
             table.addCell(header);
         }

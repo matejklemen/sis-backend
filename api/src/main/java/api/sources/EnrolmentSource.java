@@ -65,7 +65,7 @@ public class EnrolmentSource {
             })
     @Path("{studentId}")
     @GET
-    public Response getEnrolment(@PathParam("studentId") int studentId, @QueryParam("order") String order, @QueryParam("studyProgramId") Integer studyProgramId, @QueryParam("studyYearId") Integer studyYearId) {
+    public Response getEnrolment(@PathParam("studentId") int studentId, @QueryParam("order") String order, @QueryParam("studyProgramId") String studyProgramId, @QueryParam("studyYearId") Integer studyYearId) {
         Enrolment en;
 
         if(order != null) {
