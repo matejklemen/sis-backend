@@ -55,6 +55,9 @@ public class DataExporterBean {
             document.open();
 
             PdfPTable table = new PdfPTable(tableData.getColoumnNames().size());
+            float[] columnWidths = getOptimizedTableWidths(tableData.getColoumnNames(), tableData.getRows());
+            table.setWidths(columnWidths);
+            table.setWidthPercentage(100);
 
             PdfPCell mainHeader = new PdfPCell();
             mainHeader.setColspan(tableData.getColoumnNames().size());
@@ -169,16 +172,12 @@ public class DataExporterBean {
             document.newPage();
 
             document.add(new Paragraph("Priloga 1: Predmetnik\n\n", font1));
-            table = new PdfPTable(4);
-            float[] columnWidths = new float[] {10f, 40f, 30f, 20f};
-            table.setWidths(columnWidths);
-            table.setWidthPercentage(100);
+
             List<String> header = new ArrayList<>();
             header.add("#");
             header.add("Ime");
             header.add("Semester");
             header.add("KT");
-            addTableHeader(table, font3, header);
 
             List<List<String>> rows = new ArrayList<>();
             Iterator<StudentCourses> studentCoursesItr = studentCourses.iterator();
@@ -195,6 +194,12 @@ public class DataExporterBean {
                 rows.add(row);
                 index++;
             }
+
+            table = new PdfPTable(4);
+            table.setWidthPercentage(100);
+            float[] columnWidths = getOptimizedTableWidths(header, rows);
+            table.setWidths(columnWidths);
+            addTableHeader(table, font3, header);
             addRows(table, font3, rows);
             document.add(table);
 
@@ -388,7 +393,43 @@ public class DataExporterBean {
             log.severe(e.getMessage());
             return null;
         }
+    }
 
+    private float[] getOptimizedTableWidths(List<String> coloumnNames, List<List<String>> rows) {
+        float[] widths = new float[coloumnNames.size()];
+
+        int i = 0;
+        Iterator<String> coloumnNamesIt = coloumnNames.iterator();
+        while (coloumnNamesIt.hasNext()) {
+            String coloumnName = coloumnNamesIt.next();
+            if(coloumnName.length() > widths[i]) {
+                widths[i] = coloumnName.length();
+            }
+            i++;
+        }
+
+        Iterator<List<String>> rowIt = rows.iterator();
+        while (rowIt.hasNext()) {
+            i = 0;
+            Iterator<String> cellIt = rowIt.next().iterator();
+            while (cellIt.hasNext()) {
+                String cell = cellIt.next();
+                if(cell.length() > widths[i]) {
+                    widths[i] = cell.length();
+                }
+                i++;
+            }
+        }
+
+        float sum = 0;
+        for (i = 0; i < widths.length; i++) {
+            sum += widths[i];
+        }
+        if(widths[0]/sum < 0.5f) {
+            widths[0] = sum*5/100;
+        }
+
+        return widths;
     }
 
 }
