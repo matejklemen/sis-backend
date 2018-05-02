@@ -2,9 +2,8 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import beans.crud.StudentCoursesBean;
-import pojo.ResponseError;
 import beans.crud.CourseBean;
+import beans.crud.StudentCoursesBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.Course;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +15,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -24,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -54,14 +55,16 @@ public class CourseSource {
             parameters = {
                     @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
                     @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
-                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
+                    @Parameter(name = "search", description = "Search", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getCourses() {
+    public Response getCourses(@QueryParam("search") String searchQuery) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+        List enl = cB.getCourses(query, searchQuery);
         return Response
-                .ok(cB.getCourses(query))
-                .header("X-Total-Count", cB.getCourses(new QueryParameters()).size())
+                .ok(enl)
+                .header("X-Total-Count", cB.getCourses(new QueryParameters(), searchQuery).size())
                 .build();
     }
 

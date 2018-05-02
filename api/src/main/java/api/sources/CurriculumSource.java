@@ -2,7 +2,6 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import pojo.ResponseError;
 import beans.crud.CurriculumBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.Curriculum;
@@ -15,6 +14,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -51,14 +51,16 @@ public class CurriculumSource {
             parameters = {
                     @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
                     @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
-                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
+                    @Parameter(name = "search", description = "Search", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getEntireCurriculum() {
+    public Response getEntireCurriculum(@QueryParam("search") String searchQuery) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+        List enl = cb.getEntireCurriculum(query, searchQuery);
         return Response
-                .ok(cb.getEntireCurriculum(query))
-                .header("X-Total-Count", cb.getEntireCurriculum(new QueryParameters()).size())
+                .ok(enl)
+                .header("X-Total-Count", cb.getEntireCurriculum(new QueryParameters(), searchQuery).size())
                 .build();
     }
 

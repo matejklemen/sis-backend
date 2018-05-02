@@ -3,12 +3,12 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.StudyYear;
+import utils.SearchAllCriteriaFilter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -41,8 +41,13 @@ public class StudyYearBean {
 
     @Transactional
     public List<StudyYear> getStudyYears(QueryParameters query) {
-        List<StudyYear> studyYears = JPAUtils.queryEntities(em, StudyYear.class, query);
-        return studyYears;
+        return JPAUtils.queryEntities(em, StudyYear.class, query);
+    }
+
+    @Transactional
+    public List<StudyYear> getStudyYears(QueryParameters query, String searchQuery) {
+        if(searchQuery == null) return getStudyYears(query);
+        return JPAUtils.queryEntities(em, StudyYear.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
     @Transactional

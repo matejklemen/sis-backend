@@ -2,7 +2,6 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import pojo.ResponseError;
 import beans.crud.PartOfCurriculumBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.PartOfCurriculum;
@@ -15,6 +14,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -54,23 +54,23 @@ public class PartOfCurriculumSource {
             parameters = {
                     @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
                     @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
-                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
+                    @Parameter(name = "search", description = "Search", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getAllPOC() {
+    public Response getAllPOC(@QueryParam("search") String searchQuery) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        List<PartOfCurriculum> allPOC = pocb.getAllPOC(query);
-        return allPOC == null ? Response.status(Response.Status.NOT_FOUND).build() :
-                Response
-                        .ok(allPOC)
-                        .header("X-Total-Count", allPOC.size())
+        List enl = pocb.getPOC(query, searchQuery);
+        return enl == null ? Response.status(Response.Status.NOT_FOUND).build() :
+                Response.ok(enl)
+                        .header("X-Total-Count", pocb.getPOC(new QueryParameters(), searchQuery).size())
                         .build();
     }
 
     @GET
     @Path("count")
     public Response getNumberOfPOC() {
-        return Response.status(Response.Status.OK).entity(pocb.getAllPOC(new QueryParameters()).size()).build();
+        return Response.status(Response.Status.OK).entity(pocb.getPOC(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Add new module (name).", summary = "Add module", responses = {

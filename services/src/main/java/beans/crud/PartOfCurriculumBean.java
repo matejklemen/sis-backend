@@ -3,12 +3,12 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.curriculum.PartOfCurriculum;
+import utils.SearchAllCriteriaFilter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.logging.Logger;
@@ -22,9 +22,14 @@ public class PartOfCurriculumBean {
     private EntityManager em;
 
     @Transactional
-    public List<PartOfCurriculum> getAllPOC(QueryParameters query) {
-        List<PartOfCurriculum> pocs = JPAUtils.queryEntities(em, PartOfCurriculum.class, query);
-        return pocs;
+    public List<PartOfCurriculum> getPOC(QueryParameters query) {
+        return JPAUtils.queryEntities(em, PartOfCurriculum.class, query);
+    }
+
+    @Transactional
+    public List<PartOfCurriculum> getPOC(QueryParameters query, String searchQuery) {
+        if(searchQuery == null) return getPOC(query);
+        return JPAUtils.queryEntities(em, PartOfCurriculum.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
     @Transactional

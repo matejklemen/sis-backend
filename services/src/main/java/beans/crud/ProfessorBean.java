@@ -3,6 +3,7 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.Professor;
+import utils.SearchAllCriteriaFilter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -20,9 +21,13 @@ public class ProfessorBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
-    public List<Professor> getAllProfessors(QueryParameters query) {
-        List<Professor> professors = JPAUtils.queryEntities(em, Professor.class, query);
-        return professors;
+    public List<Professor> getProfessors(QueryParameters query) {
+        return JPAUtils.queryEntities(em, Professor.class, query);
+    }
+
+    public List<Professor> getProfessors(QueryParameters query, String searchQuery) {
+        if(searchQuery == null) return getProfessors(query);
+        return JPAUtils.queryEntities(em, Professor.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
     public Professor getProfessor(int id) {

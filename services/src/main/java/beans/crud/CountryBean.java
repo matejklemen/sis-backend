@@ -3,6 +3,7 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.address.Country;
+import utils.SearchAllCriteriaFilter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -22,8 +23,13 @@ public class CountryBean {
 
     @Transactional
     public List<Country> getCountries(QueryParameters query) {
-        List<Country> countries = JPAUtils.queryEntities(em, Country.class, query);
-        return countries;
+        return JPAUtils.queryEntities(em, Country.class, query);
+    }
+
+    @Transactional
+    public List<Country> getCountries(QueryParameters query, String searchQuery) {
+        if(searchQuery == null) return getCountries(query);
+        return JPAUtils.queryEntities(em, Country.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
     @Transactional

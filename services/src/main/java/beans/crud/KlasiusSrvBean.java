@@ -3,12 +3,12 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.KlasiusSrv;
+import utils.SearchAllCriteriaFilter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -20,8 +20,13 @@ public class KlasiusSrvBean {
 
     @Transactional
     public List<KlasiusSrv> getKlasiusSrvs(QueryParameters query) {
-        List<KlasiusSrv> curriculums = JPAUtils.queryEntities(em, KlasiusSrv.class, query);
-        return curriculums;
+        return JPAUtils.queryEntities(em, KlasiusSrv.class, query);
+    }
+
+    @Transactional
+    public List<KlasiusSrv> getKlasiusSrvs(QueryParameters query, String searchQuery) {
+        if(searchQuery == null) return getKlasiusSrvs(query);
+        return JPAUtils.queryEntities(em, KlasiusSrv.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
     @Transactional

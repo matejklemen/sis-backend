@@ -3,6 +3,7 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.curriculum.Curriculum;
+import utils.SearchAllCriteriaFilter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -22,8 +23,12 @@ public class CurriculumBean {
     private EntityManager em;
 
     public List<Curriculum> getEntireCurriculum(QueryParameters query) {
-        List<Curriculum> curriculums = JPAUtils.queryEntities(em, Curriculum.class, query);
-        return curriculums;
+        return JPAUtils.queryEntities(em, Curriculum.class, query);
+    }
+
+    public List<Curriculum> getEntireCurriculum(QueryParameters query, String searchQuery) {
+        if(searchQuery == null) return getEntireCurriculum(query);
+        return JPAUtils.queryEntities(em, Curriculum.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
     public Curriculum getCurriculumByIdCurriculum(int idCurriculum) {

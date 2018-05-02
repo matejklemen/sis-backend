@@ -11,15 +11,12 @@ import entities.curriculum.Course;
 import entities.curriculum.Curriculum;
 import entities.curriculum.PartOfCurriculum;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import pojo.CodelistsData;
-import utils.AuthUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -31,11 +28,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -87,7 +81,7 @@ public class CodelistSource {
 
         // države
         cld.add(new CodelistsData("country", "Države", "countries", countryB.getCountries(new QueryParameters()).size(), new Country().getColumnNames(), new Country().getColumnTypes()));
-        // TODO: občine
+        // občine
         cld.add(new CodelistsData("municipality", "Občine", "municipalities", municipalityB.getMunicipalities(new QueryParameters()).size(), new Municipality().getColumnNames(), new Municipality().getColumnTypes()));
         // pošte
         cld.add(new CodelistsData("post_address", "Poštne številke", "postaddresses", postAddressB.getPostAddresses(new QueryParameters()).size(), new PostAddress().getColumnNames(), new PostAddress().getColumnTypes()));
@@ -107,11 +101,11 @@ public class CodelistSource {
         // predmeti
         cld.add(new CodelistsData("course", "Predmeti", "courses", courseB.getCourses(new QueryParameters()).size(), new Course().getColumnNames(), new Course().getColumnTypes()));
         // predavatelji
-        cld.add(new CodelistsData("professor", "Predavatelji", "professors", professorB.getAllProfessors(new QueryParameters()).size(), new Professor().getColumnNames(), new Professor().getColumnTypes()));
+        cld.add(new CodelistsData("professor", "Predavatelji", "professors", professorB.getProfessors(new QueryParameters()).size(), new Professor().getColumnNames(), new Professor().getColumnTypes()));
         // predmetnik(-i)
         cld.add(new CodelistsData("curriculum", "Predmetnik", "curriculum", curriculumB.getEntireCurriculum(new QueryParameters()).size(), new Curriculum().getColumnNames(), new Curriculum().getColumnTypes()));
         // deli predmetnikov
-        cld.add(new CodelistsData("poc", "Deli predmetnikov", "poc", pocB.getAllPOC(new QueryParameters()).size(), new PartOfCurriculum().getColumnNames(), new PartOfCurriculum().getColumnTypes()));
+        cld.add(new CodelistsData("poc", "Deli predmetnikov", "poc", pocB.getPOC(new QueryParameters()).size(), new PartOfCurriculum().getColumnNames(), new PartOfCurriculum().getColumnTypes()));
 
         return Response.ok(cld).build();
     }
