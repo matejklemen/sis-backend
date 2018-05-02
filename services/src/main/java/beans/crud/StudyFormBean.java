@@ -3,12 +3,12 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.StudyForm;
+import utils.SearchAllCriteriaFilter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -20,8 +20,13 @@ public class StudyFormBean {
 
     @Transactional
     public List<StudyForm> getStudyForms(QueryParameters query) {
-        List<StudyForm> studyForms = JPAUtils.queryEntities(em, StudyForm.class, query);
-        return studyForms;
+        return JPAUtils.queryEntities(em, StudyForm.class, query);
+    }
+
+    @Transactional
+    public List<StudyForm> getStudyForms(QueryParameters query, String searchQuery) {
+        if(searchQuery == null) return getStudyForms(query);
+        return JPAUtils.queryEntities(em, StudyForm.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
     @Transactional

@@ -2,7 +2,6 @@ package api.sources;
 
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
-import pojo.ResponseError;
 import beans.crud.ProfessorBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.Professor;
@@ -15,6 +14,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,6 +23,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -50,21 +51,23 @@ public class ProfessorSource {
             parameters = {
                     @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
                     @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
-                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY)
+                    @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
+                    @Parameter(name = "search", description = "Search", in = ParameterIn.QUERY)
             })
     @GET
-    public Response getProfessors() {
+    public Response getProfessors(@QueryParam("search") String searchQuery) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+        List enl = pB.getProfessors(query, searchQuery);
         return Response
-                .ok(pB.getAllProfessors(query))
-                .header("X-Total-Count", pB.getAllProfessors(new QueryParameters()).size())
+                .ok(enl)
+                .header("X-Total-Count", pB.getProfessors(new QueryParameters(), searchQuery).size())
                 .build();
     }
 
     @GET
     @Path("count")
     public Response getNumberOfProfessors() {
-        return Response.status(Response.Status.OK).entity(pB.getAllProfessors(new QueryParameters()).size()).build();
+        return Response.status(Response.Status.OK).entity(pB.getProfessors(new QueryParameters()).size()).build();
     }
 
     @Operation(description = "Returns a professor with specified id.", summary = "Get professor by id", responses = {

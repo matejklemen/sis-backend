@@ -3,6 +3,7 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.StudyProgram;
+import utils.SearchAllCriteriaFilter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -26,8 +27,13 @@ public class StudyProgramBean {
 
     @Transactional
     public List<StudyProgram> getStudyPrograms(QueryParameters query) {
-        List<StudyProgram> studyPrograms = JPAUtils.queryEntities(em, StudyProgram.class, query);
-        return studyPrograms;
+        return JPAUtils.queryEntities(em, StudyProgram.class, query);
+    }
+
+    @Transactional
+    public List<StudyProgram> getStudyPrograms(QueryParameters query, String searchQuery) {
+        if(searchQuery == null) return getStudyPrograms(query);
+        return JPAUtils.queryEntities(em, StudyProgram.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
     @Transactional

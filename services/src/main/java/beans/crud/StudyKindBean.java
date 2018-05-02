@@ -3,12 +3,12 @@ package beans.crud;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.StudyKind;
+import utils.SearchAllCriteriaFilter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -20,8 +20,13 @@ public class StudyKindBean {
 
     @Transactional
     public List<StudyKind> getStudyKinds(QueryParameters query) {
-        List<StudyKind> studyKinds = JPAUtils.queryEntities(em, StudyKind.class, query);
-        return studyKinds;
+        return JPAUtils.queryEntities(em, StudyKind.class, query);
+    }
+
+    @Transactional
+    public List<StudyKind> getStudyKinds(QueryParameters query, String searchQuery) {
+        if(searchQuery == null) return getStudyKinds(query);
+        return JPAUtils.queryEntities(em, StudyKind.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
     @Transactional
