@@ -31,7 +31,8 @@ http://localhost:8080/api-specs/ui (when running locally)
 Examples on how to use filters, offsets and limits are availiable at [kumuluzee-rest#examples](https://github.com/kumuluz/kumuluzee-rest#examples).
 
 ## Sample users
----------:|
+|     Role     | Role id |         Username        | Password | Enrolments | Study program |
+|:------------:|:-------:|:-----------------------:|:--------:|:-------------:|:-------------:|
 |  Skrbnik/ca  |    1    |          joze1          |    123   |       /       |       /       |
 |  Študent/ka  |    2    |       blazkablatnik@gmail.com      |    123   |       none (no data)      |      whatever      |
 |  Študent/ka  |    2    |    peter@kopljem.net    |    123   |       none (but with data)      |      whatever      |
