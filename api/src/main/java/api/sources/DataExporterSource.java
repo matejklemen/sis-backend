@@ -73,7 +73,7 @@ public class DataExporterSource {
                             schema = @Schema(implementation = ResponseError.class))
             )
     })
-    @Path("enrolmentSheet/{studentId}")
+    @Path("enrolmentsheet/{studentId}")
     @GET
     @Produces("application/pdf")
     public Response returnEnrolmentSheet(@PathParam("studentId") int studentId){
@@ -83,6 +83,28 @@ public class DataExporterSource {
         Response.ResponseBuilder responseBuilder = Response.ok((Object) bais);
         responseBuilder.type("application/pdf");
         responseBuilder.header("Content-Disposition", "filename=vpisni-list"+12345678+".pdf");
+        return responseBuilder.build();
+    }
+
+    @Operation(description = "Returns enrolment confirmation in pdf form", summary = "Generates enrolment confirmation in pdf form for student with given studenId. NOTE: studentId != registerNumber", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Pdf file stream"
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Failed to generate pdf",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class))
+            )
+    })
+    @Path("enrolmentconfirmation/{studentId}")
+    @GET
+    @Produces("application/pdf")
+    public Response returnEnrolmentConfirmation(@PathParam("studentId") int studentId){
+        ByteArrayInputStream bais = dataExporterBean.generateEnrolmentConfirmation(studentId);
+
+        Response.ResponseBuilder responseBuilder = Response.ok((Object) bais);
+        responseBuilder.type("application/pdf");
+        responseBuilder.header("Content-Disposition", "filename=potrdilo-o-vpisu"+12345678+".pdf");
         return responseBuilder.build();
     }
 }

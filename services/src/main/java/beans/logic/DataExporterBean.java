@@ -3,10 +3,7 @@ package beans.logic;
 import beans.crud.EnrolmentBean;
 import beans.crud.StudentCoursesBean;
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 import entities.Enrolment;
 import entities.curriculum.Course;
 import entities.curriculum.StudentCourses;
@@ -17,6 +14,7 @@ import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,11 +31,21 @@ public class DataExporterBean {
     private final String DELIMETER = ";";
     private  final String NEW_LINE = "\r\n";
 
+    private final BaseFont base = BaseFont.createFont("arial.ttf", "Cp1250", BaseFont.NOT_EMBEDDED);
+    private final Font font1 = new Font(base, 12);
+    private final Font font2 = new Font(base, 10, Font.NORMAL, BaseColor.GRAY);
+    private final Font font3 = new Font(base, 10);
+    private final Font font4 = new Font(base, 10, Font.BOLD);
+    private final Font font5 = new Font(base, 8, Font.BOLDITALIC);
+
     @Inject
     EnrolmentBean eB;
 
     @Inject
     StudentCoursesBean scB;
+
+    public DataExporterBean() throws IOException, DocumentException {
+    }
 
     public ByteArrayInputStream generateTablePdf(TableData tableData){
         try {
@@ -46,23 +54,18 @@ public class DataExporterBean {
             PdfWriter.getInstance(document, baos);
             document.open();
 
-            BaseFont base = BaseFont.createFont("arial.ttf", "Cp1250", BaseFont.NOT_EMBEDDED);
-            Font font1 = new Font(base, 14);
-            Font font2 = new Font(base, 8);
-
             PdfPTable table = new PdfPTable(tableData.getColoumnNames().size());
 
             PdfPCell mainHeader = new PdfPCell();
             mainHeader.setColspan(tableData.getColoumnNames().size());
             mainHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
-            mainHeader.setBorderWidth(2);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
             Date date = new Date();
             mainHeader.setPhrase(new Phrase(tableData.getTable_name()+", datum: "+ dateFormat.format(date), font1));
             table.addCell(mainHeader);
 
-            addTableHeader(table, font2, tableData.getColoumnNames());
-            addRows(table, font2, tableData.getRows());
+            addTableHeader(table, font3, tableData.getColoumnNames());
+            addRows(table, font3, tableData.getRows());
 
             document.add(table);
 
@@ -88,13 +91,8 @@ public class DataExporterBean {
         try{
             Document document = new Document();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PdfWriter.getInstance(document, baos);
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
             document.open();
-
-            BaseFont base = BaseFont.createFont("arial.ttf", "Cp1250", BaseFont.NOT_EMBEDDED);
-            Font font1 = new Font(base, 12);
-            Font font2 = new Font(base, 10, Font.NORMAL, BaseColor.GRAY);
-            Font font3 = new Font(base, 10);
 
             PdfPTable table = new PdfPTable(3);
             table.setWidthPercentage(100);
@@ -106,7 +104,9 @@ public class DataExporterBean {
             cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
             cell.setBorder(PdfPCell.NO_BORDER);
             table.addCell(cell);
-            cell = new PdfPCell(Image.getInstance("services/src/main/resources/logo-ul.jpg"));
+            PdfReader reader = new PdfReader("services/src/main/resources/logo-ul.pdf");
+            PdfImportedPage page = writer.getImportedPage(reader, 1);
+            cell = new PdfPCell(Image.getInstance(page));
             cell.setPadding(0);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
             cell.setBorder(PdfPCell.NO_BORDER);
@@ -211,6 +211,88 @@ public class DataExporterBean {
         }
     }
 
+    public ByteArrayInputStream generateEnrolmentConfirmation(int studentId){
+        Enrolment enrolment = eB.getLastEnrolmentByStudentId(studentId);
+        if(enrolment == null) {
+            return null;
+        }
+        try{
+            Document document = new Document();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            document.open();
+
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+            PdfPCell cell = new PdfPCell();
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
+            PdfReader reader = new PdfReader("services/src/main/resources/logo-ul-fri.pdf");
+            PdfImportedPage page = writer.getImportedPage(reader, 1);
+            cell = new PdfPCell(Image.getInstance(page));
+            cell.setPadding(0);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
+            cell.addElement(new Paragraph("Večna pot 113\n1000 LJUBLJANA, Slovenija\ntelefon:01 47 98 100\nwww.fri.uni-lj.si\ne-mail: dekanat@fri.uni-lj.si",font5));
+            cell.setPadding(0);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
+
+            cell = new PdfPCell();
+            cell.setBorder(PdfPCell.NO_BORDER);
+
+            table.addCell(getCell(enrolment.getStudent().getName().toUpperCase() +" "+ enrolment.getStudent().getSurname().toUpperCase(), enrolment.getStudent().getSendingAddress() != 2 ? enrolment.getStudent().getAddress1().getLine1().toUpperCase() +"\n"+ enrolment.getStudent().getAddress1().getPost().getId() +" "+ enrolment.getStudent().getAddress1().getPost().getName().toUpperCase() : enrolment.getStudent().getAddress2().getLine1().toUpperCase() +"\n"+ enrolment.getStudent().getAddress2().getPost().getId() +" "+ enrolment.getStudent().getAddress2().getPost().getName().toUpperCase(), PdfPCell.ALIGN_LEFT, font3, font4));
+            table.addCell(cell);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
+            Date date = new Date();
+            table.addCell(getCell("Številka: "+enrolment.getId(), "Datum: "+ dateFormat.format(date), PdfPCell.ALIGN_RIGHT, font3, font3));
+            document.add(table);
+
+            Paragraph para = new Paragraph("\nPOTRDILO O VPISU\n\n", font4);
+            para.setAlignment(Element.ALIGN_CENTER);
+            document.add(para);
+
+            table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+
+            table.addCell(getCell("Vpisna številka:", enrolment.getStudent().getRegisterNumber(), PdfPCell.ALIGN_LEFT, font4, font2));
+            table.addCell(getCell("Priimek, ime:", enrolment.getStudent().getSurname().toUpperCase() +", "+ enrolment.getStudent().getName().toUpperCase(), PdfPCell.ALIGN_CENTER, font4, font2));
+            table.addCell(cell);
+
+            table.addCell(getCell("Datum rojstva:", enrolment.getStudent().getDateOfBirth().toString(), PdfPCell.ALIGN_LEFT, font4, font2));
+            table.addCell(getCell("Kraj rojstva:", enrolment.getStudent().getPlaceOfBirth(), PdfPCell.ALIGN_CENTER, font4, font2));
+            table.addCell(getCell("Država rojstva:", enrolment.getStudent().getCountryOfBirth().getName(), PdfPCell.ALIGN_RIGHT, font4, font2));
+
+            table.addCell(getCell("Študijsko leto:", enrolment.getStudyYear().getName(), PdfPCell.ALIGN_LEFT, font4, font2));
+            table.addCell(getCell("Vrsta vpisa:", enrolment.getType().getName(), PdfPCell.ALIGN_CENTER, font4, font2));
+            table.addCell(getCell("Način študija:", enrolment.getKind().getName(), PdfPCell.ALIGN_RIGHT, font4, font2));
+
+            table.addCell(getCell("Oblika študija:", enrolment.getForm().getName(), PdfPCell.ALIGN_LEFT, font4, font2));
+            table.addCell(getCell("Letnik/dodatno leto:", String.valueOf(enrolment.getYear()+". letnik"), PdfPCell.ALIGN_CENTER, font4, font2));
+            table.addCell(cell);
+
+            table.addCell(getCell("Študijski program:", enrolment.getStudyProgram().getId()+" - "+enrolment.getStudyProgram().getName(), font4, font2, 3));
+
+            table.addCell(getCell("Vrsta študija:", enrolment.getKlasiusSrv().getId()+" - "+enrolment.getKlasiusSrv().getName(), font4, font2, 3));
+
+            table.addCell(cell);
+            table.addCell(cell);
+            table.addCell(getCell("\n\n\n\nprof. dr. Bojan Orel\ndekan","", PdfPCell.ALIGN_RIGHT, font3, font3));
+            document.add(table);
+
+            document.close();
+
+            byte[] pdf = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(pdf);
+            return bais;
+        }catch(Exception e){
+            log.severe(e.getMessage());
+            return null;
+        }
+    }
+
     private void addSpacing(String text, PdfPTable table, int numCols, Font font) {
         PdfPCell cell = new PdfPCell(new Paragraph("\n\n"+text+"\n", font));
         cell.setColspan(numCols);
@@ -228,6 +310,20 @@ public class DataExporterBean {
         }
         cell.setPadding(0);
         cell.setHorizontalAlignment(alignment);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        return cell;
+    }
+
+    public PdfPCell getCell(String text1, String text2, Font font1, Font font2, int colspan) {
+        PdfPCell cell = new PdfPCell();
+        cell.setColspan(colspan);
+        if(!text1.equals("")) {
+            cell.addElement(new Paragraph(text1, font2));
+        }
+        if(!text2.equals("")) {
+            cell.addElement(new Paragraph(text2,font1));
+        }
+        cell.setPadding(0);
         cell.setBorder(PdfPCell.NO_BORDER);
         return cell;
     }
