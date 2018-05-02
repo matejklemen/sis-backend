@@ -31,12 +31,12 @@ http://localhost:8080/api-specs/ui (when running locally)
 Examples on how to use filters, offsets and limits are availiable at [kumuluzee-rest#examples](https://github.com/kumuluz/kumuluzee-rest#examples).
 
 ## Sample users
-- `joze1` (Skrbnik/ca)
-- `fejk.mail@fri.uni-lj.si` (Profesor/ica)
-- `ref@fri.uni-lj.si` (Referent/ka)
-- `janez@nov.ak` (Študent/ka)
-- `peter@kopljem.net` (Študent/ka)
-- `marta@pod.streho` (Študent/ka)
-- `steff@ff.fff` (Študent/ka)
-
-Sample password for all users above is `123`.
+---------:|
+|  Skrbnik/ca  |    1    |          joze1          |    123   |       /       |       /       |
+|  Študent/ka  |    2    |       blazkablatnik@gmail.com      |    123   |       none (no data)      |      whatever      |
+|  Študent/ka  |    2    |    peter@kopljem.net    |    123   |       none (but with data)      |      whatever      |
+|  Študent/ka  |    2    |       janez@nov.ak      |    123   |      1     |      BUN      |
+|  Študent/ka  |    2    |     marta@pod.streho    |    123   |       1,2,2       |      BUN      |
+|  Študent/ka  |    2    |       steff@stef.anio      |    123   |       1,2       |      BUN      |
+| Profesor/ica |    3    | prof@fri.uni-lj.si |    123   |       /       |       /       |
+|  Referent/ka |    4    |    ref@fri.uni-lj.si    |    123   |       /       |       /       |
