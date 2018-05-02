@@ -68,6 +68,17 @@ public class EnrolmentTokenSource {
         Enrolment e = eb.getLastEnrolmentByStudentId(id);
         EnrolmentToken et = EnrolmentToken.createEnrolmentToken(e);
 
+        if(et.getYear() == 4){
+            et.setYear(3);
+            et.setType(stb.getStudyType(2));
+        }else{
+            et.setType(stb.getStudyType(1));
+        }
+
+        // Increase study year
+        int newStudyYearId = Math.min(et.getStudyYear().getId()+1, 5);
+        et.setStudyYear(syb.getStudyYear(newStudyYearId));
+
         et.setFreeChoice(epb.hasStudentFreeChoiceOfCurriculum(et.getStudent()));
 
         et = etb.putEnrolmentToken(et);
