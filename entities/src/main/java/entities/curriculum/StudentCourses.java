@@ -4,8 +4,13 @@ import entities.Enrolment;
 import interfaces.Codelistable;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity(name = "student_courses")
 @NamedQueries(
         value = {
@@ -19,6 +24,7 @@ public class StudentCourses implements Serializable {
     @Column(name = "id_student_courses")
     private int idStudentCourses;
 
+    @XmlTransient
     @ManyToOne
     @JoinColumn(name = "id_enrolment")
     private Enrolment enrolment;
