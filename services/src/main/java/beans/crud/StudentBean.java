@@ -28,8 +28,7 @@ public class StudentBean {
 
     @Transactional
     public List<Student> getStudents(QueryParameters query) {
-        List<Student> students = JPAUtils.queryEntities(em, Student.class, query);
-        return students;
+        return JPAUtils.queryEntities(em, Student.class, query);
     }
 
     @Transactional

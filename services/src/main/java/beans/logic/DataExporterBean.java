@@ -11,10 +11,7 @@ import entities.logic.TableData;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,10 +72,27 @@ public class DataExporterBean {
             document.close();
 
             byte[] pdf = baos.toByteArray();
-            ByteArrayInputStream bais = new ByteArrayInputStream(pdf);
+
+            PdfReader reader = new PdfReader(pdf);
+            int pages = reader.getNumberOfPages();
+            log.info("" + pages);
+
+            ByteArrayOutputStream pagedPdf = new ByteArrayOutputStream();
+            PdfStamper stamper = new PdfStamper(reader, pagedPdf);
+            PdfContentByte pageContent;
+            for(int i=1; i<=pages; i++) {
+                pageContent = stamper.getOverContent(i);
+                ColumnText.showTextAligned(pageContent, Element.ALIGN_RIGHT, new Phrase(String.format("%d / %d", i, pages), font3), pageContent.getPdfDocument().right(), pageContent.getPdfDocument().bottom() - 16, 0);
+                log.info("" + i);
+                log.info("" + pageContent.toString());
+            }
+            stamper.close();
+            reader.close();
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(pagedPdf.toByteArray());
             return bais;
         } catch (Exception e) {
-            log.severe(e.getMessage());
+            e.printStackTrace();
             return null;
         }
 

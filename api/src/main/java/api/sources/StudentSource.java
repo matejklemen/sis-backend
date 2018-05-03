@@ -102,7 +102,7 @@ public class StudentSource {
         List sdl = sdB.searchStudents(paramQuery, searchQuery);
         return Response
                 .ok(sdl)
-                .header("X-Total-Count", sdl.size())
+                .header("X-Total-Count", sdB.searchStudents(new QueryParameters(), searchQuery))
                 .build();
     }
 
