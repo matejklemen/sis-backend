@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
     @NamedQuery(name = "CourseExamTerm.getTermsByCourseId", query = "SELECT cet FROM course_exam_term cet WHERE cet.course.course.id = :course_id AND cet.datetime >= :datetime")
 })
 public class CourseExamTerm implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_course_exam_term")
@@ -28,14 +29,15 @@ public class CourseExamTerm implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "id_exam_organizer")
-    Professor organizer;
+    private Professor organizer;
 
     @ManyToOne
     @JoinColumn(name = "id_course_organization")
-    CourseOrganization course;
+    private CourseOrganization course;
 
-    @Column(name = "type")
-    String type;
+    private String type;
+
+    private String notes;
 
     private boolean deleted = false;
 
@@ -99,5 +101,13 @@ public class CourseExamTerm implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
