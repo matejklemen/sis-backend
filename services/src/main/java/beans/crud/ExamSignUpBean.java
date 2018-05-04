@@ -12,13 +12,23 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 public class ExamSignUpBean {
+    /* Warning: untested */
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
-    /* examDate is exam date in UNIX timestamp format (i.e. number of seconds since 1. 1. 1970) */
+    public List<ExamSignUp> getExamSignUpsForCourse(int idCourse) {
+        TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
+                "esu.studentCourses.course.id = :id_course AND esu.returned = false", ExamSignUp.class);
+
+        q.setParameter("id_course", idCourse);
+
+        return q.getResultList();
+    }
+
+    // TODO: rewrite this (examDate used to be written in unix timestamp)
     public List<ExamSignUp> getExamSignUpsForExamTerm(int courseId, long examDate) {
         TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getByCourseIdAndExamTermDate", ExamSignUp.class);
 
