@@ -12,11 +12,11 @@ public class TableData {
     @XmlElement
     private List<List<String>> rows;
 
-    public String getTable_name() {
+    public String getTableName() {
         return tableName;
     }
 
-    public void setTable_name(String table_name) {
+    public void setTableName(String table_name) {
         this.tableName = table_name;
     }
 

@@ -8,6 +8,6 @@ import javax.ws.rs.ApplicationPath;
 
 @OpenAPIDefinition(info = @Info(title = "Budget Studis® API", version = "v1"))
 @ApplicationPath("api")
-@CrossOrigin(supportedMethods = "GET, POST, PUT, DELETE, HEAD, OPTIONS", exposedHeaders = "X-Total-Count")
+@CrossOrigin(supportedMethods = "GET, POST, PUT, DELETE, HEAD, OPTIONS", exposedHeaders = "X-Total-Count, Content-Disposition, X-Export-Filename")
 public class SourceFrame extends javax.ws.rs.core.Application { }
 

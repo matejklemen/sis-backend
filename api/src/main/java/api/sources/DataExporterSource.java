@@ -1,6 +1,7 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
+import io.swagger.v3.oas.annotations.headers.Header;
 import pojo.ResponseError;
 import beans.logic.DataExporterBean;
 import entities.logic.TableData;
@@ -18,6 +19,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,86 +28,85 @@ import java.util.logging.Logger;
 @ApplicationScoped
 @LogApiCalls
 @Tags(value = @Tag(name = "dataexporter"))
+@ApiResponse(
+        responseCode = "404",
+        description = "Failed to generate requested export file.",
+        content = @Content(schema = @Schema(implementation = ResponseError.class))
+)
+@ApiResponse(
+        responseCode = "200",
+        description = "Requested file byte stream.",
+        headers = {
+                @Header(name = "Content-Disposition", description = "Header that suggest browser to download file."),
+                @Header(name = "X-Export-Filename", description = "Suggested filename generated based on request.")
+        }
+)
+@Produces("application/pdf")
 public class DataExporterSource {
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
+    // Note: "Content-Disposition" header "pove" browserju, da naj brskalnik naredi download vsebine. Zal v nasem primeru
+    //       ne dostopamo direktno do fajlov (z urljem) ampk se prejmejo na klienta z AJAXom (HTTP) in se sele na to
+    //       prikazejo... dodal sem header "X-Export-Filename", ki vsebuje predlagano ime datoteke.
     @Inject
     private DataExporterBean dataExporterBean;
 
-    @Operation(description = "Returns a pdf file", summary = "Generates a pdf file from table data", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Pdf file stream"
-            ),
-            @ApiResponse(responseCode = "404",
-                    description = "Failed to generate pdf",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class))
-            )
-    })
+    @Operation(description = "Generates a PDF file from table data", summary = "Generate PDF")
     @Path("tablepdf")
-    @Produces("application/pdf")
     @POST
-    public Response returnTablePdf(@RequestBody TableData table) throws Exception {
+    public Response returnTablePdf(@RequestBody TableData table) {
         ByteArrayInputStream bios = dataExporterBean.generateTablePdf(table);
-        Response.ResponseBuilder responseBuilder = Response.ok((Object) bios);
-        responseBuilder.type("application/pdf");
-        responseBuilder.header("Content-Disposition", "filename=test.pdf");
-        return responseBuilder.build();
+        String filename = String.format("izvoz_%s.pdf", new SimpleDateFormat("yyyyddMM_HHmmss").format(new Date()));
+        return Response
+                .ok(bios)
+                .type("application/pdf")
+                .header("Content-Disposition", "attachment; filename=" + filename)
+                .header("X-Export-Filename", filename)
+                .build();
     }
 
+    @Operation(description = "Generates a CSV file from table data", summary = "Generate CSV")
     @Path("tablecsv")
     @Produces("text/csv")
     @POST
     public Response returnTableCsv(@RequestBody TableData table) {
         ByteArrayInputStream bios = dataExporterBean.generateTableCsv(table);
-        Response.ResponseBuilder responseBuilder = Response.ok((Object) bios);
-        responseBuilder.type("text/csv");
-        responseBuilder.header("Content-Disposition", "filename=test.csv");
-        return responseBuilder.build();
+        String filename = String.format("izvoz_%s.csv", new SimpleDateFormat("yyyyddMM_HHmmss").format(new Date()));
+        return Response
+                .ok(bios)
+                .type("text/csv")
+                .header("Content-Disposition", "attachment; filename=" + filename)
+                .header("X-Export-Filename", filename)
+                .build();
     }
 
-    @Operation(description = "Returns enrolment sheet in pdf form", summary = "Generates enrolment sheet in pdf form for student with given studenId. NOTE: studentId != registerNumber", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Pdf file stream"
-            ),
-            @ApiResponse(responseCode = "404",
-                    description = "Failed to generate pdf",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class))
-            )
-    })
+    @Operation(description = "Generates enrolment sheet in PDF form for student with given studenId. NOTE: studentId != registerNumber", summary = "Generate PDF enrolment sheet")
     @Path("enrolmentsheet/{studentId}")
     @GET
-    @Produces("application/pdf")
-    public Response returnEnrolmentSheet(@PathParam("studentId") int studentId){
+    public Response returnEnrolmentSheet(@PathParam("studentId") int studentId) {
         //get enrolment
         ByteArrayInputStream bais = dataExporterBean.generateEnrolmentSheet(studentId);
-
-        Response.ResponseBuilder responseBuilder = Response.ok((Object) bais);
-        responseBuilder.type("application/pdf");
-        responseBuilder.header("Content-Disposition", "filename=vpisni-list"+12345678+".pdf");
-        return responseBuilder.build();
+        String filename = String.format("vpisnilist_%d.pdf", studentId);
+        return Response
+                .ok(bais)
+                .type("application/pdf")
+                .header("Content-Disposition", "attachment; filename=" + filename)
+                .header("X-Export-Filename", filename)
+                .build();
     }
 
-    @Operation(description = "Returns enrolment confirmation in pdf form", summary = "Generates enrolment confirmation in pdf form for student with given studenId. NOTE: studentId != registerNumber", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Pdf file stream"
-            ),
-            @ApiResponse(responseCode = "404",
-                    description = "Failed to generate pdf",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class))
-            )
-    })
+    @Operation(description = "Generates enrolment confirmation in PDF form for student with given studenId. NOTE: studentId != registerNumber", summary = "Generate PDF enrolment confirmation")
     @Path("enrolmentconfirmation/{studentId}")
     @GET
-    @Produces("application/pdf")
-    public Response returnEnrolmentConfirmation(@PathParam("studentId") int studentId){
+    public Response returnEnrolmentConfirmation(@PathParam("studentId") int studentId) {
         ByteArrayInputStream bais = dataExporterBean.generateEnrolmentConfirmation(studentId);
-
-        Response.ResponseBuilder responseBuilder = Response.ok((Object) bais);
-        responseBuilder.type("application/pdf");
-        responseBuilder.header("Content-Disposition", "filename=potrdilo-o-vpisu"+12345678+".pdf");
-        return responseBuilder.build();
+        String filename = String.format("potrdilo_%d.pdf", studentId);
+        return Response
+                .ok(bais)
+                .type("application/pdf")
+                .header("Content-Disposition", "attachment; filename=" + filename)
+                .header("X-Export-Filename", filename)
+                .build();
     }
+
 }

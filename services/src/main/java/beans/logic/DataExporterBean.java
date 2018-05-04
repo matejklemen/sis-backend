@@ -61,7 +61,7 @@ public class DataExporterBean {
             mainHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
             Date date = new Date();
-            mainHeader.setPhrase(new Phrase(tableData.getTable_name()+", datum: "+ dateFormat.format(date), font1));
+            mainHeader.setPhrase(new Phrase(tableData.getTableName()+", datum: "+ dateFormat.format(date), font1));
             table.addCell(mainHeader);
 
             addTableHeader(table, font3, tableData.getColoumnNames());
@@ -75,7 +75,6 @@ public class DataExporterBean {
 
             PdfReader reader = new PdfReader(pdf);
             int pages = reader.getNumberOfPages();
-            log.info("" + pages);
 
             ByteArrayOutputStream pagedPdf = new ByteArrayOutputStream();
             PdfStamper stamper = new PdfStamper(reader, pagedPdf);
@@ -83,8 +82,6 @@ public class DataExporterBean {
             for(int i=1; i<=pages; i++) {
                 pageContent = stamper.getOverContent(i);
                 ColumnText.showTextAligned(pageContent, Element.ALIGN_RIGHT, new Phrase(String.format("%d / %d", i, pages), font3), pageContent.getPdfDocument().right(), pageContent.getPdfDocument().bottom() - 16, 0);
-                log.info("" + i);
-                log.info("" + pageContent.toString());
             }
             stamper.close();
             reader.close();
