@@ -41,6 +41,11 @@ public class SearchAllCriteriaFilter<T> implements CriteriaFilter<T> {
                     int searchQueryInt = Integer.parseInt(searchQuery);
                     likes.add(criteriaBuilder.equal(root.get(attr.getName()), searchQueryInt));
                 } catch (NumberFormatException ignored) {}
+            } else if(attr.isAssociation()) {
+                try {
+                    likes.add(criteriaBuilder.like(criteriaBuilder.lower(typedRoot.get(attr.getName()).get("name")), searchQueryL));
+                } catch (IllegalArgumentException ignored) {}
+
             }
 
         }
