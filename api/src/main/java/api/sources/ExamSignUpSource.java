@@ -2,6 +2,7 @@ package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
 import beans.crud.ExamSignUpBean;
+import beans.logic.ExamSignUpLogicBean;
 import entities.curriculum.ExamSignUp;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -25,6 +26,8 @@ public class ExamSignUpSource {
 
     @Inject
     ExamSignUpBean esb;
+    @Inject
+    ExamSignUpLogicBean esulb;
 
     @Path("{courseId}/{registrationNumber}")
     @GET
@@ -34,6 +37,14 @@ public class ExamSignUpSource {
 
         return signups == null ? Response.status(Response.Status.NOT_FOUND).build():
                 Response.status(Response.Status.OK).entity(signups).build();
+    }
+
+    @PUT
+    public Response addExamSignUp(@QueryParam("studentId") Integer studentId, @QueryParam("studentCoursesId") Integer studentCoursesId, @QueryParam("courseExamTermId") Integer courseExamTermId) {
+        ExamSignUp esu = esulb.addExamSignUp(studentId, studentCoursesId, courseExamTermId);
+
+        return esu == null ? Response.status(Response.Status.NOT_FOUND).build():
+                Response.status(Response.Status.OK).entity(esu).build();
     }
 
 }

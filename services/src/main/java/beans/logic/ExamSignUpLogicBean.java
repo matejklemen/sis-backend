@@ -1,15 +1,16 @@
 package beans.logic;
 
-import beans.crud.EnrolmentBean;
-import beans.crud.StudentBean;
-import beans.crud.StudentCoursesBean;
+import beans.crud.*;
 import entities.Enrolment;
 import entities.Student;
+import entities.curriculum.CourseExamTerm;
+import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,6 +21,10 @@ public class ExamSignUpLogicBean {
     @Inject StudentBean sb;
     @Inject EnrolmentBean enb;
     @Inject StudentCoursesBean scb;
+    @Inject
+    ExamSignUpBean esub;
+    @Inject
+    CourseExamTermBean cetb;
 
     public List<StudentCourses> getCoursesByRegisterNumber(String registerNumber) {
         /*
@@ -39,5 +44,22 @@ public class ExamSignUpLogicBean {
         List<StudentCourses> courses = scb.getStudentCoursesByEnrolmentId(en.getId());
 
         return courses;
+    }
+
+    public ExamSignUp addExamSignUp(Integer studentId, Integer studentCoursesId, Integer courseExamTermId) {
+        Enrolment en = enb.getLastEnrolmentByStudentId(studentId);
+        StudentCourses sc = scb.getStudentCourses(studentCoursesId);
+        CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
+
+        if(en.getId() != sc.getEnrolment().getId()) {
+            throw new NotFoundException(String.format("Invalid studentId and studentCoursesId combination"));
+        }
+
+        ExamSignUp esu = new ExamSignUp();
+        esu.setStudentCourses(sc);
+        esu.setExamTerm(cet);
+
+        esub.addExamSignUp(esu);
+        return esu;
     }
 }

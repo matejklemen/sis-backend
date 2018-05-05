@@ -24,9 +24,6 @@ public class ExamSignUp implements Serializable {
     @JoinColumn(name = "id_student_course")
     private StudentCourses studentCourses;
 
-    // Integer instead of int so it can be 'null' until Student gets grade
-    private Integer grade;
-
     // the student decided not to attend the exam and cancelled it in time
     private boolean returned;
 
@@ -53,14 +50,6 @@ public class ExamSignUp implements Serializable {
 
     public void setStudentCourses(StudentCourses studentCourses) {
         this.studentCourses = studentCourses;
-    }
-
-    public Integer getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Integer grade) {
-        this.grade = grade;
     }
 
     public boolean isReturned() {
