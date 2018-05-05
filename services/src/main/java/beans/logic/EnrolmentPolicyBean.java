@@ -24,9 +24,6 @@ public class EnrolmentPolicyBean {
     private static final int SLO_COUNTRY_ID = 705;
 
     @Inject
-    private GradeBean GradeBean;
-
-    @Inject
     private EnrolmentBean enrolmentBean;
 
     @Inject
@@ -74,15 +71,9 @@ public class EnrolmentPolicyBean {
         if(maxYear != 2)
             return false;
 
-        List<Grade> grades =  GradeBean.getGradesByStudentId(s.getId());
-        double sum = 0.0;
-        for(Grade grade: grades){
-            sum += grade.getGrade();
-        }
-        if (sum/grades.size() > 8.5)
-            return true;
+        /*TODO preveri ce ima povprecno oceno nad 8.5*/
 
-        return false;
+        return true;
     }
 
     private List<String> checkCourses(EnrolmentSheet es, List<String> errList) {

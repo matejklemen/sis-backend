@@ -7,6 +7,7 @@ import entities.curriculum.StudentCourses;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
@@ -25,6 +26,13 @@ public class StudentCoursesBean {
     public List<StudentCourses> getAllStudentCourses(QueryParameters query) {
         List<StudentCourses> studentCourses = JPAUtils.queryEntities(em, StudentCourses.class, query);
         return studentCourses;
+    }
+
+    @Transactional
+    public StudentCourses getStudentCourses(Integer id) {
+        StudentCourses sc = em.find(StudentCourses.class, id);
+        if(sc == null) throw new NoResultException("No student courses by this id");
+        return sc;
     }
 
     @Transactional

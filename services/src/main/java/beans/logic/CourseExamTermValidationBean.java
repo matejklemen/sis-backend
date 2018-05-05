@@ -34,6 +34,11 @@ public class CourseExamTermValidationBean {
                 if(term.getId() == idCourseOrganization)
                     continue;
 
+                /* skip the check with an exam term that is not of same type (i.e. only compare oral exams with oral exams
+                and written with written exams.*/
+                if(!term.getType().equals(cet.getType()))
+                    continue;
+
                 log.info(String.format("Term date: %s", term.getDatetime()));
                 long timeDiff = enteredDatetime.getTime() - term.getDatetimeObject().getTime();
                 int daysDiff = (int) (timeDiff / (1000 * 60 * 60 * 24));

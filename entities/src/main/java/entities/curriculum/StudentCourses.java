@@ -33,6 +33,17 @@ public class StudentCourses implements Serializable {
     @JoinColumn(name = "id_course")
     private Course course;
 
+    // Integer instead of int so it can be 'null' until Student gets grade
+    private Integer grade;
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
+    }
+
     public int getIdStudentCourses() {
         return idStudentCourses;
     }
