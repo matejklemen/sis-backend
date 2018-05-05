@@ -39,8 +39,6 @@ public class CourseExamTerm implements Serializable {
 
     private String notes;
 
-    String notes; // for example classroom details
-
     private boolean deleted = false;
 
     public Integer getId() {
