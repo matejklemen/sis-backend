@@ -37,6 +37,8 @@ public class CourseExamTerm implements Serializable {
     @Column(name = "type")
     String type;
 
+    String notes; // for example classroom details
+
     private boolean deleted = false;
 
     public Integer getId() {
@@ -99,5 +101,13 @@ public class CourseExamTerm implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
