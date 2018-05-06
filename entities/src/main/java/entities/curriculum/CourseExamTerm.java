@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 @Entity(name = "course_exam_term")
 @NamedQueries(value = {
     @NamedQuery(name = "CourseExamTerm.getTermsBetweenDates", query = "SELECT cet FROM course_exam_term cet WHERE cet.datetime >= :datetime1 AND cet.datetime <= :datetime2"),
-    @NamedQuery(name = "CourseExamTerm.getTermsByCourseId", query = "SELECT cet FROM course_exam_term cet WHERE cet.course.course.id = :course_id AND cet.datetime >= :datetime")
+    @NamedQuery(name = "CourseExamTerm.getTermsByCourseId", query = "SELECT cet FROM course_exam_term cet WHERE cet.courseOrganization.course.id = :course_id AND cet.datetime >= :datetime")
 })
 public class CourseExamTerm implements Serializable {
 
@@ -33,7 +33,7 @@ public class CourseExamTerm implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "id_course_organization")
-    private CourseOrganization course;
+    private CourseOrganization courseOrganization;
 
     private String type;
 
@@ -71,12 +71,12 @@ public class CourseExamTerm implements Serializable {
         this.duration = duration;
     }
 
-    public CourseOrganization getCourse() {
-        return course;
+    public CourseOrganization getCourseOrganization() {
+        return courseOrganization;
     }
 
-    public void setCourse(CourseOrganization course) {
-        this.course = course;
+    public void setCourseOrganization(CourseOrganization course) {
+        this.courseOrganization = course;
     }
 
     public boolean isDeleted() {

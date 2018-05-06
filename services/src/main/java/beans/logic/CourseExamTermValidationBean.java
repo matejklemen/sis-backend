@@ -25,7 +25,7 @@ public class CourseExamTermValidationBean {
             errList.add("datum izpita je že mimo");
 
         // bonus: date between 2 consecutive exams for the same course organization needs to be at least 7 days apart
-        List<CourseExamTerm> examTerms = cetb.getExamTermsByCourse(cet.getCourse().getId());
+        List<CourseExamTerm> examTerms = cetb.getExamTermsByCourse(cet.getCourseOrganization().getId());
         if(examTerms != null) {
             Integer idCourseOrganization = cet.getId();
 
