@@ -25,5 +25,5 @@ UPDATE professor SET id_login = 3 WHERE professor.id = 2;
 INSERT INTO enrolment_token (id, freechoice, used, year, id_study_form, id_study_kind, id_klasius_srv, id_student, id_study_program, id_study_year, id_study_type) VALUES (1, false, true, 1, 1, 1, 16204, 1, '1000468', 1, 1),(2, false, true, 2, 1, 1, 16204, 3, '1000468', 3, 2),(3, false, true, 2, 1, 1, 16204, 4, '1000468', 2, 1);
 ALTER SEQUENCE enrolment_token_id_seq RESTART WITH 4;
 
-ALTER SEQUENCE course_exam_term_id_course_exam_term_seq RESTART WITH 83;
+ALTER SEQUENCE course_exam_term_id_course_exam_term_seq RESTART WITH 116;
 ALTER SEQUENCE student_courses_id_student_courses_seq RESTART WITH 283;
