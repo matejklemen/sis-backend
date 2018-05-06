@@ -2,9 +2,16 @@ package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
 import beans.crud.CourseExamTermBean;
+import beans.crud.CourseOrganizationBean;
+import beans.crud.EnrolmentBean;
+import beans.crud.StudentCoursesBean;
 import beans.logic.CourseExamTermValidationBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import entities.Enrolment;
+import entities.curriculum.Course;
 import entities.curriculum.CourseExamTerm;
+import entities.curriculum.CourseOrganization;
+import entities.curriculum.StudentCourses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -18,11 +25,13 @@ import pojo.ResponseError;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -38,10 +47,11 @@ public class CourseExamTermSource {
     @Context
     protected UriInfo uriInfo;
 
-    @Inject
-    private CourseExamTermValidationBean cetvb;
-    @Inject
-    private CourseExamTermBean cetb;
+    @Inject private CourseExamTermValidationBean cetvb;
+    @Inject private CourseExamTermBean cetb;
+    @Inject private EnrolmentBean eb;
+    @Inject private StudentCoursesBean scb;
+    @Inject private CourseOrganizationBean cob;
 
     @Operation(description = "Returns a list of all exam terms.", summary = "Get list of exam terms",
             responses = {
@@ -71,6 +81,50 @@ public class CourseExamTermSource {
                 .ok(cetb.getAllExamTerms(query))
                 .header("X-Total-Count", cetb.getAllExamTerms(q2).size())
                 .build();
+    }
+
+    @Operation(description = "Returns a list of all exam terms for given student (for last enrolment).", summary = "Get list of exam terms for student",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "List of exam terms",
+                            content = @Content(
+                                    schema = @Schema(implementation = CourseExamTerm.class))
+                    ),
+                    @ApiResponse(responseCode = "404",
+                            description = "No student with this id.",
+                            content = @Content(
+                                    schema = @Schema(implementation = ResponseError.class)
+                            ))
+            })
+    @GET
+    @Path("student/{studentId}")
+    public Response getAllExamTermsForStudent(@PathParam("studentId") int studentId) {
+
+        // First we get last enrolment for student
+        Enrolment e = eb.getLastEnrolmentByStudentId(studentId);
+
+        // Then we get all courses student is enrolled in
+        List<StudentCourses> lsc = scb.getStudentCoursesByEnrolmentId(e.getId());
+
+        // For each course we get term
+        List<CourseExamTerm> llcet = new ArrayList<>();
+
+        for ( StudentCourses sc : lsc) {
+            CourseOrganization co = cob.getCourseOrganizationsByCourseIdAndYear(sc.getCourse().getId(), e.getStudyYear().getId());
+
+            if(co == null)
+                continue;
+
+            List<CourseExamTerm> cet = cetb.getExamTermsByCourse(co.getId());
+
+            if(cet == null)
+                continue;
+
+            llcet.addAll(cetb.getExamTermsByCourse(co.getId()));
+        }
+
+        return Response.ok().entity(llcet).build();
+
     }
 
     @Operation(description = "Returns an exam term object for specified ID of exam term.", summary = "Get exam term by ID",

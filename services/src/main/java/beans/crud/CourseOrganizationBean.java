@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.NotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -51,5 +52,18 @@ public class CourseOrganizationBean {
         q.setParameter("studyYear", studyYear);
 
         return q.getResultList();
+    }
+
+    public CourseOrganization getCourseOrganizationsByCourseIdAndYear(int courseId, int studyYearId) {
+        TypedQuery<CourseOrganization> q = em.createNamedQuery("CourseOrganization.getByCourseIdAndStudyYearId", CourseOrganization.class);
+        q.setParameter("idCourse", courseId);
+        q.setParameter("idStudyYear", studyYearId);
+
+        List<CourseOrganization> lco = q.getResultList();
+
+        if( lco != null && lco.size() > 0)
+            return lco.get(0);
+        else
+            return null;
     }
 }
