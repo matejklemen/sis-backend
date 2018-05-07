@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Entity(name = "exam_sign_up")
 @NamedQueries(value = {
         @NamedQuery(name = "ExamSignUp.getByCourseIdAndExamTermDate", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :id_course AND es.examTerm.datetime = :exam_date"),
-        @NamedQuery(name = "ExamSignUp.getByCourseIdAndStudentRegisterNumber", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :id_course AND es.studentCourses.enrolment.student.registerNumber = :student_registration AND es.returned = false"),
+        @NamedQuery(name = "ExamSignUp.getByCourseIdAndStudentId", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :id_course AND es.studentCourses.enrolment.student.id = :id_student AND es.returned = false"),
         @NamedQuery(name = "ExamSignUp.getStudentTermSignUp", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.registerNumber = :student_registration AND es.examTerm.datetime = :exam_date AND es.returned = false")
 })
 public class ExamSignUp implements Serializable {

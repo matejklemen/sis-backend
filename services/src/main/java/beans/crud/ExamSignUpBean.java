@@ -38,13 +38,13 @@ public class ExamSignUpBean {
         return q.getResultList();
     }
 
-    public List<ExamSignUp> getExamSignUpsOnCourseForStudent(int courseId, String studentRegistration) {
-        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getByCourseIdAndStudentRegisterNumber", ExamSignUp.class);
+    public List<ExamSignUp> getExamSignUpsOnCourseForStudent(int courseId, int studentId) {
+        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getByCourseIdAndStudentId", ExamSignUp.class);
 
-        log.info(String.format("Student registration: %s, course ID: %d", studentRegistration, courseId));
+        log.info(String.format("Get exam sign-ups for studentId=%d and courseId=%d", studentId, courseId));
 
         q.setParameter("id_course", courseId);
-        q.setParameter("student_registration", studentRegistration);
+        q.setParameter("id_student", studentId);
 
         return q.getResultList();
     }
