@@ -57,25 +57,56 @@ public class ExamSignUpLogicBean {
         Enrolment en = enb.getLastEnrolmentByStudentId(studentId);
         StudentCourses sc = scb.getStudentCourses(studentCoursesId);
         CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
+
         if(en.getId() != sc.getEnrolment().getId()) {
-            throw new NotFoundException("Invalid studentId and studentCoursesId combination");
+            errors.add("Napačna kombinacija studentId in studentCoursesId");
+            return errors;
         }
 
         if(cet.getCourseOrganization().getCourse().getId() != sc.getCourse().getId()) {
-            throw new NotFoundException("Invalid studentCoursesId and courseExamTermId combination");
+            errors.add("Napačna kombinacija studentCoursesId in courseExamTermId");
+            return errors;
         }
 
         /* preveri ce je potekel rok za prijavo (2 dni prej do polnoci)*/
-        if(ExamSignUpDeadlineReached(cet.getDatetimeObject())) {
+        if(examSignUpDeadlineReached(cet.getDatetimeObject())) {
             errors.add("Rok za prijavo je potekel");
         }
 
-        log.info(String.valueOf(esub.getNumberOfExamTakingsInLatestEnrolment(sc.getIdStudentCourses())));
+        /* preveri ce je student ze porabil kvoto treh polaganj izpita za najnovejš vpis */
+        if(esub.getNumberOfExamTakingsInLatestEnrolment(sc.getIdStudentCourses()) > 2) {
+            errors.add("Presežena kvota izvajanja izpitov za dani predmet v tem šolskem letu");
+        }
+
+        /* preveri ce je student ze porabil kvoto sestih polaganj izpita za vse njegove vpise */
+        if(esub.getNumberOfExamTakingsInAllEnrolments(studentId, sc.getCourse().getId()) > 5) {
+            errors.add("Presežena kvota izvajanja izpitov za dani predmet");
+        }
+
+        /* preveri za prijavo na ze opravljen izpit */
+        if(!esub.getByStudentIdAndCourseIdAndGrade(studentId, sc.getCourse().getId(), 5).isEmpty()) {
+            errors.add("Predmet je že opravljen in pozitivno zaključen");
+        }
+
+        /*preveri ce je od zadnjega polaganja minilo 14 dni */
+        if(esub.getLastSignUp(sc.getCourse().getId()) != null && !fortnitePassed(esub.getLastSignUp(sc.getCourse().getId()).getCourseExamTerm().getDatetimeObject())) {
+            errors.add("Ni še minilo 14 dni od polaganja zadnjega izpita iz tega predmeta");
+        }
+
+        /*preveri ce je student ze prijavljen na dani rok */
+        if(esub.checkIfAlreadySignedUp(courseExamTermId, studentId)) {
+            errors.add("Študent je na ta izpit že prijavljen");
+        }
+
+        /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
+         if(esub.getLastSignUp(sc.getCourse().getId()) != null && esub.getLastSignUp(sc.getCourse().getId()).getGrade() == null) {
+            errors.add("Ocena za prejšnji rok še ni bila zaključena");
+        }
 
         if(errors.isEmpty()) {
             ExamSignUp esu = new ExamSignUp();
             esu.setStudentCourses(sc);
-            esu.setExamTerm(cet);
+            esu.setCourseExamTerm(cet);
 
             esub.addExamSignUp(esu);
         }
@@ -83,7 +114,7 @@ public class ExamSignUpLogicBean {
         return errors;
     }
 
-    private boolean ExamSignUpDeadlineReached(Timestamp deadline) {
+    private boolean examSignUpDeadlineReached(Timestamp deadline) {
         Timestamp twoDaysBeforeDeadline = new Timestamp(deadline.getTime() - (1000 * 60 * 60 * 24 * 2));
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(twoDaysBeforeDeadline.getTime());
@@ -96,6 +127,25 @@ public class ExamSignUpLogicBean {
         Calendar t = Calendar.getInstance();
         Timestamp today = new Timestamp(t.getTimeInMillis());
         if(today.after(twoDaysBeforeDeadline)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean fortnitePassed(Timestamp lastTaking) {
+        Timestamp fortniteAfterLastTaking = new Timestamp(lastTaking.getTime() + (1000 * 60 * 60 * 24 * 14));
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(fortniteAfterLastTaking.getTime());
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        fortniteAfterLastTaking.setTime(c.getTimeInMillis());
+        Calendar t = Calendar.getInstance();
+        Timestamp today = new Timestamp(t.getTimeInMillis());
+        if(today.after(fortniteAfterLastTaking)) {
             return true;
         } else {
             return false;

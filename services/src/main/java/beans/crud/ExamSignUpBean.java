@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -39,10 +40,48 @@ public class ExamSignUpBean {
     }
 
     public Integer getNumberOfExamTakingsInLatestEnrolment(int studentCoursesId) {
-        TypedQuery<Integer> q = em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInLatestEnrolment", Integer.class);
-        q.setParameter("studentCourses_id", studentCoursesId);
+        int num = ((Number)em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInLatestEnrolment", Integer.class).setParameter("student_courses_id", studentCoursesId).getSingleResult()).intValue();
+        return num;
+    }
 
-        return q.getSingleResult();
+    public Integer getNumberOfExamTakingsInAllEnrolments(int studentId, int courseId) {
+        int num = ((Number)em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInAllEnrolments", Integer.class).setParameter("student_id", studentId).setParameter("course_id", courseId).getSingleResult()).intValue();
+        return num;
+    }
+
+    public ExamSignUp getLastSignUp(int courseId) {
+        List<ExamSignUp> e = em.createNamedQuery("ExamSignUp.getLastSignUp", ExamSignUp.class)
+                .setParameter("course_id", courseId)
+                .setMaxResults(1)
+                .getResultList();
+
+        if(e == null || e.size() == 0)
+            return null;
+
+        return e.get(0);
+    }
+
+    public boolean checkIfAlreadySignedUp(int courseExamTermId, int studentId) {
+        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.checkIfAlreadySignedUp", ExamSignUp.class);
+        q.setParameter("course_exam_term_id", courseExamTermId);
+        q.setParameter("student_id", studentId);
+        List<ExamSignUp> e = q.getResultList();
+
+        if(e.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    @Transactional
+    public List<ExamSignUp> getByStudentIdAndCourseIdAndGrade(Integer studentId, Integer courseId, Integer grade) {
+        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getByStudentIdAndCourseIdAndGrade", ExamSignUp.class);
+        q.setParameter("student_id", studentId);
+        q.setParameter("course_id", courseId);
+        q.setParameter("grade", grade);
+        return q.getResultList();
     }
 
     public List<ExamSignUp> getExamSignUpsOnCourseForStudent(int courseId, int studentId) {
