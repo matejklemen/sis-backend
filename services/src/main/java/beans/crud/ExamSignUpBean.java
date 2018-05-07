@@ -38,6 +38,13 @@ public class ExamSignUpBean {
         return q.getResultList();
     }
 
+    public Integer getNumberOfExamTakingsInLatestEnrolment(int studentCoursesId) {
+        TypedQuery<Integer> q = em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInLatestEnrolment", Integer.class);
+        q.setParameter("studentCourses_id", studentCoursesId);
+
+        return q.getSingleResult();
+    }
+
     public List<ExamSignUp> getExamSignUpsOnCourseForStudent(int courseId, int studentId) {
         TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getByCourseIdAndStudentId", ExamSignUp.class);
 

@@ -75,10 +75,10 @@ public class ExamSignUpSource {
     })
     @PUT
     public Response addExamSignUp(@QueryParam("studentId") Integer studentId, @QueryParam("studentCoursesId") Integer studentCoursesId, @QueryParam("courseExamTermId") Integer courseExamTermId) {
-        ExamSignUp esu = esulb.addExamSignUp(studentId, studentCoursesId, courseExamTermId);
+        List<String> err = esulb.addExamSignUp(studentId, studentCoursesId, courseExamTermId);
 
-        return esu == null ? Response.status(Response.Status.NOT_FOUND).build():
-                Response.status(Response.Status.OK).entity(esu).build();
+        return !err.isEmpty() ? Response.status(Response.Status.BAD_REQUEST).entity(err).build() :
+                Response.status(Response.Status.OK).build();
     }
 
 }
