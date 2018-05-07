@@ -41,6 +41,9 @@ public class CourseExamTerm implements Serializable {
 
     private boolean deleted = false;
 
+    @Transient
+    private Integer StudentCoursesId = null;
+
     public Integer getId() {
         return id;
     }
@@ -109,5 +112,13 @@ public class CourseExamTerm implements Serializable {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Integer getStudentCoursesId() {
+        return StudentCoursesId;
+    }
+
+    public void setStudentCoursesId(Integer studentCoursesId) {
+        StudentCoursesId = studentCoursesId;
     }
 }

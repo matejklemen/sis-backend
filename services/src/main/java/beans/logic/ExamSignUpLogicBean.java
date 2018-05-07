@@ -98,10 +98,13 @@ public class ExamSignUpLogicBean {
             errors.add("Študent je na ta izpit že prijavljen");
         }
 
-        /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
+        /*
+        TO-DO: sc.getCourse().getId() ocitno vraca za vse predmete, ne samo od dolocenega studenta.
+        // Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena
          if(esub.getLastSignUp(sc.getCourse().getId()) != null && esub.getLastSignUp(sc.getCourse().getId()).getGrade() == null) {
             errors.add("Ocena za prejšnji rok še ni bila zaključena");
         }
+        */
 
         if(errors.isEmpty()) {
             ExamSignUp esu = new ExamSignUp();

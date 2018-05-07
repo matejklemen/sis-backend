@@ -107,7 +107,7 @@ public class CourseExamTermSource {
         List<StudentCourses> lsc = scb.getStudentCoursesByEnrolmentId(e.getId());
 
         // For each course we get term
-        List<CourseExamTerm> llcet = new ArrayList<>();
+        List<CourseExamTerm> lcet = new ArrayList<>();
 
         for ( StudentCourses sc : lsc) {
             CourseOrganization co = cob.getCourseOrganizationsByCourseIdAndYear(sc.getCourse().getId(), e.getStudyYear().getId());
@@ -120,10 +120,16 @@ public class CourseExamTermSource {
             if(cet == null)
                 continue;
 
-            llcet.addAll(cetb.getExamTermsByCourse(co.getId()));
+            List<CourseExamTerm> innerlcet = cetb.getExamTermsByCourse(co.getId());
+
+            for (CourseExamTerm c : innerlcet){
+                c.setStudentCoursesId(sc.getIdStudentCourses());
+            }
+
+            lcet.addAll(innerlcet);
         }
 
-        return Response.ok().entity(llcet).build();
+        return Response.ok().entity(lcet).build();
 
     }
 
