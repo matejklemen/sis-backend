@@ -89,7 +89,7 @@ public class ExamSignUpLogicBean {
         }
 
         /*preveri ce je od zadnjega polaganja minilo 14 dni */
-        if(esub.getLastSignUp(sc.getCourse().getId()) != null && !fortnitePassed(esub.getLastSignUp(sc.getCourse().getId()).getCourseExamTerm().getDatetimeObject())) {
+        if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && !fortnitePassed(esub.getLastSignUp(sc.getCourse().getId(), studentId).getCourseExamTerm().getDatetimeObject())) {
             errors.add("Ni še minilo 14 dni od polaganja zadnjega izpita iz tega predmeta");
         }
 
@@ -99,7 +99,7 @@ public class ExamSignUpLogicBean {
         }
 
         /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
-         if(esub.getLastSignUp(sc.getCourse().getId()) != null && esub.getLastSignUp(sc.getCourse().getId()).getGrade() == null) {
+         if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
             errors.add("Ocena za prejšnji rok še ni bila zaključena");
         }
 

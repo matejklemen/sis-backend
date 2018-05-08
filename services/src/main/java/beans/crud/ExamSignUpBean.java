@@ -49,9 +49,10 @@ public class ExamSignUpBean {
         return num;
     }
 
-    public ExamSignUp getLastSignUp(int courseId) {
+    public ExamSignUp getLastSignUp(int courseId, int studentId) {
         List<ExamSignUp> e = em.createNamedQuery("ExamSignUp.getLastSignUp", ExamSignUp.class)
                 .setParameter("course_id", courseId)
+                .setParameter("student_id", studentId)
                 .setMaxResults(1)
                 .getResultList();
 
