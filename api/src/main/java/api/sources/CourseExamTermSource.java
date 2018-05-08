@@ -101,11 +101,14 @@ public class CourseExamTermSource {
         // First we get last enrolment for student
         Enrolment e = eb.getLastEnrolmentByStudentId(studentId);
 
+        // For each course we get exam term
+        List<CourseExamTerm> lcet = new ArrayList<>();
+
+        if(!e.isConfirmed())
+            return Response.ok().entity(lcet).build();
+
         // Then we get all courses student is enrolled in
         List<StudentCourses> lsc = scb.getStudentCoursesByEnrolmentId(e.getId());
-
-        // For each course we get term
-        List<CourseExamTerm> lcet = new ArrayList<>();
 
         for ( StudentCourses sc : lsc) {
             CourseOrganization co = cob.getCourseOrganizationsByCourseIdAndYear(sc.getCourse().getId(), e.getStudyYear().getId());
@@ -124,7 +127,7 @@ public class CourseExamTermSource {
                 // Setting StudentCourses id as FE needs it
                 c.setStudentCoursesId(sc.getIdStudentCourses());
 
-                // Setting isSignUp flas as FE needs it
+                // Setting isSignUp flag as FE needs it
                 c.setSignedUp(esub.checkIfAlreadySignedUpAndNotReturned(c.getId(), sc.getIdStudentCourses()));
             }
 
@@ -132,7 +135,6 @@ public class CourseExamTermSource {
         }
 
         return Response.ok().entity(lcet).build();
-
     }
 
     @Operation(description = "Returns an exam term object for specified ID of exam term.", summary = "Get exam term by ID",
