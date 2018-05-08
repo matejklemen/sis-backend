@@ -1,10 +1,7 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
-import beans.crud.CourseExamTermBean;
-import beans.crud.CourseOrganizationBean;
-import beans.crud.EnrolmentBean;
-import beans.crud.StudentCoursesBean;
+import beans.crud.*;
 import beans.logic.CourseExamTermValidationBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.Enrolment;
@@ -52,6 +49,7 @@ public class CourseExamTermSource {
     @Inject private EnrolmentBean eb;
     @Inject private StudentCoursesBean scb;
     @Inject private CourseOrganizationBean cob;
+    @Inject private ExamSignUpBean esub;
 
     @Operation(description = "Returns a list of all exam terms.", summary = "Get list of exam terms",
             responses = {
@@ -107,7 +105,7 @@ public class CourseExamTermSource {
         List<StudentCourses> lsc = scb.getStudentCoursesByEnrolmentId(e.getId());
 
         // For each course we get term
-        List<CourseExamTerm> llcet = new ArrayList<>();
+        List<CourseExamTerm> lcet = new ArrayList<>();
 
         for ( StudentCourses sc : lsc) {
             CourseOrganization co = cob.getCourseOrganizationsByCourseIdAndYear(sc.getCourse().getId(), e.getStudyYear().getId());
@@ -120,10 +118,20 @@ public class CourseExamTermSource {
             if(cet == null)
                 continue;
 
-            llcet.addAll(cetb.getExamTermsByCourse(co.getId()));
+            List<CourseExamTerm> innerlcet = cetb.getExamTermsByCourse(co.getId());
+
+            for (CourseExamTerm c : innerlcet){
+                // Setting StudentCourses id as FE needs it
+                c.setStudentCoursesId(sc.getIdStudentCourses());
+
+                // Setting isSignUp flas as FE needs it
+                c.setSignedUp(esub.checkIfAlreadySignedUpAndNotReturned(c.getId(), sc.getIdStudentCourses()));
+            }
+
+            lcet.addAll(innerlcet);
         }
 
-        return Response.ok().entity(llcet).build();
+        return Response.ok().entity(lcet).build();
 
     }
 

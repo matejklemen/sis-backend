@@ -98,6 +98,7 @@ public class ExamSignUpLogicBean {
             errors.add("Študent je na ta izpit že prijavljen");
         }
 
+
         /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
          if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
             errors.add("Ocena za prejšnji rok še ni bila zaključena");

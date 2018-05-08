@@ -13,6 +13,7 @@ import java.io.Serializable;
         @NamedQuery(name = "ExamSignUp.getNumberOfExamTakingsInAllEnrolments", query = "SELECT COUNT(es) FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.id = :student_id AND es.studentCourses.course.id = :course_id AND es.returned = false"),
         @NamedQuery(name = "ExamSignUp.getLastSignUp", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :course_id AND es.studentCourses.enrolment.student.id = :student_id AND es.returned = false ORDER BY es.courseExamTerm.datetime DESC"),
         @NamedQuery(name = "ExamSignUp.checkIfAlreadySignedUp", query = "SELECT es FROM exam_sign_up es WHERE es.courseExamTerm.id = :course_exam_term_id AND es.studentCourses.enrolment.student.id = :student_id"),
+        @NamedQuery(name = "ExamSignUp.checkIfAlreadySignedUpAndNotReturned", query = "SELECT es FROM exam_sign_up es WHERE es.courseExamTerm.id = :course_exam_term_id AND es.studentCourses.idStudentCourses = :student_course_id AND es.returned = false"),
         @NamedQuery(name = "ExamSignUp.getByStudentIdAndCourseIdAndGrade", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.id = :student_id AND es.studentCourses.course.id = :course_id AND es.grade > :grade")
 })
 public class ExamSignUp implements Serializable {
