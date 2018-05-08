@@ -59,49 +59,49 @@ public class ExamSignUpLogicBean {
         CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
 
         if(en.getId() != sc.getEnrolment().getId()) {
-            errors.add("Napačna kombinacija studentId in studentCoursesId");
+            errors.add("napačna kombinacija studentId in studentCoursesId");
             return errors;
         }
 
         if(cet.getCourseOrganization().getCourse().getId() != sc.getCourse().getId()) {
-            errors.add("Napačna kombinacija studentCoursesId in courseExamTermId");
+            errors.add("napačna kombinacija studentCoursesId in courseExamTermId");
             return errors;
         }
 
         /* preveri ce je potekel rok za prijavo (2 dni prej do polnoci)*/
         if(examSignUpDeadlineReached(cet.getDatetimeObject())) {
-            errors.add("Rok za prijavo je potekel");
+            errors.add("rok za prijavo je potekel");
         }
 
         /* preveri ce je student ze porabil kvoto treh polaganj izpita za najnovejš vpis */
         if(esub.getNumberOfExamTakingsInLatestEnrolment(sc.getIdStudentCourses()) > 2) {
-            errors.add("Presežena kvota izvajanja izpitov za dani predmet v tem šolskem letu");
+            errors.add("presežena kvota izvajanja izpitov za dani predmet v tem šolskem letu");
         }
 
         /* preveri ce je student ze porabil kvoto sestih polaganj izpita za vse njegove vpise */
         if(esub.getNumberOfExamTakingsInAllEnrolments(studentId, sc.getCourse().getId()) > 5) {
-            errors.add("Presežena kvota izvajanja izpitov za dani predmet");
+            errors.add("presežena kvota izvajanja izpitov za dani predmet");
         }
 
         /* preveri za prijavo na ze opravljen izpit */
         if(!esub.getByStudentIdAndCourseIdAndGrade(studentId, sc.getCourse().getId(), 5).isEmpty()) {
-            errors.add("Predmet je že opravljen in pozitivno zaključen");
+            errors.add("predmet je že opravljen in pozitivno zaključen");
         }
 
         /*preveri ce je od zadnjega polaganja minilo 14 dni */
         if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && !fortnitePassed(esub.getLastSignUp(sc.getCourse().getId(), studentId).getCourseExamTerm().getDatetimeObject())) {
-            errors.add("Ni še minilo 14 dni od polaganja zadnjega izpita iz tega predmeta");
+            errors.add("ni še minilo 14 dni od polaganja zadnjega izpita iz tega predmeta");
         }
 
         /*preveri ce je student ze prijavljen na dani rok */
         if(esub.checkIfAlreadySignedUpAndNotReturned(courseExamTermId, studentId)) {
-            errors.add("Študent je na ta izpit že prijavljen");
+            errors.add("študent je na ta izpit že prijavljen");
         }
 
 
         /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
          if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
-            errors.add("Ocena za prejšnji rok še ni bila zaključena");
+            errors.add("ocena za prejšnji rok še ni bila zaključena");
         }
 
         if(errors.isEmpty()) {
