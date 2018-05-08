@@ -20,6 +20,13 @@ public class ExamSignUpBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    @Transactional
+    public ExamSignUp getExamSignUpById(int id){
+        log.info("Getting exam sign up by id: "+id);
+
+        return em.find(ExamSignUp.class, id);
+    }
+
     public List<ExamSignUp> getExamSignUpsForCourse(int idCourse) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
                 "esu.studentCourses.course.id = :id_course AND esu.returned = false", ExamSignUp.class);
@@ -91,6 +98,21 @@ public class ExamSignUpBean {
     }
 
     @Transactional
+    public ExamSignUp getExamSignedUp(int courseExamTermId, int studentCourseId) {
+        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.checkIfAlreadySignedUpAndNotReturned", ExamSignUp.class);
+        q.setParameter("course_exam_term_id", courseExamTermId);
+        q.setParameter("student_course_id", studentCourseId);
+        List<ExamSignUp> e = q.getResultList();
+
+        if(!e.isEmpty()) {
+            return e.get(0);
+        } else {
+            return null;
+        }
+
+    }
+
+    @Transactional
     public List<ExamSignUp> getByStudentIdAndCourseIdAndGrade(Integer studentId, Integer courseId, Integer grade) {
         TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getByStudentIdAndCourseIdAndGrade", ExamSignUp.class);
         q.setParameter("student_id", studentId);
@@ -145,5 +167,14 @@ public class ExamSignUpBean {
         catch(Exception e) {
             log.severe("Something went wrong when trying to insert new ExamSignUp!");
         }
+    }
+
+    @Transactional
+    public ExamSignUp updateExamSignUp(ExamSignUp esu){
+        log.info("Will update exam sign up with id: "+esu.getId());
+
+        em.merge(esu);
+        em.flush();
+        return esu;
     }
 }

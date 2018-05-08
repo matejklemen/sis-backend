@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -79,6 +80,32 @@ public class ExamSignUpSource {
 
         return !err.isEmpty() ? Response.status(Response.Status.BAD_REQUEST).entity(err).build() :
                 Response.status(Response.Status.OK).build();
+    }
+
+    @Operation(description = "Returns exam sign up.", summary = "Returns exam sign up.",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Return successful",
+                            content = @Content(
+                                    schema = @Schema(implementation = ExamSignUp.class))),
+                    @ApiResponse(responseCode = "400",
+                            description = "Return failed",
+                            content = @Content(
+                                    schema = @Schema(implementation = ResponseError.class))),
+                    @ApiResponse(responseCode = "404",
+                            description = "No exam sign up with given ids",
+                            content = @Content(
+                                    schema = @Schema(implementation = ResponseError.class)))
+            })
+    @POST
+    @Path("/return")
+    public Response returnExamSignUp(@QueryParam("courseExamTermId") int courseExamTermId, @QueryParam("studentCourseId") int studentCourseId){
+
+        ExamSignUp esu = esb.getExamSignedUp(courseExamTermId, studentCourseId);
+        esu.setReturned(true);
+        esu = esb.updateExamSignUp(esu);
+
+        return Response.ok().entity(esu).build();
     }
 
 }

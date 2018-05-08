@@ -94,7 +94,7 @@ public class ExamSignUpLogicBean {
         }
 
         /*preveri ce je student ze prijavljen na dani rok */
-        if(esub.checkIfAlreadySignedUp(courseExamTermId, studentId)) {
+        if(esub.checkIfAlreadySignedUpAndNotReturned(courseExamTermId, studentId)) {
             errors.add("Študent je na ta izpit že prijavljen");
         }
 
@@ -105,11 +105,19 @@ public class ExamSignUpLogicBean {
         }
 
         if(errors.isEmpty()) {
-            ExamSignUp esu = new ExamSignUp();
-            esu.setStudentCourses(sc);
-            esu.setCourseExamTerm(cet);
+            ExamSignUp esu = esub.getExamSignedUp(courseExamTermId, studentId);
 
-            esub.addExamSignUp(esu);
+            if(esu != null){
+                esu.setReturned(false);
+                esub.updateExamSignUp(esu);
+            }else{
+                esu = new ExamSignUp();
+
+                esu.setStudentCourses(sc);
+                esu.setCourseExamTerm(cet);
+
+                esub.addExamSignUp(esu);
+            }
         }
 
         return errors;
