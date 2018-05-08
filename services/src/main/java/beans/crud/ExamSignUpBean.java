@@ -75,6 +75,20 @@ public class ExamSignUpBean {
 
     }
 
+    public boolean checkIfAlreadySignedUpAndNotReturned(int courseExamTermId, int studentCourseId) {
+        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.checkIfAlreadySignedUpAndNotReturned", ExamSignUp.class);
+        q.setParameter("course_exam_term_id", courseExamTermId);
+        q.setParameter("student_course_id", studentCourseId);
+        List<ExamSignUp> e = q.getResultList();
+
+        if(e.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
     @Transactional
     public List<ExamSignUp> getByStudentIdAndCourseIdAndGrade(Integer studentId, Integer courseId, Integer grade) {
         TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getByStudentIdAndCourseIdAndGrade", ExamSignUp.class);

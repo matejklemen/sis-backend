@@ -44,6 +44,9 @@ public class CourseExamTerm implements Serializable {
     @Transient
     private Integer StudentCoursesId = null;
 
+    @Transient
+    private Boolean isSignedUp = false;
+
     public Integer getId() {
         return id;
     }
@@ -120,5 +123,13 @@ public class CourseExamTerm implements Serializable {
 
     public void setStudentCoursesId(Integer studentCoursesId) {
         StudentCoursesId = studentCoursesId;
+    }
+
+    public Boolean getSignedUp() {
+        return isSignedUp;
+    }
+
+    public void setSignedUp(Boolean signedUp) {
+        isSignedUp = signedUp;
     }
 }
