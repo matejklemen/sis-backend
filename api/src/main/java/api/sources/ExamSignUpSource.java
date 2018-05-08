@@ -77,7 +77,7 @@ public class ExamSignUpSource {
     public Response addExamSignUp(@QueryParam("studentId") Integer studentId, @QueryParam("studentCoursesId") Integer studentCoursesId, @QueryParam("courseExamTermId") Integer courseExamTermId) {
         List<String> err = esulb.addExamSignUp(studentId, studentCoursesId, courseExamTermId);
 
-        return !err.isEmpty() ? Response.status(Response.Status.BAD_REQUEST).entity(err).build() :
+        return !err.isEmpty() ? Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, err.toArray(new String[0]))).build() :
                 Response.status(Response.Status.OK).build();
     }
 
