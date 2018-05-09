@@ -55,6 +55,22 @@ public class ExamSignUpLogicBean {
         StudentCourses sc = scb.getStudentCourses(studentCoursesId);
         CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
 
+        if(en == null) {
+            errors.add("študent z id-jem "+studentId+" ne obstaja");
+        }
+
+        if(sc == null) {
+            errors.add("študentov predmet z id-jem "+studentCoursesId+" ne obstaja");
+        }
+
+        if(cet == null) {
+            errors.add("izpitni rok z id-jem "+courseExamTermId+" ne obstaja ali je izbrisan");
+        }
+
+        if(!errors.isEmpty()) {
+            return errors;
+        }
+
         if(en.getId() != sc.getEnrolment().getId()) {
             errors.add("napačna kombinacija studentId in studentCoursesId");
             return errors;
@@ -97,6 +113,7 @@ public class ExamSignUpLogicBean {
 
 
         /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
+        log.info(String.valueOf(esub.getLastSignUp(sc.getCourse().getId(), studentId).getId()));
          if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
             errors.add("ocena za prejšnji rok še ni bila zaključena");
         }
@@ -109,6 +126,9 @@ public class ExamSignUpLogicBean {
                 esub.updateExamSignUp(esu);
             }else{
                 esu = new ExamSignUp();
+                if(en.getKind().getName().equals("izredni")) {
+                    esu.setConfirmed(false);
+                }
 
                 esu.setStudentCourses(sc);
                 esu.setCourseExamTerm(cet);
