@@ -129,7 +129,9 @@ public class ExamSignUpLogicBean {
                 esub.updateExamSignUp(esu);
             }else{
                 esu = new ExamSignUp();
-                if(en.getKind().getName().equals("izredni")) {
+
+                /*nastavi confirmed flag, ce mora student placati izpit*/
+                if(en.getKind().getName().equals("izredni") || esub.getNumberOfExamTakingsInAllEnrolments(studentId, sc.getCourse().getId()) > 2) {
                     esu.setConfirmed(false);
                 }
 
