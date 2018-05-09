@@ -1,16 +1,16 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
-import beans.crud.ExamSignUpBean;
+import beans.crud.*;
 import beans.logic.ExamSignUpLogicBean;
+import entities.ExamSignUpHistory;
+import entities.curriculum.CourseExamTerm;
 import entities.curriculum.ExamSignUp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -21,6 +21,8 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -31,10 +33,11 @@ import java.util.List;
 @Tags(value = @Tag(name = "exam signup"))
 public class ExamSignUpSource {
 
-    @Inject
-    private ExamSignUpBean esb;
-    @Inject
-    private ExamSignUpLogicBean esulb;
+    @Inject private ExamSignUpBean esb;
+    @Inject private ExamSignUpLogicBean esulb;
+    @Inject private CourseExamTermBean cetb;
+    @Inject private ExamSignUpHistoryBean esuhb;
+    @Inject private UserLoginBean ulb;
 
     @Operation(description = "Returns exam sign-ups for a student (and course).", summary = "Get exam sign-ups by studentId and/or query parameters",
             parameters = {
@@ -99,13 +102,48 @@ public class ExamSignUpSource {
             })
     @POST
     @Path("/return")
-    public Response returnExamSignUp(@QueryParam("courseExamTermId") int courseExamTermId, @QueryParam("studentCourseId") int studentCourseId){
+    public Response returnExamSignUp(@QueryParam("courseExamTermId") int courseExamTermId, @QueryParam("studentCourseId") int studentCourseId, @QueryParam("loginId") int loginId){
 
-        ExamSignUp esu = esb.getExamSignedUp(courseExamTermId, studentCourseId);
-        esu.setReturned(true);
-        esu = esb.updateExamSignUp(esu);
+        ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
+        CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
 
-        return Response.ok().entity(esu).build();
+        if(!esulb.examSignUpDeadlineReached(cet.getDatetimeObject())){
+            esu.setReturned(true);
+            esu = esb.updateExamSignUp(esu);
+
+            ExamSignUpHistory esuh = new ExamSignUpHistory();
+            esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
+            esuh.setExamSignUp(esu);
+            esuh.setAction("odjava");
+
+            esuh.setUserLogin(ulb.getUserLoginById(loginId));
+            esuhb.insertNewExamSignUpHistory(esuh);
+
+            return Response.ok().entity(esu).build();
+        }
+
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "rok za odjavo je potekel")).build();
+    }
+
+
+    @Operation(description = "Get exam sign up history.", summary = "Get exam sign up history.",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Exam sign up istory",
+                            content = @Content(
+                                    schema = @Schema(implementation = ExamSignUpHistory.class))),
+                    @ApiResponse(responseCode = "404",
+                            description = "No exam sign up with given ids",
+                            content = @Content(
+                                    schema = @Schema(implementation = ResponseError.class)))
+            })
+    @GET
+    @Path("/history")
+    public Response getExamSignUpHistory(@QueryParam("courseExamTermId") int courseExamTermId, @QueryParam("studentCourseId") int studentCourseId){
+        ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
+        if(esu == null)
+            Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok().entity(esuhb.getExamSignUpHistoryByExamSignUpId(esu.getId(), 30)).build();
     }
 
 }

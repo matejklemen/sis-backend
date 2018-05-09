@@ -5,7 +5,6 @@
 
         <class>entities.Enrolment</class>
         <class>entities.EnrolmentToken</class>
-        <class>entities.Grade</class>
         <class>entities.KlasiusSrv</class>
         <class>entities.Professor</class>
         <class>entities.Student</class>
@@ -17,6 +16,7 @@
         <class>entities.StudyYear</class>
         <class>entities.UserLogin</class>
         <class>entities.UserRole</class>
+        <class>entities.ExamSignUpHistory</class>
 
         <class>entities.address.Address</class>
         <class>entities.address.Country</class>
