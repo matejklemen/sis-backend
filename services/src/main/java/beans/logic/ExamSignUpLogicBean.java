@@ -54,6 +54,8 @@ public class ExamSignUpLogicBean {
         StudentCourses sc = scb.getStudentCourses(studentCoursesId);
         CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
 
+        boolean sudo = false;
+
         // Force
         if(userLoginId == null || ulb.getUserLoginInfoByUserLoginId(userLoginId).getRole().getId() != 4 || force == null || !force) {
             if(en == null) {
@@ -120,14 +122,18 @@ public class ExamSignUpLogicBean {
             if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
                 errors.add("ocena za prejšnji rok še ni bila zaključena");
             }
+        }else{
+            sudo = true;
         }
-
 
         if(errors.isEmpty()) {
             ExamSignUp esu = esub.getExamSignUp(courseExamTermId, studentCoursesId);
 
             if (esu != null) {
                 esu.setReturned(false);
+                if(sudo) {
+                    esu.setConfirmed(true);
+                }
                 esub.updateExamSignUp(esu);
             } else {
                 esu = new ExamSignUp();
