@@ -8,16 +8,13 @@ import entities.UserRole;
 import entities.curriculum.CourseExamTerm;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
-import javax.ws.rs.NotFoundException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -59,7 +56,23 @@ public class ExamSignUpLogicBean {
         StudentCourses sc = scb.getStudentCourses(studentCoursesId);
         CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
 
-        if (en.getId() != sc.getEnrolment().getId()) {
+        if(en == null) {
+            errors.add("študent z id-jem "+studentId+" ne obstaja");
+        }
+
+        if(sc == null) {
+            errors.add("študentov predmet z id-jem "+studentCoursesId+" ne obstaja");
+        }
+
+        if(cet == null) {
+            errors.add("izpitni rok z id-jem "+courseExamTermId+" ne obstaja ali je izbrisan");
+        }
+
+        if(!errors.isEmpty()) {
+            return errors;
+        }
+
+        if(en.getId() != sc.getEnrolment().getId()) {
             errors.add("napačna kombinacija studentId in studentCoursesId");
             return errors;
         }
@@ -99,9 +112,13 @@ public class ExamSignUpLogicBean {
             errors.add("študent je na ta izpit že prijavljen");
         }
 
-
         /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
         if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
+            errors.add("ocena za prejšnji rok še ni bila zaključena");
+        }
+
+        log.info(String.valueOf(esub.getLastSignUp(sc.getCourse().getId(), studentId).getId()));
+         if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
             errors.add("ocena za prejšnji rok še ni bila zaključena");
         }
 
@@ -113,14 +130,17 @@ public class ExamSignUpLogicBean {
             }
         }
 
-        if (errors.isEmpty()) {
-            ExamSignUp esu = esub.getExamSignedUp(courseExamTermId, studentId);
+        if(errors.isEmpty()) {
+            ExamSignUp esu = esub.getExamSignUp(courseExamTermId, studentCoursesId);
 
             if (esu != null) {
                 esu.setReturned(false);
                 esub.updateExamSignUp(esu);
             } else {
                 esu = new ExamSignUp();
+                if(en.getKind().getName().equals("izredni")) {
+                    esu.setConfirmed(false);
+                }
 
                 esu.setStudentCourses(sc);
                 esu.setCourseExamTerm(cet);
@@ -131,7 +151,7 @@ public class ExamSignUpLogicBean {
         return errors;
     }
 
-    private boolean examSignUpDeadlineReached(Timestamp deadline) {
+    public boolean examSignUpDeadlineReached(Timestamp deadline) {
         Timestamp twoDaysBeforeDeadline = new Timestamp(deadline.getTime() - (1000 * 60 * 60 * 24 * 2));
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(twoDaysBeforeDeadline.getTime());

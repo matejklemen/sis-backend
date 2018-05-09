@@ -62,6 +62,11 @@ public class UserLoginBean {
         }
     }
 
+    @Transactional
+    public UserLogin getUserLoginById(int id){
+        return em.find(UserLogin.class, id);
+    }
+
     public List<UserLogin> getUserLoginInfoByUsername(String username) {
         TypedQuery<UserLogin> q = em.createNamedQuery("UserLogin.getUserLoginInfoByUsername", UserLogin.class);
         q.setParameter("username", username);
