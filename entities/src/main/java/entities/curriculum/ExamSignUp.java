@@ -36,6 +36,9 @@ public class ExamSignUp implements Serializable {
     // the student decided not to attend the exam and cancelled it in time
     private boolean returned;
 
+    @Column(columnDefinition="boolean default 'true'")
+    private boolean confirmed;
+
     public CourseExamTerm getCourseExamTerm() {
         return courseExamTerm;
     }
@@ -58,6 +61,14 @@ public class ExamSignUp implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
     }
 
     public StudentCourses getStudentCourses() {
