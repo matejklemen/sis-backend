@@ -117,8 +117,7 @@ public class ExamSignUpLogicBean {
             errors.add("ocena za prejšnji rok še ni bila zaključena");
         }
 
-        log.info(String.valueOf(esub.getLastSignUp(sc.getCourse().getId(), studentId).getId()));
-         if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
+        if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
             errors.add("ocena za prejšnji rok še ni bila zaključena");
         }
 
