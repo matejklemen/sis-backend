@@ -15,8 +15,6 @@ import java.io.Serializable;
 )
 public class UserLogin implements Serializable {
 
-    //@XmlID
-    //@XmlElement
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
