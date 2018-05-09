@@ -79,8 +79,12 @@ public class ExamSignUpSource {
                                     schema = @Schema(implementation = ResponseError.class)))
     })
     @PUT
-    public Response addExamSignUp(@QueryParam("studentId") Integer studentId, @QueryParam("studentCoursesId") Integer studentCoursesId, @QueryParam("courseExamTermId") Integer courseExamTermId, @QueryParam("userLoginId") Integer userLoginId) {
-        List<String> err = esulb.addExamSignUp(studentId, studentCoursesId, courseExamTermId, userLoginId);
+    public Response addExamSignUp(@QueryParam("studentId") Integer studentId,
+                                  @QueryParam("studentCoursesId") Integer studentCoursesId,
+                                  @QueryParam("courseExamTermId") Integer courseExamTermId,
+                                  @QueryParam("userLoginId") Integer userLoginId,
+                                  @QueryParam("force") Boolean force) {
+        List<String> err = esulb.addExamSignUp(studentId, studentCoursesId, courseExamTermId, userLoginId, force);
 
         return !err.isEmpty() ? Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, err.toArray(new String[0]))).build() :
                 Response.status(Response.Status.OK).build();
@@ -103,7 +107,9 @@ public class ExamSignUpSource {
             })
     @POST
     @Path("/return")
-    public Response returnExamSignUp(@QueryParam("courseExamTermId") int courseExamTermId, @QueryParam("studentCourseId") int studentCourseId, @QueryParam("loginId") int loginId){
+    public Response returnExamSignUp(@QueryParam("courseExamTermId") int courseExamTermId,
+                                     @QueryParam("studentCourseId") int studentCourseId,
+                                     @QueryParam("loginId") int loginId){
 
         ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
         CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);

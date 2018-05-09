@@ -1,10 +1,7 @@
 package beans.logic;
 
 import beans.crud.*;
-import entities.Enrolment;
-import entities.Student;
-import entities.UserLogin;
-import entities.UserRole;
+import entities.*;
 import entities.curriculum.CourseExamTerm;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
@@ -28,6 +25,7 @@ public class ExamSignUpLogicBean {
     @Inject private ExamSignUpBean esub;
     @Inject private CourseExamTermBean cetb;
     @Inject private UserLoginBean ulb;
+    @Inject private ExamSignUpHistoryBean esuhb;
 
     public List<StudentCourses> getCoursesByRegisterNumber(String registerNumber) {
         /*
@@ -49,85 +47,81 @@ public class ExamSignUpLogicBean {
         return courses;
     }
 
-    public List<String> addExamSignUp(Integer studentId, Integer studentCoursesId, Integer courseExamTermId, Integer userLoginId) {
+    public List<String> addExamSignUp(Integer studentId, Integer studentCoursesId, Integer courseExamTermId, Integer userLoginId, Boolean force) {
         List<String> errors = new ArrayList<>();
 
         Enrolment en = enb.getLastEnrolmentByStudentId(studentId);
         StudentCourses sc = scb.getStudentCourses(studentCoursesId);
         CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
 
-        if(en == null) {
-            errors.add("študent z id-jem "+studentId+" ne obstaja");
-        }
+        // Force
+        if(userLoginId == null || ulb.getUserLoginInfoByUserLoginId(userLoginId).getRole().getId() != 4 || force == null || !force) {
+            if(en == null) {
+                errors.add("študent z id-jem "+studentId+" ne obstaja");
+            }
 
-        if(sc == null) {
-            errors.add("študentov predmet z id-jem "+studentCoursesId+" ne obstaja");
-        }
+            if(sc == null) {
+                errors.add("študentov predmet z id-jem "+studentCoursesId+" ne obstaja");
+            }
 
-        if(cet == null) {
-            errors.add("izpitni rok z id-jem "+courseExamTermId+" ne obstaja ali je izbrisan");
-        }
+            if(cet == null) {
+                errors.add("izpitni rok z id-jem "+courseExamTermId+" ne obstaja ali je izbrisan");
+            }
 
-        if(!errors.isEmpty()) {
-            return errors;
-        }
+            if(!errors.isEmpty()) {
+                return errors;
+            }
 
-        if(en.getId() != sc.getEnrolment().getId()) {
-            errors.add("napačna kombinacija studentId in studentCoursesId");
-            return errors;
-        }
+            if(en.getId() != sc.getEnrolment().getId()) {
+                errors.add("napačna kombinacija studentId in studentCoursesId");
+                return errors;
+            }
 
-        if (cet.getCourseOrganization().getCourse().getId() != sc.getCourse().getId()) {
-            errors.add("napačna kombinacija studentCoursesId in courseExamTermId");
-            return errors;
-        }
+            if (cet.getCourseOrganization().getCourse().getId() != sc.getCourse().getId()) {
+                errors.add("napačna kombinacija studentCoursesId in courseExamTermId");
+                return errors;
+            }
 
-        /* preveri ce je potekel rok za prijavo (2 dni prej do polnoci)*/
-        if (examSignUpDeadlineReached(cet.getDatetimeObject())) {
-            errors.add("rok za prijavo je potekel");
-        }
+            /* preveri ce je potekel rok za prijavo (2 dni prej do polnoci)*/
+            if (examSignUpDeadlineReached(cet.getDatetimeObject())) {
+                errors.add("rok za prijavo je potekel");
+            }
 
-        /* preveri ce je student ze porabil kvoto treh polaganj izpita za najnovejš vpis */
-        if (esub.getNumberOfExamTakingsInLatestEnrolment(sc.getIdStudentCourses()) > 2) {
-            errors.add("presežena kvota izvajanja izpitov za dani predmet v tem šolskem letu");
-        }
+            /* preveri ce je student ze porabil kvoto treh polaganj izpita za najnovejš vpis */
+            if (esub.getNumberOfExamTakingsInLatestEnrolment(sc.getIdStudentCourses()) > 2) {
+                errors.add("presežena kvota izvajanja izpitov za dani predmet v tem šolskem letu");
+            }
 
-        /* preveri ce je student ze porabil kvoto sestih polaganj izpita za vse njegove vpise */
-        if (esub.getNumberOfExamTakingsInAllEnrolments(studentId, sc.getCourse().getId()) > 5) {
-            errors.add("presežena kvota izvajanja izpitov za dani predmet");
-        }
+            /* preveri ce je student ze porabil kvoto sestih polaganj izpita za vse njegove vpise */
+            if (esub.getNumberOfExamTakingsInAllEnrolments(studentId, sc.getCourse().getId()) > 5) {
+                errors.add("presežena kvota izvajanja izpitov za dani predmet");
+            }
 
-        /* preveri za prijavo na ze opravljen izpit */
-        if (!esub.getByStudentIdAndCourseIdAndGrade(studentId, sc.getCourse().getId(), 5).isEmpty()) {
-            errors.add("predmet je že opravljen in pozitivno zaključen");
-        }
+            /* preveri za prijavo na ze opravljen izpit */
+            if (!esub.getByStudentIdAndCourseIdAndGrade(studentId, sc.getCourse().getId(), 5).isEmpty()) {
+                errors.add("predmet je že opravljen in pozitivno zaključen");
+            }
 
-        /*preveri ce je od zadnjega polaganja minilo 14 dni */
-        if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && !fortnitePassed(esub.getLastSignUp(sc.getCourse().getId(), studentId).getCourseExamTerm().getDatetimeObject())) {
-            errors.add("ni še minilo 14 dni od polaganja zadnjega izpita iz tega predmeta");
-        }
+            /*preveri ce je od zadnjega polaganja minilo 14 dni */
+            if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && !fortnitePassed(esub.getLastSignUp(sc.getCourse().getId(), studentId).getCourseExamTerm().getDatetimeObject())) {
+                errors.add("ni še minilo 14 dni od polaganja zadnjega izpita iz tega predmeta");
+            }
 
-        /*preveri ce je student ze prijavljen na dani rok */
-        if (esub.checkIfAlreadySignedUpAndNotReturned(courseExamTermId, studentId)) {
-            errors.add("študent je na ta izpit že prijavljen");
-        }
+            /*preveri ce je student ze prijavljen na dani rok */
+            if (esub.checkIfAlreadySignedUpAndNotReturned(courseExamTermId, studentId)) {
+                errors.add("študent je na ta izpit že prijavljen");
+            }
 
-        /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
-        if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
-            errors.add("ocena za prejšnji rok še ni bila zaključena");
-        }
+            /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
+            if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
+                errors.add("ocena za prejšnji rok še ni bila zaključena");
+            }
 
-        if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
-            errors.add("ocena za prejšnji rok še ni bila zaključena");
-        }
-
-        if(userLoginId != null) {
-            UserRole role = ulb.getUserLoginInfoByUserLoginId(userLoginId).getRole();
-            if (role.getId() == 4) {
-                // sign up request was made as a REFERENT, therefore, ignore all errors and make a sign up
-                errors.clear(); // THOTS BE GONE
+            if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
+                errors.add("ocena za prejšnji rok še ni bila zaključena");
             }
         }
+
 
         if(errors.isEmpty()) {
             ExamSignUp esu = esub.getExamSignUp(courseExamTermId, studentCoursesId);
@@ -148,6 +142,14 @@ public class ExamSignUpLogicBean {
 
                 esub.addExamSignUp(esu);
             }
+
+            ExamSignUpHistory esuh = new ExamSignUpHistory();
+            esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
+            esuh.setExamSignUp(esu);
+            esuh.setAction("prijava");
+
+            esuh.setUserLogin(ulb.getUserLoginById(userLoginId));
+            esuhb.insertNewExamSignUpHistory(esuh);
         }
         return errors;
     }
