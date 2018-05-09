@@ -69,6 +69,11 @@ public class UserLoginBean {
         return q.getResultList();
     }
 
+    public UserLogin getUserLoginInfoByUserLoginId(int userLoginId) {
+        UserLogin ul = em.find(UserLogin.class, userLoginId);
+        return ul;
+    }
+
     @Transactional
     public UserLogin insertUserLoginSingle(String username, String password, UserRole role) {
         UserLogin newUser = new UserLogin();

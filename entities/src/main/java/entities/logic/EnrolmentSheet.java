@@ -1,12 +1,9 @@
 package entities.logic;
 
-import entities.*;
-import entities.curriculum.Course;
-import entities.curriculum.StudentCourses;
+import entities.EnrolmentToken;
+import entities.Student;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlIDREF;
 import java.io.Serializable;
 import java.util.List;
 

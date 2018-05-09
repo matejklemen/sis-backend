@@ -63,6 +63,7 @@ public class ExamSignUpSource {
                     @Parameter(name = "studentId", required = true, description = "Student id", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
                     @Parameter(name = "studentCoursesId", required = true, description = "StudentCourses id", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
                     @Parameter(name = "courseExamTermId", required = true, description = "CourseExamTerm id", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
+                    @Parameter(name = "userLoginId", description = "UserLogin id (optional for students) - if given user login refers to a 'referent' role, all tests are ignored (basically force sign-up).")
             },
             responses = {
                     @ApiResponse(responseCode = "200",
@@ -75,8 +76,8 @@ public class ExamSignUpSource {
                                     schema = @Schema(implementation = ResponseError.class)))
     })
     @PUT
-    public Response addExamSignUp(@QueryParam("studentId") Integer studentId, @QueryParam("studentCoursesId") Integer studentCoursesId, @QueryParam("courseExamTermId") Integer courseExamTermId) {
-        List<String> err = esulb.addExamSignUp(studentId, studentCoursesId, courseExamTermId);
+    public Response addExamSignUp(@QueryParam("studentId") Integer studentId, @QueryParam("studentCoursesId") Integer studentCoursesId, @QueryParam("courseExamTermId") Integer courseExamTermId, @QueryParam("userLoginId") Integer userLoginId) {
+        List<String> err = esulb.addExamSignUp(studentId, studentCoursesId, courseExamTermId, userLoginId);
 
         return !err.isEmpty() ? Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, err.toArray(new String[0]))).build() :
                 Response.status(Response.Status.OK).build();
