@@ -6,16 +6,13 @@ import entities.Student;
 import entities.curriculum.CourseExamTerm;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
-import javax.ws.rs.NotFoundException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -122,7 +119,7 @@ public class ExamSignUpLogicBean {
         }
 
         if(errors.isEmpty()) {
-            ExamSignUp esu = esub.getExamSignedUp(courseExamTermId, studentId);
+            ExamSignUp esu = esub.getExamSignUp(courseExamTermId, studentCoursesId);
 
             if(esu != null){
                 esu.setReturned(false);
@@ -145,7 +142,7 @@ public class ExamSignUpLogicBean {
         return errors;
     }
 
-    private boolean examSignUpDeadlineReached(Timestamp deadline) {
+    public boolean examSignUpDeadlineReached(Timestamp deadline) {
         Timestamp twoDaysBeforeDeadline = new Timestamp(deadline.getTime() - (1000 * 60 * 60 * 24 * 2));
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(twoDaysBeforeDeadline.getTime());

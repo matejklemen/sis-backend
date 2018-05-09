@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -19,13 +18,6 @@ public class ExamSignUpBean {
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
-
-    @Transactional
-    public ExamSignUp getExamSignUpById(int id){
-        log.info("Getting exam sign up by id: "+id);
-
-        return em.find(ExamSignUp.class, id);
-    }
 
     public List<ExamSignUp> getExamSignUpsForCourse(int idCourse) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
@@ -69,20 +61,6 @@ public class ExamSignUpBean {
         return e.get(0);
     }
 
-    public boolean checkIfAlreadySignedUp(int courseExamTermId, int studentId) {
-        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.checkIfAlreadySignedUp", ExamSignUp.class);
-        q.setParameter("course_exam_term_id", courseExamTermId);
-        q.setParameter("student_id", studentId);
-        List<ExamSignUp> e = q.getResultList();
-
-        if(e.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
-
-    }
-
     public boolean checkIfAlreadySignedUpAndNotReturned(int courseExamTermId, int studentCourseId) {
         TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.checkIfAlreadySignedUpAndNotReturned", ExamSignUp.class);
         q.setParameter("course_exam_term_id", courseExamTermId);
@@ -94,14 +72,13 @@ public class ExamSignUpBean {
         } else {
             return true;
         }
-
     }
 
     @Transactional
-    public ExamSignUp getExamSignedUp(int courseExamTermId, int studentCourseId) {
-        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.checkIfAlreadySignedUpAndNotReturned", ExamSignUp.class);
-        q.setParameter("course_exam_term_id", courseExamTermId);
-        q.setParameter("student_course_id", studentCourseId);
+    public ExamSignUp getExamSignUp(int courseExamTermId, int studentCourseId){
+        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getExamSignUp", ExamSignUp.class)
+                .setParameter("course_exam_term_id", courseExamTermId)
+                .setParameter("student_course_id", studentCourseId);
         List<ExamSignUp> e = q.getResultList();
 
         if(!e.isEmpty()) {
@@ -109,7 +86,21 @@ public class ExamSignUpBean {
         } else {
             return null;
         }
+    }
 
+    @Transactional
+    public ExamSignUp getExamSignUpWithReturn(int courseExamTermId, int studentCourseId, Boolean returned) {
+        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getExamSignUpWithReturn", ExamSignUp.class)
+        .setParameter("course_exam_term_id", courseExamTermId)
+        .setParameter("student_course_id", studentCourseId)
+        .setParameter("returned", returned);
+        List<ExamSignUp> e = q.getResultList();
+
+        if(!e.isEmpty()) {
+            return e.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Transactional
