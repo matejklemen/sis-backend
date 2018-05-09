@@ -121,11 +121,13 @@ public class ExamSignUpLogicBean {
             errors.add("ocena za prejšnji rok še ni bila zaključena");
         }
 
+        boolean sudo = false;
         if(userLoginId != null) {
             UserRole role = ulb.getUserLoginInfoByUserLoginId(userLoginId).getRole();
             if (role.getId() == 4) {
                 // sign up request was made as a REFERENT, therefore, ignore all errors and make a sign up
                 errors.clear(); // THOTS BE GONE
+                sudo = true;
             }
         }
 
@@ -134,6 +136,9 @@ public class ExamSignUpLogicBean {
 
             if (esu != null) {
                 esu.setReturned(false);
+                if(sudo) {
+                    esu.setConfirmed(true);
+                }
                 esub.updateExamSignUp(esu);
             } else {
                 esu = new ExamSignUp();
