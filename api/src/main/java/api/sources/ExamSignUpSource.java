@@ -149,7 +149,7 @@ public class ExamSignUpSource {
     public Response getExamSignUpHistory(@QueryParam("courseExamTermId") int courseExamTermId, @QueryParam("studentCourseId") int studentCourseId){
         ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
         if(esu == null)
-            Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         return Response.ok().entity(esuhb.getExamSignUpHistoryByExamSignUpId(esu.getId(), 30)).build();
     }
 

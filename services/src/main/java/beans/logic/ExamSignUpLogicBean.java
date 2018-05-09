@@ -152,8 +152,10 @@ public class ExamSignUpLogicBean {
             ExamSignUpHistory esuh = new ExamSignUpHistory();
             esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
             esuh.setExamSignUp(esu);
-            esuh.setAction("prijava");
-
+            if(sudo)
+                esuh.setAction("prisilna prijava");
+            else
+                esuh.setAction("prijava");
             esuh.setUserLogin(ulb.getUserLoginById(userLoginId));
             esuhb.insertNewExamSignUpHistory(esuh);
         }
