@@ -112,10 +112,14 @@ public class ExamSignUpSource {
     @Path("/return")
     public Response returnExamSignUp(@QueryParam("courseExamTermId") int courseExamTermId,
                                      @QueryParam("studentCourseId") int studentCourseId,
-                                     @QueryParam("loginId") int loginId){
+                                     @QueryParam("loginId") int loginId) {
 
         ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
         CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
+
+        if(esu.getGrade() != null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ocena za ta izpitni rok je že vpisana")).build();
+        }
 
         if(!esulb.examSignUpDeadlineReached(cet.getDatetimeObject())){
             esu.setReturned(true);
