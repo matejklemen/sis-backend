@@ -72,3 +72,17 @@ TODO
 
 ##### 13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit). 
 TODO
+
+
+# Odjava izpita (študent) (#22)
+
+###
+- [ ] 1. Preveri možnost odjave pred iztekom roka za odjavo.
+- [ ] 2. Preveri možnost odjave po izteku roka za odjavo.
+- [ ] 3. Preveri, da se zabeležijo podatki o odjavi (odjavitelj in točen čas odjave).
+- [ ] 4. Preveri, da odjavljenega študenta ni več v seznamu prijavljenih za izpit.*
+
+# Prijava na izpit (referentka) (#23)
+
+###
+- [x] 1. Preveri za vse sprejemne teste iz zgodbe #21
