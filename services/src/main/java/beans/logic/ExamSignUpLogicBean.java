@@ -105,7 +105,7 @@ public class ExamSignUpLogicBean {
             }
 
             /*preveri ce je od zadnjega polaganja minilo 14 dni */
-            if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && !fortnitePassed(esub.getLastSignUp(sc.getCourse().getId(), studentId).getCourseExamTerm().getDatetimeObject())) {
+            if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && !fortnitePassed(esub.getLastSignUp(sc.getCourse().getId(), studentId).getCourseExamTerm().getDatetimeObject(), cet.getDatetimeObject())) {
                 errors.add("ni še minilo 14 dni od polaganja zadnjega izpita iz tega predmeta");
             }
 
@@ -178,7 +178,7 @@ public class ExamSignUpLogicBean {
         }
     }
 
-    private boolean fortnitePassed(Timestamp lastTaking) {
+    private boolean fortnitePassed(Timestamp lastTaking, Timestamp newTaking) {
         Timestamp fortniteAfterLastTaking = new Timestamp(lastTaking.getTime() + (1000 * 60 * 60 * 24 * 14));
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(fortniteAfterLastTaking.getTime());
@@ -188,12 +188,7 @@ public class ExamSignUpLogicBean {
         c.set(Calendar.MILLISECOND, 0);
 
         fortniteAfterLastTaking.setTime(c.getTimeInMillis());
-        Calendar t = Calendar.getInstance();
-        Timestamp today = new Timestamp(t.getTimeInMillis());
-        if (today.after(fortniteAfterLastTaking)) {
-            return true;
-        } else {
-            return false;
-        }
+        // true if new exam term date is more than 14 days after last taken exam term
+        return newTaking.after(fortniteAfterLastTaking);
     }
 }
