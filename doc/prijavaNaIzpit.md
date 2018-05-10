@@ -11,8 +11,8 @@
 - [x] 8. Preveri za prekoračitev celotnega števila polaganj (največ 6).
 - [ ] 9. Preveri za prijavo na rok, za katerega že obstaja prijava.
 - [x] 10. Preveri za prijavo, kjer za prejšnji rok še ni bila zaključena ocena.
-- [ ] 11. Preveri za prijavo vpisanega študenta, ki mora plačati izpit.
-- [ ] 12. Preveri za prijavo nevpisanega študenta, ki mora plačati izpit.
+- [x] 11. Preveri za prijavo vpisanega študenta, ki mora plačati izpit.
+- [x] 12. Preveri za prijavo nevpisanega študenta, ki mora plačati izpit.
 - [ ] 13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit). 
 
 ##### 1. Preveri regularen potek za prvo, drugo, tretje polaganje pred iztekom roka.
