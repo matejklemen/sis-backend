@@ -54,7 +54,6 @@ public class ExamSignUpSource {
     @GET
     public Response getExamSignUpsForExamTerm(@QueryParam("studentId") Integer studentId, @QueryParam("courseId") Integer courseId) {
 
-        // TODO: popravil da se uporablja studentId namesto registerNumber, vendar nisem se testiral!
         List<ExamSignUp> signups = esb.getExamSignUpsOnCourseForStudent(courseId, studentId);
 
         return signups == null ? Response.status(Response.Status.NOT_FOUND).build():
@@ -86,8 +85,12 @@ public class ExamSignUpSource {
                                   @QueryParam("force") Boolean force) {
         List<String> err = esulb.addExamSignUp(studentId, studentCoursesId, courseExamTermId, userLoginId, force);
 
-        return !err.isEmpty() ? Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, err.toArray(new String[0]))).build() :
-                Response.status(Response.Status.OK).build();
+        if(err.isEmpty()) {
+            ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCoursesId);
+            return Response.ok(esu).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, err.toArray(new String[0]))).build();
+        }
     }
 
     @Operation(description = "Returns exam sign up.", summary = "Returns exam sign up.",

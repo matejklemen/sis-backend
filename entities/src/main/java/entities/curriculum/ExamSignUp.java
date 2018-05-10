@@ -41,7 +41,7 @@ public class ExamSignUp implements Serializable {
     private boolean returned;
 
     @Column(columnDefinition="boolean default 'true'")
-    private boolean confirmed;
+    private boolean confirmed = true;
 
     public CourseExamTerm getCourseExamTerm() {
         return courseExamTerm;

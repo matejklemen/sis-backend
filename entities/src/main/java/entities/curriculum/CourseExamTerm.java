@@ -48,7 +48,10 @@ public class CourseExamTerm implements Serializable {
     private Boolean isSignedUp = false;
 
     @Transient
-    private int[] previousAttempts = new int[]{-1, -1};
+    private int[] previousAttempts = new int[]{-1, -1}; // see setter usage
+
+    @Transient
+    private Boolean confirmed = true; // is latest examsignup confirmed?
 
     public Integer getId() {
         return id;
@@ -142,5 +145,13 @@ public class CourseExamTerm implements Serializable {
 
     public void setPreviousAttempts(int previousAttemptsThisYear, int previousAttemptsTotal) {
         this.previousAttempts = new int[]{previousAttemptsThisYear, previousAttemptsTotal};
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
     }
 }
