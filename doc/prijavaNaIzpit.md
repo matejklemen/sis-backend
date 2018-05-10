@@ -43,8 +43,9 @@
 TODO
 
 ##### 7. Preveri za prekoračitev števila polaganj v tekočem študijskem letu (največ 3).
-TODO
-
+`lh8006@student.uni-lj.si` - `lh_63180006`
+- študent ima že prej v bazo vstavljene 3 prijave na predmet **Verjetnost in statistika** (vse 3 prijave imajo določeno negativno oceno)
+- poizkusi se prijaviti na 4. rok za predmet **Verjetnost in statistika** in pokaži, da je prijava zavrnjena
 ##### 8. Preveri za prekoračitev celotnega števila polaganj (največ 6).
 `ip8012@student.uni-lj.si` - `ip_63180012`
 - študent je izredno vpisan v 2. letnik, izbral je samo predmet **Verjetnost in statistika**
