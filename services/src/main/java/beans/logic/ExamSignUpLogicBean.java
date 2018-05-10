@@ -105,8 +105,15 @@ public class ExamSignUpLogicBean {
             }
 
             /*preveri ce je od zadnjega polaganja minilo 14 dni */
-            if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && !fortnitePassed(esub.getLastSignUp(sc.getCourse().getId(), studentId).getCourseExamTerm().getDatetimeObject(), cet.getDatetimeObject())) {
-                errors.add("ni še minilo 14 dni od polaganja zadnjega izpita iz tega predmeta");
+            if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null) {
+                Timestamp lastTermDate = esub.getLastSignUp(sc.getCourse().getId(), studentId).getCourseExamTerm().getDatetimeObject();
+                Timestamp newTermDate = cet.getDatetimeObject();
+                // ce se hoce prijaviti npr. na prvi rok medtem ko obstaja prijava na drugi rok, zavrni
+                if(newTermDate.before(lastTermDate)) {
+                    errors.add("obstaja poznejša prijava na izpit pri tem predmetu");
+                } else if (!fortnitePassed(lastTermDate, newTermDate)) {
+                    errors.add("ni še minilo 14 dni od polaganja zadnjega izpita iz tega predmeta");
+                }
             }
 
             /*preveri ce je student ze prijavljen na dani rok */
