@@ -43,11 +43,15 @@
 - pokaži, da je gumb za prijavo na izpit, ki je že mimo, onemogočen (vizualno je onemogočen, vendar se ob kliku še vedno odpre modalno okno - v primeru poskusa prijave se izpiše napaka "rok za prijavo je potekel". Če je prijavljen referent, se mu pokaže gumb "vseeno prijavi").
 
 ##### 5. Preveri za prijavo na že opravljen izpit. 
-`žr8007@student.uni-lj.si` - `žr_63180007`
-- izpitnih rokov za predmete, ki jih je študent že naredil, sistem sploh ne prikaže
+`lh8006@student.uni-lj.si` - `lh_63180006`
+- študent ima že prej v bazo vstavljeno prijavo na APS1 in (pozitivno) oceno za ta izpit
+- poizkusi se prijaviti na enega izmed preostalih možnih rokov APS1 (npr. 4.9.2018 ob 13:00) in pokaži, da prijava ni uspela
+- izpitnih rokov za predmete, ki jih je študent že naredil **v lanskih letih**, sistem sploh ne prikaže
 
 ##### 6. Preveri za prijavo, pri kateri še ni preteklo dovolj dni od zadnjega polaganja.
-TODO
+`mj8005@student.uni-lj.si` - `mj_63180005`
+- prijavi se na pisni izpit iz fizike 24.8.2018 ob 17:00
+- poizkusi se prijaviti na ustni izpit iz fizike 29.8.2018 ob 15:00 in pokaži, da je prijava zavrnjena
 
 ##### 7. Preveri za prekoračitev števila polaganj v tekočem študijskem letu (največ 3).
 `lh8006@student.uni-lj.si` - `lh_63180006`
@@ -79,7 +83,10 @@ TODO
 - vpiši se na enega izmed rokov pri predmetu FIZ (to bo 6. polaganje)
 
 ##### 13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit). 
-TODO
+`žr8007@student.uni-lj.si` - `žr_63180007`
+- študent ponavlja 2. letnik
+- ko je redno delal 2. letnik, je 2-krat (neuspešno) opravljal predmet IRZ
+- prijavi se na rok IRZ in pokaži, da je to 3. polaganje predmeta IRZ (in ne 1.)
 
 
 # Odjava izpita (študent) (#22)
