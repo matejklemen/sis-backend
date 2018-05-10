@@ -115,14 +115,11 @@ public class ExamSignUpLogicBean {
             }
 
             /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
-            if (esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
-                errors.add("ocena za prejšnji rok še ni bila zaključena");
-            }
-
             if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
                 errors.add("ocena za prejšnji rok še ni bila zaključena");
             }
-        }else{
+
+        } else {
             sudo = true;
         }
 

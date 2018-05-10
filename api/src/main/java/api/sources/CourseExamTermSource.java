@@ -129,6 +129,12 @@ public class CourseExamTermSource {
 
                 // Setting isSignUp flag as FE needs it
                 c.setSignedUp(esub.checkIfAlreadySignedUpAndNotReturned(c.getId(), sc.getIdStudentCourses()));
+
+                // Setting previous attempts [attempts this year, total attempts] for course, FE needs it
+                c.setPreviousAttempts(
+                        esub.getNumberOfExamTakingsInLatestEnrolment(c.getStudentCoursesId()),
+                        esub.getNumberOfExamTakingsInAllEnrolments(studentId, c.getCourseOrganization().getCourse().getId())
+                );
             }
 
             lcet.addAll(innerlcet);
