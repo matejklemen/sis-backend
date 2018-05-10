@@ -23,13 +23,20 @@
 *tu bi blo mogoče fajn pokazat tudi prijavo na drugo in tretje polaganje? (npr. da je prvič padel in se prijavljana drugo polaganje, ne samo na drugi rok)*
 
 ##### 2. Preveri izračun celotnega števila polaganj in števila polaganj v tekočem študijskem letu. 
+- to izpiše pri vsaki prijavi na izpit
 
 ##### 3. Preveri regularen potek za prijavo na izpit iz prejšnjega letnika.
+
+\[**MAIN**\]
+`mj8005@student.uni-lj.si` - `mj_63180005`
+- študent je redno vpisan v 2. letnik, poleg tega pa še za nazaj opravlja predmet **Fizika**
+- prijavi se na enega izmed rokov za fiziko
+
+
+\[**BONUS**\]
 `žr8007@student.uni-lj.si` - `žr_63180007`
 - študent ponavlja 2. letnik, videti mora izpite iz APS1, APS2, VIS, IRZ (**2. letnik**) in OUI (**3. letnik**)
 - prijavi se na 1. rok za nek predmet iz 2. letnika (npr. APS2)
-
-*iz vpisov ni razvidno, da bi bil študent vpisan v tretji letnik, ampak ponavlja drugi letnik. Razn če je OUI v predmetniku tega ponavljanja drugega letnika?*
 
 ##### 4. Preveri za prijavo po izteku roka.
 `žr8007@student.uni-lj.si` - `žr_63180007`
