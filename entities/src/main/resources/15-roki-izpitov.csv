@@ -81,7 +81,7 @@ id_course_exam_term;datetime;deleted;duration;notes;type;id_course_organization;
 79;2018-09-05 08:00:00.000000;false;300;CLI;ustni;44;1
 80;2018-08-29 15:00:00.000000;false;1;Prostor: Peterlinov pavilijon;ustni;45;59
 81;2018-09-13 12:00:00.000000;false;40;Samo za študente, ki so dosegli <= 60% na pisnem izpitu.;ustni;18;18
-82;2018-09-10 10:00:00.000000;false;60;;ustni;25;38
+82;2018-09-10 10:00:00.000000;false;60;NULL;ustni;25;38
 83;2015-01-22 10:00:00.000000;false;60;NULL;pisni;161;20
 84;2015-02-13 10:00:00.000000;false;60;NULL;pisni;161;20
 85;2015-09-03 10:00:00.000000;false;60;NULL;pisni;161;20
@@ -263,3 +263,12 @@ id_course_exam_term;datetime;deleted;duration;notes;type;id_course_organization;
 261;2017-02-09 12:00:00.000000;false;90;NULL;pisni;257;43
 262;2017-09-04 11:00:00.000000;false;90;NULL;pisni;258;43
 263;2017-09-30 10:00:00.000000;false;10;Splošni rok za diplomski seminar 2017;pisni;96;31
+264;2018-01-18 13:00:00.000000;false;45;NULL;pisni;9;26
+265;2018-02-02 13:00:00.000000;false;45;NULL;pisni;9;26
+266;2018-09-03 13:00:00.000000;false;45;NULL;pisni;9;26
+267;2018-01-19 13:00:00.000000;false;60;Predavalnice: PA, P1;pisni;8;2
+268;2018-02-06 13:00:00.000000;false;60;Predavalnice: PA, P1;pisni;8;2
+269;2018-09-04 13:00:00.000000;false;60;Predavalnice: PA, P1;pisni;8;2
+270;2018-06-15 13:00:00.000000;false;45;NULL;pisni;252;26
+271;2018-07-05 13:00:00.000000;false;45;NULL;pisni;252;26
+272;2018-09-13 13:00:00.000000;false;45;NULL;pisni;252;26
