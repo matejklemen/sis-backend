@@ -41,6 +41,8 @@
 ##### 4. Preveri za prijavo po izteku roka.
 `žr8007@student.uni-lj.si` - `žr_63180007`
 - pokaži, da je gumb za prijavo na izpit, ki je že mimo, onemogočen (vizualno je onemogočen, vendar se ob kliku še vedno odpre modalno okno - v primeru poskusa prijave se izpiše napaka "rok za prijavo je potekel". Če je prijavljen referent, se mu pokaže gumb "vseeno prijavi").
+`sz8003@student.uni-lj.si` - `sz_63180003`
+- poizkusi se odjaviti od izpita Ekonomika in podjetništvo 12.5.2018 ob 14:00
 
 ##### 5. Preveri za prijavo na že opravljen izpit. 
 `lh8006@student.uni-lj.si` - `lh_63180006`
@@ -94,6 +96,8 @@
 ###
 - [ ] 1. Preveri možnost odjave pred iztekom roka za odjavo.
 - [ ] 2. Preveri možnost odjave po izteku roka za odjavo.
+`sz8003@student.uni-lj.si` - `sz_63180003`
+    - poizkusi se odjaviti od izpita Ekonomika in podjetništvo 12.5.2018 ob 15:00
 - [ ] 3. Preveri, da se zabeležijo podatki o odjavi (odjavitelj in točen čas odjave).
 - [ ] 4. Preveri, da odjavljenega študenta ni več v seznamu prijavljenih za izpit.*
 
