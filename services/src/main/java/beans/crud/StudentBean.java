@@ -34,7 +34,10 @@ public class StudentBean {
     @Transactional
     public Student getStudent(int id) {
         Student s = em.find(Student.class, id);
-        if(s == null) throw new NoResultException("No student by this id");
+        if(s == null) {
+            log.info("Student is apparently null...");
+            throw new NoResultException("No student by this id");
+        }
         return s;
     }
 
