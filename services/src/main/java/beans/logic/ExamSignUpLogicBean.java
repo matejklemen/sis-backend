@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 public class ExamSignUpLogicBean {
+
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @Inject private StudentBean sb;
@@ -28,6 +29,7 @@ public class ExamSignUpLogicBean {
     @Inject private CourseExamTermBean cetb;
     @Inject private UserLoginBean ulb;
     @Inject private ExamSignUpHistoryBean esuhb;
+    @Inject private StaffBean stb;
 
     public List<StudentCourses> getCoursesByRegisterNumber(String registerNumber) {
         /*
@@ -168,7 +170,7 @@ public class ExamSignUpLogicBean {
         return errors;
     }
 
-    public List<String> returnExamSignUp(Integer courseExamTermId, Integer studentCourseId, Integer loginId, Boolean forced){
+    public List<String> returnExamSignUp(Integer courseExamTermId, Integer studentCourseId, Integer loginId, Boolean force){
         List<String> errors = new ArrayList<>();
 
         ExamSignUp esu = esub.getExamSignUp(courseExamTermId, studentCourseId);
@@ -178,7 +180,11 @@ public class ExamSignUpLogicBean {
             errors.add("ocena za ta izpitni rok je že vpisana");
         }
 
-        if(forced) {
+        if(esu.getStudentCourses().getGrade() != null){
+            errors.add("ocena za ta predmet je že vpisana");
+        }
+
+        if(force == null || !force || loginId == null || loginId != 4) {
             if (!examSignUpDeadlineReached(cet.getDatetimeObject())) {
                 esu.setReturned(true);
                 esu = esub.updateExamSignUp(esu);
@@ -198,6 +204,23 @@ public class ExamSignUpLogicBean {
         return errors;
     }
 
+    public List<ExamSignUpHistory> getExamSignUpHistry(ExamSignUp esu){
+        List<ExamSignUpHistory> esuhl = esuhb.getExamSignUpHistoryByExamSignUpId(esu.getId(), 30);
+
+        for (ExamSignUpHistory e : esuhl){
+            //proba v referetu in potem v st
+            int role = e.getUserLogin().getRole().getId();
+            if(role == 2){
+                Student s = sb.getStudentByLoginId(e.getUserLogin().getId());
+                e.setName(s.getName() + " " + s.getSurname());
+            }else if(role == 4){
+                Staff st = stb.getStaffByLoginId(e.getUserLogin().getId());
+                e.setName(st.getFirstName() + " " + st.getLastName1() + " " + st.getLastName2());
+            }
+
+        }
+        return esuhl;
+    }
 
     /* Helpers */
 
