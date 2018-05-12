@@ -112,31 +112,17 @@ public class ExamSignUpSource {
     @Path("/return")
     public Response returnExamSignUp(@QueryParam("courseExamTermId") int courseExamTermId,
                                      @QueryParam("studentCourseId") int studentCourseId,
-                                     @QueryParam("loginId") int loginId) {
+                                     @QueryParam("loginId") int loginId,
+                                     @QueryParam("force") Boolean force) {
 
-        ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
-        CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
+        List<String> err = esulb.returnExamSignUp(courseExamTermId, studentCourseId, loginId, force);
 
-        if(esu.getGrade() != null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "ocena za ta izpitni rok je že vpisana")).build();
-        }
-
-        if(!esulb.examSignUpDeadlineReached(cet.getDatetimeObject())){
-            esu.setReturned(true);
-            esu = esb.updateExamSignUp(esu);
-
-            ExamSignUpHistory esuh = new ExamSignUpHistory();
-            esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
-            esuh.setExamSignUp(esu);
-            esuh.setAction("odjava");
-
-            esuh.setUserLogin(ulb.getUserLoginById(loginId));
-            esuhb.insertNewExamSignUpHistory(esuh);
-
+        if(err.isEmpty()) {
+            ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
             return Response.ok().entity(esu).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, err.toArray(new String[0]))).build();
         }
-
-        return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "rok za odjavo je potekel")).build();
     }
 
 
@@ -153,11 +139,14 @@ public class ExamSignUpSource {
             })
     @GET
     @Path("/history")
-    public Response getExamSignUpHistory(@QueryParam("courseExamTermId") int courseExamTermId, @QueryParam("studentCourseId") int studentCourseId){
+    public Response getExamSignUpHistory(@QueryParam("courseExamTermId") int courseExamTermId,
+                                         @QueryParam("studentCourseId") int studentCourseId){
         ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
+
         if(esu == null)
             return Response.status(Response.Status.NOT_FOUND).build();
-        return Response.ok().entity(esuhb.getExamSignUpHistoryByExamSignUpId(esu.getId(), 30)).build();
+
+        return Response.ok().entity(esulb.getExamSignUpHistry(esu)).build();
     }
 
 }

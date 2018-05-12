@@ -5,10 +5,12 @@ import entities.*;
 import entities.curriculum.CourseExamTerm;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +19,7 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 public class ExamSignUpLogicBean {
+
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @Inject private StudentBean sb;
@@ -26,6 +29,7 @@ public class ExamSignUpLogicBean {
     @Inject private CourseExamTermBean cetb;
     @Inject private UserLoginBean ulb;
     @Inject private ExamSignUpHistoryBean esuhb;
+    @Inject private StaffBean stb;
     @Inject private StudyYearBean syb;
 
     public List<StudentCourses> getCoursesByRegisterNumber(String registerNumber) {
@@ -167,7 +171,59 @@ public class ExamSignUpLogicBean {
         return errors;
     }
 
-    public boolean examSignUpDeadlineReached(Timestamp deadline) {
+    public List<String> returnExamSignUp(Integer courseExamTermId, Integer studentCourseId, Integer loginId, Boolean force){
+        List<String> errors = new ArrayList<>();
+
+        ExamSignUp esu = esub.getExamSignUp(courseExamTermId, studentCourseId);
+        CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
+
+        if(esu.getGrade() != null) {
+            errors.add("ocena za ta izpitni rok je že vpisana");
+        }
+
+        if(esu.getStudentCourses().getGrade() != null){
+            errors.add("ocena za ta predmet je že vpisana");
+        }
+
+        if(force == null || !force || loginId == null || loginId != 4) {
+            if (!examSignUpDeadlineReached(cet.getDatetimeObject())) {
+                esu.setReturned(true);
+                esu = esub.updateExamSignUp(esu);
+
+                ExamSignUpHistory esuh = new ExamSignUpHistory();
+                esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
+                esuh.setExamSignUp(esu);
+                esuh.setAction("odjava");
+
+                esuh.setUserLogin(ulb.getUserLoginById(loginId));
+                esuhb.insertNewExamSignUpHistory(esuh);
+            } else {
+                errors.add("rok za odjavo je potekel");
+            }
+        }
+
+        return errors;
+    }
+
+    public List<ExamSignUpHistory> getExamSignUpHistry(ExamSignUp esu){
+        List<ExamSignUpHistory> esuhl = esuhb.getExamSignUpHistoryByExamSignUpId(esu.getId(), 30);
+
+        for (ExamSignUpHistory e : esuhl){
+            int role = e.getUserLogin().getRole().getId();
+            if(role == 2){
+                Student s = sb.getStudentByLoginId(e.getUserLogin().getId());
+                e.setName(s.getName() + " " + s.getSurname());
+            }else if(role == 4){
+                Staff st = stb.getStaffByLoginId(e.getUserLogin().getId());
+                e.setName(st.getFirstName() + " " + st.getLastName1() + " " + st.getLastName2());
+            }
+        }
+        return esuhl;
+    }
+
+    /* Helpers */
+
+    private boolean examSignUpDeadlineReached(Timestamp deadline) {
         Timestamp twoDaysBeforeDeadline = new Timestamp(deadline.getTime() - (1000 * 60 * 60 * 24 * 2));
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(twoDaysBeforeDeadline.getTime());

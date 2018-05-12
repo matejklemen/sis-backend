@@ -52,4 +52,7 @@ Examples on how to use filters, offsets and limits are availiable at [kumuluzee-
 |  Študent/ka  |    2    | cl8011@student.uni-lj.si | cl_63180011 | 1, 1 | BUN |
 |  Študent/ka  |    2    | ip8012@student.uni-lj.si | ip_63180012 | 1, 2, 2, 2 (izredni) | BUN |
 |  Študent/ka  |    2    | jj8013@student.uni-lj.si | jj_63180013 | 1 | BUN |
+
+[Podatki za teste](doc/testi.md)
+
 |  

@@ -54,3 +54,8 @@ ALTER SEQUENCE enrolment_token_id_seq RESTART WITH 242;
 ALTER SEQUENCE professor_id_seq RESTART WITH 61;
 ALTER SEQUENCE student_id_seq RESTART WITH 95;
 ALTER SEQUENCE user_login_id_seq RESTART WITH 98;
+
+-- staff (ref and joze1)
+INSERT INTO staff (id, first_name, last_name1, last_name2, id_login) VALUES (1, 'Referen', 'Tka', 'Fri', 4), (2, 'Jože', 'Može', NULL, 1);
+
+ALTER SEQUENCE staff_id_seq RESTART WITH 3;

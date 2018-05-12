@@ -105,3 +105,14 @@
 
 ###
 - [x] 1. Preveri za vse sprejemne teste iz zgodbe #21
+
+
+# Odjava izpita (referentka) (#24)
+
+###
+Vsi testi: `janez@nov.ak` `123`
+
+- [x] Preveri možnost odjave pred iztekom roka za odjavo. (Računalniške komunikacije -> 15.6.2018 ob 08:00)
+- [x] Preveri možnost odjave po izteku roka za odjavo. (Fizika -> 26.1.2018 ob 17:00)
+- [x] Preveri za prijavo z že vpisano oceno pisnega dela izpita. (Osnove matematične analize -> 26.1.2018 ob 08:00)
+- [x] Preveri za prijavo z že vpisano končno oceno. (Osnove matematične analize -> 26.1.2018 ob 08:00)

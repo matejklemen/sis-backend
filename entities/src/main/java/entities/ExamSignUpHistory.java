@@ -30,6 +30,9 @@ public class ExamSignUpHistory implements Serializable {
 
     private String action; // can be "prijava" or "odjava"
 
+    @Transient
+    private String name;
+
     public int getId() {
         return id;
     }
@@ -68,5 +71,13 @@ public class ExamSignUpHistory implements Serializable {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
