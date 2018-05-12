@@ -275,3 +275,6 @@ id_course_exam_term;datetime;deleted;duration;notes;type;id_course_organization;
 273;2018-09-18 13:00:00.000000;false;60;Četrti razpisani rok VIS, ki predstavlja 'izredni' rok;pisni;44;1
 274;2018-05-12 14:00:00.000000;false;60;Umetni rok, namenjen testiranju časovne omejitve za prijavo;pisni;46;57
 275;2018-05-12 15:00:00.000000;false;60;Umetni rok, namenjen testiranju časovne omejitve za odjavo;pisni;46;57
+276;2018-06-22 12:00:00.000000;false;60;NULL;pisni;262;60
+277;2017-06-12 12:00:00.000000;false;60;NULL;pisni;263;60
+278;2016-06-17 12:00:00.000000;false;60;NULL;pisni;264;60

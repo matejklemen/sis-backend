@@ -2,8 +2,7 @@ package beans.logic;
 
 import beans.crud.*;
 import entities.*;
-import entities.curriculum.Curriculum;
-import entities.curriculum.ECTSDistribution;
+import entities.curriculum.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,13 +24,20 @@ public class ArtificialDataBean {
     @Inject private StudyFormBean stf;
     @Inject private StudyYearBean syb;
     @Inject private StudyProgramBean spb;
+    @Inject private StudentCoursesBean scb;
     @Inject private KlasiusSrvBean ksb;
     @Inject private ECTSDistributionBean edb;
     @Inject private EnrolmentTokenBean etb;
     @Inject private EnrolmentBean eb;
+    @Inject private ExamSignUpBean esub;
+    @Inject private CourseOrganizationBean cob;
+    @Inject private CourseExamTermBean cetb;
 
+    // isFreeChoiceThirdYear will be false on every (yearOfProgram != 3)
+    // ... will only be true sometimes when (yearOfProgram == 3)
     public EnrolmentToken generateEnrolmentToken(int idStudent, StudyProgram studyProgram,
-                                                 StudyYear studyYear, int yearOfProgram) {
+                                                 StudyYear studyYear, int yearOfProgram,
+                                                 boolean isFreeChoiceThirdYear) {
         Student student = sb.getStudent(idStudent);
 
         EnrolmentToken enrToken = new EnrolmentToken();
@@ -59,12 +65,7 @@ public class ArtificialDataBean {
 
         enrToken.setUsed(false);
 
-        boolean freeChoice = false;
-        // add a bit of randomness into the process
-        if(yearOfProgram == 3)
-            freeChoice = (int)(Math.random() * 10) == 1;
-
-        enrToken.setFreeChoice(freeChoice);
+        enrToken.setFreeChoice(isFreeChoiceThirdYear);
         EnrolmentToken newEnrToken = etb.putEnrolmentToken(enrToken);
 
         return newEnrToken;
@@ -164,18 +165,70 @@ public class ArtificialDataBean {
         return chosenCourses;
     }
 
+    public void generateExamSignUpsAndGrades(EnrolmentToken enrToken,
+                                             Enrolment enr, boolean isFreeChoiceThirdYear) {
+        List<StudentCourses> chosenCourses = scb.getStudentCoursesByEnrolmentId(enr.getId());
+        int minSuccessfulGrade = isFreeChoiceThirdYear? 9: 6;
+        int maxSuccessfulGrade = 10;
+
+        for(StudentCourses course: chosenCourses) {
+            log.info(String.format("Doing stuff for course %s", course.getCourse().getName()));
+            CourseOrganization courseOrganization = cob.getCourseOrganizationsByCourseIdAndYear(course.getCourse().getId(),
+                    enrToken.getStudyYear().getId());
+
+            List<CourseExamTerm> availableTerms = cetb.getExamTermsByCourse(courseOrganization.getId());
+
+            if(availableTerms.size() == 0)
+                log.severe(String.format("No exam terms for course %d", course.getCourse().getId()));
+            else {
+                int maxNumberOfTerms = availableTerms.size() > 3 ? 3 : availableTerms.size();
+                int numberOfTerms = (int) (Math.random() * maxNumberOfTerms) + 1;
+
+                // unsuccessful attempts
+                for (int i = 0; i < numberOfTerms - 1; i++) {
+                    ExamSignUp esu = new ExamSignUp();
+                    esu.setCourseExamTerm(availableTerms.get(i));
+                    esu.setStudentCourses(course);
+                    esu.setGrade(5);
+                    esu.setReturned(false);
+                    esub.addExamSignUp(esu);
+                    log.info(String.format("Added an exam sign up for course %d %s with grade %d",
+                            course.getCourse().getId(), course.getCourse().getName(), 5));
+                }
+
+                // successful attempt
+                ExamSignUp esu = new ExamSignUp();
+                esu.setCourseExamTerm(availableTerms.get(numberOfTerms - 1));
+                esu.setStudentCourses(course);
+                esu.setGrade((int)(Math.random() * (maxSuccessfulGrade - minSuccessfulGrade) + minSuccessfulGrade));
+                esu.setReturned(false);
+                esub.addExamSignUp(esu);
+                log.info(String.format("Added an exam sign up for course %d %s with grade %d",
+                        course.getCourse().getId(), course.getCourse().getName(), esu.getGrade()));
+            }
+        }
+    }
+
     public void caller(int idStudent, String idStudyProgram, int idStudyYear, int toYearOfProgram) {
+        boolean isFreeChoiceThirdYear = (int)(Math.random() * 10) == 1;
+        log.info(String.format("isFreeChoice outside of main logic: %b", isFreeChoiceThirdYear));
+
         for(int yr = 1; yr <= toYearOfProgram; yr++) {
             // log.info(String.format("Doing stuff for year#%d", yr));
             StudyProgram sp = spb.getStudyProgram(idStudyProgram);
             // relies on later study years having a bigger ID than previous study year
             // (e.g. 2017/2018 = id 5, 2016/2017 = id 4)
             StudyYear sy = syb.getStudyYear(idStudyYear - (toYearOfProgram - yr));
-            EnrolmentToken newEnrToken = generateEnrolmentToken(idStudent, sp, sy, yr);
+            EnrolmentToken newEnrToken = generateEnrolmentToken(idStudent, sp, sy, yr,
+                    yr == 3? isFreeChoiceThirdYear: false);
             List<Integer> chosenCourses = selectRandomCourses(newEnrToken);
             Enrolment enr = eb.putEnrolment(newEnrToken, chosenCourses);
             enr.setConfirmed(true);
             eb.updateEnrolment(enr);
+
+            // set grades for all but the last year
+            if(yr != toYearOfProgram)
+                generateExamSignUpsAndGrades(newEnrToken, enr, isFreeChoiceThirdYear);
         }
     }
 }
