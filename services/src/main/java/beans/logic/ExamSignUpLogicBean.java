@@ -5,10 +5,12 @@ import entities.*;
 import entities.curriculum.CourseExamTerm;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -166,7 +168,40 @@ public class ExamSignUpLogicBean {
         return errors;
     }
 
-    public boolean examSignUpDeadlineReached(Timestamp deadline) {
+    public List<String> returnExamSignUp(Integer courseExamTermId, Integer studentCourseId, Integer loginId, Boolean forced){
+        List<String> errors = new ArrayList<>();
+
+        ExamSignUp esu = esub.getExamSignUp(courseExamTermId, studentCourseId);
+        CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
+
+        if(esu.getGrade() != null) {
+            errors.add("ocena za ta izpitni rok je že vpisana");
+        }
+
+        if(forced) {
+            if (!examSignUpDeadlineReached(cet.getDatetimeObject())) {
+                esu.setReturned(true);
+                esu = esub.updateExamSignUp(esu);
+
+                ExamSignUpHistory esuh = new ExamSignUpHistory();
+                esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
+                esuh.setExamSignUp(esu);
+                esuh.setAction("odjava");
+
+                esuh.setUserLogin(ulb.getUserLoginById(loginId));
+                esuhb.insertNewExamSignUpHistory(esuh);
+            } else {
+                errors.add("rok za odjavo je potekel");
+            }
+        }
+
+        return errors;
+    }
+
+
+    /* Helpers */
+
+    private boolean examSignUpDeadlineReached(Timestamp deadline) {
         Timestamp twoDaysBeforeDeadline = new Timestamp(deadline.getTime() - (1000 * 60 * 60 * 24 * 2));
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(twoDaysBeforeDeadline.getTime());
