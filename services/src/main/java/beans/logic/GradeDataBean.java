@@ -32,7 +32,7 @@ public class GradeDataBean {
         List<StudentCourses> scl = scb.getStudentCoursesByEnrolmentId(e.getId());
 
         for(StudentCourses sc : scl){
-            List<ExamSignUp> esu = esub.getExamSignUpsOnCourseForStudent(sc.getCourse().getId(), sc.getIdStudentCourses());
+            List<ExamSignUp> esu = esub.getExamSignUpsOnCourseForStudent(sc.getCourse().getId(), studentId);
             CourseOrganization so = cob.getCourseOrganizationsByCourseIdAndYear(sc.getCourse().getId(), e.getStudyYear().getId());
 
             String examGrade = null;
