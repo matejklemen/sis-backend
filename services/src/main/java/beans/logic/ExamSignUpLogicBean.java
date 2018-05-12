@@ -209,7 +209,6 @@ public class ExamSignUpLogicBean {
         List<ExamSignUpHistory> esuhl = esuhb.getExamSignUpHistoryByExamSignUpId(esu.getId(), 30);
 
         for (ExamSignUpHistory e : esuhl){
-            //proba v referetu in potem v st
             int role = e.getUserLogin().getRole().getId();
             if(role == 2){
                 Student s = sb.getStudentByLoginId(e.getUserLogin().getId());
@@ -218,7 +217,6 @@ public class ExamSignUpLogicBean {
                 Staff st = stb.getStaffByLoginId(e.getUserLogin().getId());
                 e.setName(st.getFirstName() + " " + st.getLastName1() + " " + st.getLastName2());
             }
-
         }
         return esuhl;
     }
