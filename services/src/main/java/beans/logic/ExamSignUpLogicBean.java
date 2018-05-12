@@ -30,6 +30,7 @@ public class ExamSignUpLogicBean {
     @Inject private UserLoginBean ulb;
     @Inject private ExamSignUpHistoryBean esuhb;
     @Inject private StaffBean stb;
+    @Inject private StudyYearBean syb;
 
     public List<StudentCourses> getCoursesByRegisterNumber(String registerNumber) {
         /*
@@ -147,7 +148,7 @@ public class ExamSignUpLogicBean {
                 esu = new ExamSignUp();
 
                 /*nastavi confirmed flag, ce mora student placati izpit*/
-                if(en.getKind().getName().equals("izredni") || esub.getNumberOfExamTakingsInAllEnrolments(studentId, sc.getCourse().getId()) > 2) {
+                if(!syb.thisStudyYear(en.getStudyYear().getId()) || esub.getNumberOfExamTakingsInAllEnrolments(studentId, sc.getCourse().getId()) > 2) {
                     esu.setConfirmed(false);
                 }
 

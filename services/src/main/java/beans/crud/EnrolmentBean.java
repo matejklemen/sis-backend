@@ -81,6 +81,23 @@ public class EnrolmentBean {
     }
 
     @Transactional
+    public Enrolment getOriginalYearOfRetryYearEnrolment(int studentId) {
+        try {
+            Enrolment e = em.createNamedQuery("Enrolment.getRetryYearEnrolment", Enrolment.class)
+                    .setParameter("student_id", studentId)
+                    .setMaxResults(1)
+                    .getSingleResult();
+            return em.createNamedQuery("Enrolment.getOriginalYearOfRetryYearEnrolment", Enrolment.class)
+                    .setParameter("student_id", studentId)
+                    .setParameter("year", e.getYear())
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Transactional
     public List<Enrolment> getEnrolmentsByStudentId(int studentId) {
         return em.createNamedQuery("Enrolment.getByStudentId", Enrolment.class).setParameter("id", studentId).getResultList();
     }

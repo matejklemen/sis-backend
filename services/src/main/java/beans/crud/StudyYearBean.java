@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.Calendar;
 import java.util.List;
 
 @ApplicationScoped
@@ -85,6 +86,28 @@ public class StudyYearBean {
         em.merge(e);
         em.flush();
         return e;
+    }
+
+    public boolean thisStudyYear(int id) {
+        StudyYear sy = getStudyYear(id);
+        Calendar today = Calendar.getInstance();
+        int year = today.get(Calendar.YEAR);
+        if(today.get(Calendar.MONTH) >= 10) {
+            return sy.getName().equals(year+"/"+(year+1));
+        } else {
+            return sy.getName().equals((year-1)+"/"+year);
+        }
+    }
+
+    public StudyYear getCurrentStudyYear(int before) {
+        Calendar today = Calendar.getInstance();
+        int year = today.get(Calendar.YEAR);
+        if(today.get(Calendar.MONTH) >= 10) {
+            return getStudyYearByName((year-before)+"/"+(year+1-before));
+        } else {
+            return getStudyYearByName((year-1-before)+"/"+(year-before));
+        }
+
     }
 
 }

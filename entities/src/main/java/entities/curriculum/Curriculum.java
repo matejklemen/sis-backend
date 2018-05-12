@@ -30,7 +30,8 @@ import java.io.Serializable;
                                 "cur.poc.type = \"mod\" " +
                                 "AND cur.studyYear.name = :name_study_year " +
                                 "AND cur.idStudyProgram.id = :id_study_program " +
-                                "AND cur.yearOfProgram = :year_of_program "),
+                                "AND cur.yearOfProgram = :year_of_program " +
+                                "ORDER BY cur.poc.id"),
                 /* Example use-case: get module courses for module "Informacijski sistemi" in year 2017/2018 */
                 @NamedQuery(name = "Curriculum.getCurriculumByPOC",
                             query = "SELECT cur FROM curriculum cur WHERE " +

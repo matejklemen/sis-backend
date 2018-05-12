@@ -5,6 +5,11 @@ import interfaces.Codelistable;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@NamedQueries(
+        value = {
+                @NamedQuery(name = "StudyYear.getByName", query = "SELECT sy FROM study_year sy WHERE sy.name = :name")
+        }
+)
 @Entity(name = "study_year")
 public class StudyYear implements Serializable, Codelistable {
 

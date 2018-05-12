@@ -1,8 +1,10 @@
 package beans.crud;
 
+import entities.Enrolment;
 import entities.curriculum.ExamSignUp;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -18,6 +20,11 @@ public class ExamSignUpBean {
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
+
+    @Inject
+    private EnrolmentBean eb;
+
+    @Inject StudyYearBean syb;
 
     public List<ExamSignUp> getExamSignUpsForCourse(int idCourse) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
@@ -44,7 +51,9 @@ public class ExamSignUpBean {
     }
 
     public Integer getNumberOfExamTakingsInAllEnrolments(int studentId, int courseId) {
-        int num = ((Number)em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInAllEnrolments", Integer.class).setParameter("student_id", studentId).setParameter("course_id", courseId).getSingleResult()).intValue();
+        Enrolment originalYearOfRetryYearEnrolment = eb.getOriginalYearOfRetryYearEnrolment(studentId);
+        int num = ((Number)em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInAllEnrolments", Integer.class).setParameter("student_id", studentId).setParameter("course_id", courseId).setParameter("enrolment_id", originalYearOfRetryYearEnrolment == null ? -1 : originalYearOfRetryYearEnrolment.getId()).getSingleResult()).intValue();
+        log.info("takings: "+String.valueOf(num));
         return num;
     }
 
