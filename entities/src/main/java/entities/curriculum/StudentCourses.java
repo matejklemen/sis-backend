@@ -31,6 +31,8 @@ public class StudentCourses implements Serializable {
     @JoinColumn(name = "id_course")
     private Course course;
 
+    private Integer grade;
+
     public int getIdStudentCourses() {
         return idStudentCourses;
     }
@@ -55,4 +57,11 @@ public class StudentCourses implements Serializable {
         this.course = course;
     }
 
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
+    }
 }
