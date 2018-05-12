@@ -113,9 +113,9 @@ public class ExamSignUpSource {
     public Response returnExamSignUp(@QueryParam("courseExamTermId") int courseExamTermId,
                                      @QueryParam("studentCourseId") int studentCourseId,
                                      @QueryParam("loginId") int loginId,
-                                     @QueryParam("forced") Boolean forced) {
+                                     @QueryParam("force") Boolean force) {
 
-        List<String> err = esulb.returnExamSignUp(courseExamTermId, studentCourseId, loginId, forced);
+        List<String> err = esulb.returnExamSignUp(courseExamTermId, studentCourseId, loginId, force);
 
         if(err.isEmpty()) {
             ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
@@ -146,7 +146,7 @@ public class ExamSignUpSource {
         if(esu == null)
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        return Response.ok().entity(esuhb.getExamSignUpHistoryByExamSignUpId(esu.getId(), 30)).build();
+        return Response.ok().entity(esulb.getExamSignUpHistry(esu)).build();
     }
 
 }
