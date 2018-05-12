@@ -89,7 +89,7 @@ public class ArtificialDataBean {
         int pizECTSRequired = ectsDistribution.getEctsPiz();
         int modECTSRequired = ectsDistribution.getEctsMod();
 
-        // choose specialist elective courses - TODO: write this in a more general manner
+        // choose specialist elective courses
         if(sizECTSRequired > 0 && pizECTSRequired > 0) {
             List<Curriculum> sizCourses = cb.getSpecialistElectiveCourses(studyYear.getName(), studyProgram.getId(), yearOfProgram);
 
@@ -100,32 +100,37 @@ public class ArtificialDataBean {
             chosenCourses.add(sizCourses.get(idxChosenCourse1).getIdCourse().getId());
             chosenCourses.add(sizCourses.get(idxChosenCourse2).getIdCourse().getId());
 
-            /*
+
             log.info(String.format("Chosen specialist elective course: %d %s",
                     sizCourses.get(idxChosenCourse1).getIdCourse().getId(),
                     sizCourses.get(idxChosenCourse1).getIdCourse().getName()));
             log.info(String.format("Chosen specialist elective course: %d %s",
                     sizCourses.get(idxChosenCourse2).getIdCourse().getId(),
                     sizCourses.get(idxChosenCourse2).getIdCourse().getName()));
-            */
         }
 
         // choose module courses
         if(modECTSRequired > 0) {
             List<Curriculum> modCourses = cb.getModuleCourses(studyYear.getName(), studyProgram.getId(), yearOfProgram);
             boolean hasFreeChoice = et.isFreeChoice();
-            // log.info(String.format("I %s free module courses choice",
-            //         hasFreeChoice? "have": "don't have"));
+            log.info(String.format("I %s free module courses choice",
+                    hasFreeChoice? "have": "don't have"));
 
             if(hasFreeChoice) {
                 Collections.shuffle(modCourses);
 
                 for(int i = 0; i < modECTSRequired / 6; i++) {
-                    // log.info(String.format("Chosen module course: %d %s",
-                    //         modCourses.get(i).getIdCourse().getId(),
-                    //         modCourses.get(i).getIdCourse().getName()));
+                     log.info(String.format("Chosen module course: %d %s",
+                             modCourses.get(i).getIdCourse().getId(),
+                             modCourses.get(i).getIdCourse().getName()));
                     chosenCourses.add(modCourses.get(i).getIdCourse().getId());
                 }
+
+                // choose an additional module course instead of a general elective course
+                chosenCourses.add(modCourses.get(modECTSRequired / 6).getIdCourse().getId());
+                log.info(String.format("Chosen general elective course: %d %s",
+                        modCourses.get(modECTSRequired / 6).getIdCourse().getId(),
+                        modCourses.get(modECTSRequired / 6).getIdCourse().getName()));
             }
             else {
                 // module consists of 3 courses
@@ -135,16 +140,24 @@ public class ArtificialDataBean {
                     possibleIdxModule.add(i);
 
                 Collections.shuffle(possibleIdxModule);
-                log.info(possibleIdxModule.toString());
                 // choose whole module together
                 for(int i = 0; i < modECTSRequired / (6 * 3); i++) {
                     for(int j = 0; j < 3; j++) {
-                        // log.info(String.format("Chosen module course: %d %s",
-                        //         modCourses.get(possibleIdxModule.get(i) * 3 + j).getIdCourse().getId(),
-                        //         modCourses.get(possibleIdxModule.get(i) * 3 + j).getIdCourse().getName()));
+                        log.info(String.format("Chosen module course: %d %s",
+                                modCourses.get(possibleIdxModule.get(i) * 3 + j).getIdCourse().getId(),
+                                modCourses.get(possibleIdxModule.get(i) * 3 + j).getIdCourse().getName()));
                         chosenCourses.add(modCourses.get(possibleIdxModule.get(i) * 3 + j).getIdCourse().getId());
                     }
                 }
+
+                // choose an additional module course instead of a general elective course
+                chosenCourses.add(modCourses.get(possibleIdxModule.get(modECTSRequired / (6 * 3)) * 3 +
+                        (int)(Math.random() * 3)).getIdCourse().getId());
+                log.info(String.format("Chosen general elective course: %d %s",
+                        modCourses.get(possibleIdxModule.get(modECTSRequired / (6 * 3)) * 3 +
+                                (int)(Math.random() * 3)).getIdCourse().getId(),
+                        modCourses.get(possibleIdxModule.get(modECTSRequired / (6 * 3)) * 3 +
+                                (int)(Math.random() * 3)).getIdCourse().getName()));
             }
         }
 
