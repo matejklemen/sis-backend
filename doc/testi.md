@@ -2,10 +2,10 @@
 
 ###
 - [x] 1. Preveri regularen potek za prvo, drugo, tretje polaganje pred iztekom roka.
-- [x] 2. Preveri izračun celotnega števila polaganj in števila polaganj v tekočem študijskem letu. 
+- [x] 2. Preveri izračun celotnega števila polaganj in števila polaganj v tekočem študijskem letu.
 - [x] 3. Preveri regularen potek za prijavo na izpit iz prejšnjega letnika.
 - [x] 4. Preveri za prijavo po izteku roka.
-- [x] 5. Preveri za prijavo na že opravljen izpit. 
+- [x] 5. Preveri za prijavo na že opravljen izpit.
 - [x] 6. Preveri za prijavo, pri kateri še ni preteklo dovolj dni od zadnjega polaganja.
 - [x] 7. Preveri za prekoračitev števila polaganj v tekočem študijskem letu (največ 3).
 - [x] 8. Preveri za prekoračitev celotnega števila polaganj (največ 6).
@@ -13,7 +13,7 @@
 - [x] 10. Preveri za prijavo, kjer za prejšnji rok še ni bila zaključena ocena.
 - [x] 11. Preveri za prijavo vpisanega študenta, ki mora plačati izpit.
 - [x] 12. Preveri za prijavo nevpisanega študenta, ki mora plačati izpit.
-- [x] 13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit). 
+- [x] 13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit).
 
 ##### 1. Preveri regularen potek za prvo, drugo, tretje polaganje pred iztekom roka.
 `sz8003@student.uni-lj.si` - `sz_63180003`
@@ -22,7 +22,7 @@
 - prijavi se na enega izmed razpoložljivih izpitov za IS (to bo 2. polaganje)
 - prijavi se na edini še razpoložljivi izpit za OUI (to bo 3. polaganje)
 
-##### 2. Preveri izračun celotnega števila polaganj in števila polaganj v tekočem študijskem letu. 
+##### 2. Preveri izračun celotnega števila polaganj in števila polaganj v tekočem študijskem letu.
 - to izpiše pri vsaki prijavi na izpit
 
 ##### 3. Preveri regularen potek za prijavo na izpit iz prejšnjega letnika.
@@ -44,7 +44,7 @@
 `sz8003@student.uni-lj.si` - `sz_63180003`
 - poizkusi se odjaviti od izpita Ekonomika in podjetništvo 12.5.2018 ob 14:00
 
-##### 5. Preveri za prijavo na že opravljen izpit. 
+##### 5. Preveri za prijavo na že opravljen izpit.
 `lh8006@student.uni-lj.si` - `lh_63180006`
 - študent ima že prej v bazo vstavljeno prijavo na APS1 in (pozitivno) oceno za ta izpit
 - poizkusi se prijaviti na enega izmed preostalih možnih rokov APS1 (npr. 4.9.2018 ob 13:00) in pokaži, da prijava ni uspela
@@ -80,17 +80,16 @@
 - vpiši se na enega izmed rokov pri predmetu APS1 (to bo 4. polaganje)
 
 
-###### **12. Preveri za prijavo nevpisanega študenta, ki mora plačati izpit.**
+###### 12. Preveri za prijavo nevpisanega študenta, ki mora plačati izpit.
 `jd8004@student.uni-lj.si` - `jd_63180004`
-- **študent mora plačati za vse izpit**
+- študent mora plačati za vse izpite, ker ni vpisan (zadnji vpis prešnje šolsko leto)
 
-##### **13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit).**
+###### 13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit).
 `ip8012@student.uni-lj.si` - `ip_63180012`
-- **študent je ponavljal 2. letnik**
-- **ko je redno delal 2. letnik, je 2-krat (neuspešno) opravljal predmet verjetnost in statistika in ko je ponavljal letik 3-krat neuspešno opravljal predmet**
-- **prijavi se na rok verjetnost in statistika in pokaži, da je to 4. polaganje predmeta verjetnost in statistika, in ne 6, ker se odštejeta dve polaganji iz rednega vpisa v drugi letnik, študent mora vseeno plačati, ker je presegel kvoto treh polaganj**
-- **če v bazi spremenimo exam_sign_up 165 (kar je polaganje iz ponavljanja drugega letnika) returned na true, študentu ni potrebno plačati, ker je potem to njegovo tretje polaganje (verjetno bo treba spremenit v init-db.sql ker bere iz pomnilnika)**
-
+- študent je ponavljal 2. letnik
+- ko je redno delal 2. letnik, je 2-krat (neuspešno) opravljal predmet verjetnost in statistika in ko je ponavljal letik še 3-krat neuspešno opravljal predmet verjetnost in statistika
+- prijavi se na rok verjetnost in statistika in pokaži, da je to 4. polaganje predmeta verjetnost in statistika, in ne 6., ker se odštejeta dve polaganji iz rednega vpisa v drugi letnik, študent mora vseeno plačati, ker je presegel kvoto treh polaganj
+- če v bazi spremenimo exam_sign_up z id-jem 165 (kar je polaganje iz ponavljanja drugega letnika) in damo returned na true, študentu ni potrebno plačati, ker je potem to njegovo tretje polaganje (verjetno bo treba spremenit v init-db.sql, ker bere iz pomnilnika)
 
 # Odjava izpita (študent) (#22)
 
