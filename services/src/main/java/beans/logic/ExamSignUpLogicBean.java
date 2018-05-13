@@ -157,16 +157,10 @@ public class ExamSignUpLogicBean {
 
                 esub.addExamSignUp(esu);
             }
-
-            ExamSignUpHistory esuh = new ExamSignUpHistory();
-            esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
-            esuh.setExamSignUp(esu);
             if(sudo)
-                esuh.setAction("prisilna prijava");
+                logExamSignUpHistory(esu,userLoginId,"prisilna prijava");
             else
-                esuh.setAction("prijava");
-            esuh.setUserLogin(ulb.getUserLoginById(userLoginId));
-            esuhb.insertNewExamSignUpHistory(esuh);
+                logExamSignUpHistory(esu,userLoginId,"prijava");
         }
         return errors;
     }
@@ -190,16 +184,15 @@ public class ExamSignUpLogicBean {
                 esu.setReturned(true);
                 esu = esub.updateExamSignUp(esu);
 
-                ExamSignUpHistory esuh = new ExamSignUpHistory();
-                esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
-                esuh.setExamSignUp(esu);
-                esuh.setAction("odjava");
-
-                esuh.setUserLogin(ulb.getUserLoginById(loginId));
-                esuhb.insertNewExamSignUpHistory(esuh);
+                logExamSignUpHistory(esu,loginId,"odjava");
             } else {
                 errors.add("rok za odjavo je potekel");
             }
+        }else if(errors.isEmpty()){
+            esu.setReturned(true);
+            esu = esub.updateExamSignUp(esu);
+
+            logExamSignUpHistory(esu,loginId,"prisilna odjava");
         }
 
         return errors;
@@ -220,6 +213,7 @@ public class ExamSignUpLogicBean {
         }
         return esuhl;
     }
+
 
     /* Helpers */
 
@@ -254,5 +248,15 @@ public class ExamSignUpLogicBean {
         fortniteAfterLastTaking.setTime(c.getTimeInMillis());
         // true if new exam term date is more than 14 days after last taken exam term
         return newTaking.after(fortniteAfterLastTaking);
+    }
+
+    private void logExamSignUpHistory(ExamSignUp esu, Integer loginId, String action){
+        ExamSignUpHistory esuh = new ExamSignUpHistory();
+        esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
+        esuh.setExamSignUp(esu);
+        esuh.setAction(action);
+        esuh.setUserLogin(ulb.getUserLoginById(loginId));
+
+        esuhb.insertNewExamSignUpHistory(esuh);
     }
 }
