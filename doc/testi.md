@@ -79,15 +79,17 @@
 - študent je že 3-krat opravljal izpit pri predmetu APS1
 - vpiši se na enega izmed rokov pri predmetu APS1 (to bo 4. polaganje)
 
-###### 12. Preveri za prijavo nevpisanega študenta, ki mora plačati izpit.
-`jd8004@student.uni-lj.si` - `jd_63180004`
-- študent mora plačati za vse izpite
 
-##### 13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit). 
-`žr8007@student.uni-lj.si` - `žr_63180007`
-- študent ponavlja 2. letnik
-- ko je redno delal 2. letnik, je 2-krat (neuspešno) opravljal predmet IRZ
-- prijavi se na rok IRZ in pokaži, da je to 3. polaganje predmeta IRZ (in ne 1.)
+###### **12. Preveri za prijavo nevpisanega študenta, ki mora plačati izpit.**
+`jd8004@student.uni-lj.si` - `jd_63180004`
+- **študent mora plačati za vse izpit**
+
+##### **13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit).**
+`ip8012@student.uni-lj.si` - `ip_63180012`
+- **študent je ponavljal 2. letnik**
+- **ko je redno delal 2. letnik, je 2-krat (neuspešno) opravljal predmet verjetnost in statistika in ko je ponavljal letik 3-krat neuspešno opravljal predmet**
+- **prijavi se na rok verjetnost in statistika in pokaži, da je to 4. polaganje predmeta verjetnost in statistika, in ne 6, ker se odštejeta dve polaganji iz rednega vpisa v drugi letnik, študent mora vseeno plačati, ker je presegel kvoto treh polaganj**
+- **če v bazi spremenimo exam_sign_up 165 (kar je polaganje iz ponavljanja drugega letnika) returned na true, študentu ni potrebno plačati, ker je potem to njegovo tretje polaganje (verjetno bo treba spremenit v init-db.sql ker bere iz pomnilnika)**
 
 
 # Odjava izpita (študent) (#22)

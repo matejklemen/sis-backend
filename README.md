@@ -42,7 +42,7 @@ Examples on how to use filters, offsets and limits are availiable at [kumuluzee-
 | Profesor/ica |    3    | prof@fri.uni-lj.si |    123   |       /       |       /       |
 |  Referent/ka |    4    |    ref@fri.uni-lj.si    |    123   |       /       |       /       |
 |  Študent/ka  |    2    | sz8003@student.uni-lj.si | sz_63180003 | 1, 2, 3 |       BUN     |
-|  Študent/ka  |    2    | jd8004@student.uni-lj.si | jd_63180004 | 1, 1, 1 (izredni) |     BUN     |
+|  Študent/ka  |    2    | jd8004@student.uni-lj.si | jd_63180004 | 1, 1 |     BUN     |
 |  Študent/ka  |    2    | mj8005@student.uni-lj.si | mj_63180005 | 1, 2 | BUN |
 |  Študent/ka  |    2    | lh8006@student.uni-lj.si | lh_63180006 | 1, 2 | BUN |
 |  Študent/ka  |    2    | žr8007@student.uni-lj.si | žr_63180007 | 1, 2, 2 | BUN |
@@ -50,7 +50,7 @@ Examples on how to use filters, offsets and limits are availiable at [kumuluzee-
 |  Študent/ka  |    2    | rb8009@student.uni-lj.si | rb_63180009 | 1 | BUN |
 |  Študent/ka  |    2    | nk8010@student.uni-lj.si | nk_63180010 | 1, 1, 2 | BUN |
 |  Študent/ka  |    2    | cl8011@student.uni-lj.si | cl_63180011 | 1, 1 | BUN |
-|  Študent/ka  |    2    | ip8012@student.uni-lj.si | ip_63180012 | 1, 2, 2, 2 (izredni) | BUN |
+|  Študent/ka  |    2    | ip8012@student.uni-lj.si | ip_63180012 | 1, 2, 2, 3 | BUN |
 |  Študent/ka  |    2    | jj8013@student.uni-lj.si | jj_63180013 | 1 | BUN |
 
 [Podatki za teste](doc/testi.md)
