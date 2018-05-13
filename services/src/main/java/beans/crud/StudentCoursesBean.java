@@ -58,4 +58,13 @@ public class StudentCoursesBean {
         em.flush();
         return sc;
     }
+
+    @Transactional
+    public StudentCourses updateCourse(StudentCourses studentCourse) {
+        log.info("Will update student course with id: " + studentCourse.getIdStudentCourses());
+
+        em.merge(studentCourse);
+        em.flush();
+        return studentCourse;
+    }
 }

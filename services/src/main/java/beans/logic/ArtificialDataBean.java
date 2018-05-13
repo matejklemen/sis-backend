@@ -196,15 +196,52 @@ public class ArtificialDataBean {
                             course.getCourse().getId(), course.getCourse().getName(), 5));
                 }
 
+                int finalGrade = (int)(Math.random() * (maxSuccessfulGrade - minSuccessfulGrade) + minSuccessfulGrade);
+
                 // successful attempt
                 ExamSignUp esu = new ExamSignUp();
                 esu.setCourseExamTerm(availableTerms.get(numberOfTerms - 1));
                 esu.setStudentCourses(course);
-                esu.setGrade((int)(Math.random() * (maxSuccessfulGrade - minSuccessfulGrade) + minSuccessfulGrade));
+                esu.setGrade(finalGrade);
                 esu.setReturned(false);
                 esub.addExamSignUp(esu);
-                log.info(String.format("Added an exam sign up for course %d %s with grade %d",
+
+                // set final grade of the course as the last grade obtained from sign-ups
+                course.setGrade(finalGrade);
+                scb.updateCourse(course);
+                log.info(String.format("Added an exam sign up for course %d %s with grade %d [ = FINAL GRADE]",
                         course.getCourse().getId(), course.getCourse().getName(), esu.getGrade()));
+            }
+        }
+    }
+
+    // copies latest grade on exam sign ups for each course in 1st and 2nd year of student with ID 'idStudent'.
+    public void transferCourseGrades(int idStudent) {
+        Student student = sb.getStudent(idStudent);
+        log.info(String.format("Updating stuff for student %s %s...", student.getName(), student.getSurname()));
+
+        List<Enrolment> enrolmentsForStudent = eb.getEnrolmentsByStudentId(idStudent);
+
+        for(Enrolment enr: enrolmentsForStudent) {
+            // don't set final grades for third year yet
+            if(enr.getYear() == 3)
+                break;
+
+            List<StudentCourses> studentCourses = scb.getStudentCoursesByEnrolmentId(enr.getId());
+
+            // for each student course, write the last obtained grade as the final course grade
+            for(StudentCourses sc: studentCourses) {
+                log.info(String.format("Checking stuff for course %d %s...", sc.getCourse().getId(),
+                        sc.getCourse().getName()));
+                ExamSignUp lastSignUp = esub.getLastSignUpForStudentCourse(sc.getIdStudentCourses());
+
+                if(lastSignUp != null) {
+                    log.info(String.format("Setting final grade to %d for course %d %s...", lastSignUp.getGrade(),
+                            sc.getCourse().getId(), sc.getCourse().getName()));
+                    sc.setGrade(lastSignUp.getGrade());
+
+                    scb.updateCourse(sc);
+                }
             }
         }
     }
@@ -225,6 +262,9 @@ public class ArtificialDataBean {
             Enrolment enr = eb.putEnrolment(newEnrToken, chosenCourses);
             enr.setConfirmed(true);
             eb.updateEnrolment(enr);
+
+            newEnrToken.setUsed(true);
+            etb.updateEnrolmentToken(newEnrToken);
 
             // set grades for all but the last year
             if(yr != toYearOfProgram)

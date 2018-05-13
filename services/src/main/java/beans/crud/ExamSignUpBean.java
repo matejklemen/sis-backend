@@ -83,6 +83,24 @@ public class ExamSignUpBean {
         }
     }
 
+    public ExamSignUp getLastSignUpForStudentCourse(int studentCourseId) {
+        TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
+                "esu.studentCourses.idStudentCourses = :id_student_course AND esu.returned = false " +
+                "ORDER BY esu.courseExamTerm.datetime DESC", ExamSignUp.class);
+
+        q.setParameter("id_student_course", studentCourseId);
+
+        List<ExamSignUp> ret = q.getResultList();
+
+        for(ExamSignUp esu: ret)
+            log.info(String.format("Obtained exam sign up (date): %s", esu.getCourseExamTerm().getDatetimeObject().toString()));
+
+        if(ret != null && ret.size() > 0)
+            return ret.get(0);
+
+        return null;
+    }
+
     @Transactional
     public ExamSignUp getExamSignUp(int courseExamTermId, int studentCourseId){
         TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getExamSignUp", ExamSignUp.class)
