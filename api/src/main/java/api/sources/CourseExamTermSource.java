@@ -50,6 +50,7 @@ public class CourseExamTermSource {
     @Inject private StudentCoursesBean scb;
     @Inject private CourseOrganizationBean cob;
     @Inject private ExamSignUpBean esub;
+    @Inject private StudyYearBean syb;
 
     @Operation(description = "Returns a list of all exam terms.", summary = "Get list of exam terms",
             responses = {
@@ -111,7 +112,7 @@ public class CourseExamTermSource {
         List<StudentCourses> lsc = scb.getStudentCoursesByEnrolmentId(e.getId());
 
         for ( StudentCourses sc : lsc) {
-            CourseOrganization co = cob.getCourseOrganizationsByCourseIdAndYear(sc.getCourse().getId(), e.getStudyYear().getId());
+            CourseOrganization co = cob.getCourseOrganizationsByCourseIdAndYear(sc.getCourse().getId(), syb.getCurrentStudyYear(0).getId());
 
             if(co == null)
                 continue;

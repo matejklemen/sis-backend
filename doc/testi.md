@@ -81,8 +81,7 @@
 
 ###### 12. Preveri za prijavo nevpisanega študenta, ki mora plačati izpit.
 `jd8004@student.uni-lj.si` - `jd_63180004`
-- študent je že 5-krat opravljal izpit pri predmetu FIZ in je izredno vpisan zgolj na predmet Fizika
-- vpiši se na enega izmed rokov pri predmetu FIZ (to bo 6. polaganje)
+- študent mora plačati za vse izpite
 
 ##### 13. Preveri za prijavo ponavljalca, ki se mu odštejejo polaganja iz prvega vpisa (za primer ko mu ni treba plačati izpita in za primer, ko mora plačati izpit). 
 `žr8007@student.uni-lj.si` - `žr_63180007`
