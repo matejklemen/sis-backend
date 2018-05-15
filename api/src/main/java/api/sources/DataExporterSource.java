@@ -109,4 +109,18 @@ public class DataExporterSource {
                 .build();
     }
 
+    @Operation(description = "Generates index in PDF form for student with given studenId. NOTE: studentId != registerNumber", summary = "Generate PDF index")
+    @Path("index/{studentId}")
+    @GET
+    public Response returnIndex(@PathParam("studentId") int studentId) {
+        ByteArrayInputStream bais = dataExporterBean.genarateIndex(studentId);
+        String filename = String.format("index_%d.pdf", studentId);
+        return Response
+                .ok(bais)
+                .type("application/pdf")
+                .header("Content-Disposition", "attachment; filename=" + filename)
+                .header("X-Export-Filename", filename)
+                .build();
+    }
+
 }
