@@ -53,8 +53,6 @@ public class ExamSignUpBean {
 
         Integer res = ((Number)q.getSingleResult()).intValue();
 
-        log.info("Number of prior takings: " + res);
-
         return res;
     }
 
