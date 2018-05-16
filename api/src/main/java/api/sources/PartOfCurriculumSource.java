@@ -61,7 +61,7 @@ public class PartOfCurriculumSource {
     public Response getAllPOC(@QueryParam("search") String searchQuery) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List enl = pocb.getPOC(query, searchQuery);
-        return enl == null ? Response.status(Response.Status.NOT_FOUND).build() :
+        return enl == null ? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build() :
                 Response.ok(enl)
                         .header("X-Total-Count", pocb.getPOC(new QueryParameters(), searchQuery).size())
                         .build();

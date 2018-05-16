@@ -89,7 +89,7 @@ public class StudentCoursesSource {
     public Response getCurrentStudentCoursesByRegisterNumber(@PathParam("regNumber") String registerNumber) {
         List<StudentCourses> res = esulB.getCoursesByRegisterNumber(registerNumber);
 
-        return res == null? Response.status(Response.Status.NOT_FOUND).build():
+        return res == null? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
                 Response.status(Response.Status.OK).entity(res).build();
     }
 
