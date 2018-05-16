@@ -4,6 +4,7 @@ import entities.Professor;
 import entities.StudyYear;
 
 import javax.persistence.*;
+import javax.print.DocFlavor;
 
 /* Represents the metadata about who are the organizers of a course in a particular study year */
 @Entity(name = "course_organization")
@@ -90,5 +91,24 @@ public class CourseOrganization {
 
     public String toString() {
         return String.format("CourseOrganization(studyYear = %s, course = %s, organizer1 = %s)", studyYear.getName(), course.getName(), organizer1.toString());
+    }
+
+    public String formatCourseOrganizers(){
+        String allOrganizers = "";
+
+        if(organizer1 != null){
+            allOrganizers += organizer1.getFirstName() + " " + organizer1.getLastName1();
+            allOrganizers += organizer1.getLastName2() != null? " " + organizer1.getLastName2() : "";
+        }
+        if(organizer2 != null){
+            allOrganizers += ", " + organizer2.getFirstName() + " " + organizer2.getLastName1();
+            allOrganizers += organizer2.getLastName2() != null? " " + organizer2.getLastName2() : "";
+        }
+        if(organizer3 != null){
+            allOrganizers += ", " + organizer3.getFirstName() + " " + organizer3.getLastName1();
+            allOrganizers += organizer3.getLastName2() != null? " " + organizer3.getLastName2() : "";
+        }
+
+        return allOrganizers;
     }
 }

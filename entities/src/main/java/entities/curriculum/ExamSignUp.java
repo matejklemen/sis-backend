@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Entity(name = "exam_sign_up")
 @NamedQueries(value = {
         @NamedQuery(name = "ExamSignUp.getByCourseIdAndExamTermDate", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :id_course AND es.courseExamTerm.datetime = :exam_date"),
-        @NamedQuery(name = "ExamSignUp.getByCourseIdAndStudentId", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :id_course AND es.studentCourses.enrolment.student.id = :id_student AND es.returned = false"),
+        @NamedQuery(name = "ExamSignUp.getByCourseIdAndStudentId", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :id_course AND es.studentCourses.enrolment.student.id = :id_student AND es.returned = false ORDER BY es.courseExamTerm.datetime ASC"),
         @NamedQuery(name = "ExamSignUp.getStudentTermSignUp", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.registerNumber = :student_registration AND es.courseExamTerm.datetime = :exam_date AND es.returned = false"),
         @NamedQuery(name = "ExamSignUp.getLastSignUp", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :course_id AND es.studentCourses.enrolment.student.id = :student_id AND es.returned = false ORDER BY es.courseExamTerm.datetime DESC"),
         @NamedQuery(name = "ExamSignUp.getByStudentIdAndCourseIdAndGrade", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.id = :student_id AND es.studentCourses.course.id = :course_id AND es.grade > :grade"),
