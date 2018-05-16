@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -38,6 +39,23 @@ public class ExamSignUpBean {
     public Integer getNumberOfExamTakingsInLatestEnrolment(int studentCoursesId) {
         int num = ((Number)em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInLatestEnrolment", Integer.class).setParameter("student_courses_id", studentCoursesId).getSingleResult()).intValue();
         return num;
+    }
+
+    public Integer getNumberOfExamTakingsBeforeDatetime(int studentCoursesId, Timestamp dt) {
+        // includes the current taking of exam!
+        TypedQuery<Integer> q = em.createQuery("SELECT COUNT(es) FROM exam_sign_up es WHERE " +
+                "es.studentCourses.idStudentCourses = :student_courses_id AND " +
+                "es.courseExamTerm.datetime <= :specified_datetime AND " +
+                "es.returned = false", Integer.class);
+
+        q.setParameter("student_courses_id", studentCoursesId);
+        q.setParameter("specified_datetime", dt);
+
+        Integer res = ((Number)q.getSingleResult()).intValue();
+
+        log.info("Number of prior takings: " + res);
+
+        return res;
     }
 
     public Integer getNumberOfExamTakingsInAllEnrolments(int studentId, int courseId) {

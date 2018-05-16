@@ -77,11 +77,15 @@ public class ExamSignUpSource {
             StudentCourses currStudentCourseInfo = scb.getStudentCourses(signups.get(idx).
                     getStudentCourses().getIdStudentCourses());
 
+            Integer numPriorTakings = esb.getNumberOfExamTakingsBeforeDatetime(currStudentCourseInfo.getIdStudentCourses(),
+                    signups.get(idx).getCourseExamTerm().getDatetimeObject());
+
             SignUpInfoResponse currInfo = new SignUpInfoResponse();
             currInfo.setStudentInfo(currStudentCourseInfo.getEnrolment().getStudent());
             currInfo.setYearOfTakingCourse(currStudentCourseInfo.getEnrolment().getStudyYear());
             currInfo.setFinalGrade(currStudentCourseInfo.getGrade());
             currInfo.setCurrentGrade(signups.get(idx).getGrade());
+            currInfo.setCurrentNumberOfTakings(numPriorTakings);
 
             signUpInfo.add(idx, currInfo);
         }
