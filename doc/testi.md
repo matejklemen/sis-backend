@@ -91,6 +91,19 @@
 - prijavi se na rok verjetnost in statistika in pokaži, da je to 4. polaganje predmeta verjetnost in statistika, in ne 6., ker se odštejeta dve polaganji iz rednega vpisa v drugi letnik, študent mora vseeno plačati, ker je presegel kvoto treh polaganj
 - če v bazi spremenimo exam_sign_up z id-jem 165 (kar je polaganje iz ponavljanja drugega letnika) in damo returned na true, študentu ni potrebno plačati, ker je potem to njegovo tretje polaganje (verjetno bo treba spremenit v init-db.sql, ker bere iz pomnilnika)
 
+# 19 Sprememba izpitnega roka
+
+###
+- [x] 1. Preveri veljavnost novih izvajalcev.
+*Na uporabniškem vmesniku se pokažejo samo izvajalci za izbrani predmet*
+- [x] 2. Preveri veljavnost novega datuma izpita (večji od trenutnega, ne sme biti sobota, nedelja ali praznik)
+- [x] 3. Preveri, ali obstajajo prijave (sprememba roka je možna ob potrditvi uporabnika).
+    3.1 *Probaj spremenit izpit TPO 13.6.2018 ob 08:00.* (bo pustilo čez brez opozorila)
+    3.2 *Vpiši študenta Simona Zoreta (`sz8003@student.uni-lj.si` - `sz_63180003`) na TPO izpit 13.6.2018 ob 08:00. in sedaj probaj popravit isti izpit.*
+    (bo izpisalo opozorilo)
+- [ ] 4. Preveri, ali so se prijave prenesle na nov rok. **(TODO: preveri prikaz tega in dopiši)**
+- [ ] 5. Preveri, ali so za ta rok že vpisane ocene (sprememba roka ni možna). **(TODO: hardcodaj neki v bazo)**
+
 # Odjava izpita (študent) (#22)
 
 ###
