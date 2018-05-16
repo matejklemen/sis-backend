@@ -25,7 +25,7 @@ public class CourseExamTermValidationBean {
         for(ExamSignUp esu: signUps)
             // if we find someone who has grade already entered, changing/deleting the exam term becomes impossible
             if(esu.getWrittenScore() != null || esu.getSuggestedGrade() != null) {
-                errList.add("nekdo izmed vpisanih že ima vpisano oceno izpita ali končno oceno");
+                errList.add("nekdo izmed vpisanih že ima vpisano oceno izpita ali predlagano končno oceno");
                 return errList;
             }
 
@@ -43,12 +43,13 @@ public class CourseExamTermValidationBean {
         // bonus: date between 2 consecutive exams for the same course organization needs to be at least 7 days apart
         List<CourseExamTerm> examTerms = cetb.getExamTermsByCourse(cet.getCourseOrganization().getId());
         if(examTerms != null) {
-            Integer idCourseOrganization = cet.getId();
+            Integer idExamTerm = cet.getId();
 
-            for (CourseExamTerm term : examTerms) {
+            for (CourseExamTerm term: examTerms) {
                 // when updating an entity, skip the check with the same entity (before it was updated)
-                if(term.getId() == idCourseOrganization)
+                if(term.getId().equals(idExamTerm)) {
                     continue;
+                }
 
                 /* skip the check with an exam term that is not of same type (i.e. only compare oral exams with oral exams
                 and written with written exams.*/
@@ -75,6 +76,7 @@ public class CourseExamTermValidationBean {
         List<String> errors = new ArrayList<>();
 
         errors = validateDate(cet, errors);
+        errors = checkIfExamTermHasGradesEntered(cet, errors);
 
         return errors;
     }

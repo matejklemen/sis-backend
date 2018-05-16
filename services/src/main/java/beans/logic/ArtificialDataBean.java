@@ -188,7 +188,7 @@ public class ArtificialDataBean {
                     ExamSignUp esu = new ExamSignUp();
                     esu.setCourseExamTerm(availableTerms.get(i));
                     esu.setStudentCourses(course);
-                    esu.setWrittenScore(5); // TODO: this should be in range 0-100
+                    esu.setSuggestedGrade(5);
                     esu.setReturned(false);
                     esub.addExamSignUp(esu);
                     log.info(String.format("Added an exam sign up for course %d %s with grade %d",
@@ -201,7 +201,7 @@ public class ArtificialDataBean {
                 ExamSignUp esu = new ExamSignUp();
                 esu.setCourseExamTerm(availableTerms.get(numberOfTerms - 1));
                 esu.setStudentCourses(course);
-                esu.setWrittenScore(finalGrade); // TODO: check if that's what you want
+                esu.setSuggestedGrade(finalGrade);
                 esu.setReturned(false);
                 esub.addExamSignUp(esu);
 
@@ -209,7 +209,7 @@ public class ArtificialDataBean {
                 course.setGrade(finalGrade);
                 scb.updateCourse(course);
                 log.info(String.format("Added an exam sign up for course %d %s with grade %d [ = FINAL GRADE]",
-                        course.getCourse().getId(), course.getCourse().getName(), esu.getWrittenScore())); // TODO: check if that's what you want
+                        course.getCourse().getId(), course.getCourse().getName(), esu.getSuggestedGrade())); // TODO: check if that's what you want
             }
         }
     }
@@ -237,7 +237,7 @@ public class ArtificialDataBean {
                 if(lastSignUp != null) {
                     log.info(String.format("Setting final grade to %d for course %d %s...", lastSignUp.getWrittenScore(),
                             sc.getCourse().getId(), sc.getCourse().getName()));
-                    sc.setGrade(lastSignUp.getWrittenScore());
+                    sc.setGrade(lastSignUp.getSuggestedGrade());
 
                     scb.updateCourse(sc);
                 }
