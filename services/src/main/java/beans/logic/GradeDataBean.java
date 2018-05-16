@@ -35,19 +35,19 @@ public class GradeDataBean {
             List<ExamSignUp> esu = esub.getExamSignUpsOnCourseForStudent(sc.getCourse().getId(), studentId);
             CourseOrganization so = cob.getCourseOrganizationsByCourseIdAndYear(sc.getCourse().getId(), e.getStudyYear().getId());
 
-            String examGrade = null;
+            Integer examGrade = null;
             if(!esu.isEmpty()){
-                Collections.sort(esu, Comparator.comparingInt(ExamSignUp ::getId));
+                esu.sort(Comparator.comparingInt(ExamSignUp::getId));
                 if(esu.get(0).getGrade() != null){
-                    examGrade = esu.get(0).getGrade().toString();
+                    examGrade = esu.get(0).getGrade();
                 }else if(esu.size() > 1){
-                    examGrade = esu.get(1).getGrade().toString();
+                    examGrade = esu.get(1).getGrade();
                 }
             }
 
             GradeData gd = new GradeData();
             gd.setExamGrade(examGrade);
-            gd.setFinalGrade(sc.getGrade()== null?"":sc.getGrade().toString());
+            gd.setFinalGrade(sc.getGrade());
             gd.setCourseOrganization(so);
             gd.setYear(Integer.toString(e.getYear()));
 

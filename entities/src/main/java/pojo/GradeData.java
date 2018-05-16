@@ -11,9 +11,9 @@ public class GradeData {
 
     private CourseOrganization courseOrganization;
 
-    private String ExamGrade;
+    private Integer examGrade;
 
-    private String FinalGrade;
+    private Integer finalGrade;
 
 
     public String getYear() {
@@ -32,19 +32,19 @@ public class GradeData {
         this.courseOrganization = courseOrganization;
     }
 
-    public String getExamGrade() {
-        return ExamGrade;
+    public Integer getExamGrade() {
+        return examGrade;
     }
 
-    public void setExamGrade(String examGrade) {
-        ExamGrade = examGrade;
+    public void setExamGrade(Integer examGrade) {
+        this.examGrade = examGrade;
     }
 
-    public String getFinalGrade() {
-        return FinalGrade;
+    public Integer getFinalGrade() {
+        return finalGrade;
     }
 
-    public void setFinalGrade(String finalGrade) {
-        FinalGrade = finalGrade;
+    public void setFinalGrade(Integer finalGrade) {
+        this.finalGrade = finalGrade;
     }
 }
