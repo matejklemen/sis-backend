@@ -1,7 +1,9 @@
 package beans.logic;
 
 import beans.crud.CourseExamTermBean;
+import beans.crud.ExamSignUpBean;
 import entities.curriculum.CourseExamTerm;
+import entities.curriculum.ExamSignUp;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,6 +17,20 @@ public class CourseExamTermValidationBean {
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @Inject private CourseExamTermBean cetb;
+    @Inject private ExamSignUpBean esub;
+
+    private List<String> checkIfExamTermHasGradesEntered(CourseExamTerm cet, List<String> errList) {
+        List<ExamSignUp> signUps = esub.getExamSignUpsByExamTerm(cet.getId());
+
+        for(ExamSignUp esu: signUps)
+            // if we find someone who has grade already entered, changing/deleting the exam term becomes impossible
+            if(esu.getGrade() != null || esu.getCurrFinalGrade() != null) {
+                errList.add("nekdo izmed vpisanih že ima vpisano oceno izpita ali končno oceno");
+                return errList;
+            }
+
+        return errList;
+    }
 
     private List<String> validateDate(CourseExamTerm cet, List<String> errList) {
         Date enteredDatetime = cet.getDatetimeObject();

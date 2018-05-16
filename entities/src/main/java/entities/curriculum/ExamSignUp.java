@@ -38,6 +38,10 @@ public class ExamSignUp implements Serializable {
     // Integer instead of int so it can be 'null' until Student gets grade
     private Integer grade;
 
+    @Column(name = "curr_final_grade")
+    // final grade that was given according to exam grade and (sometimes) additional work during the semester
+    private Integer currFinalGrade;
+
     // the student decided not to attend the exam and cancelled it in time
     private boolean returned;
 
@@ -90,5 +94,13 @@ public class ExamSignUp implements Serializable {
 
     public void setReturned(boolean returned) {
         this.returned = returned;
+    }
+
+    public Integer getCurrFinalGrade() {
+        return currFinalGrade;
+    }
+
+    public void setCurrFinalGrade(Integer currFinalGrade) {
+        this.currFinalGrade = currFinalGrade;
     }
 }

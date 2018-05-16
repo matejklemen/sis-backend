@@ -126,7 +126,9 @@ public class ExamSignUpBean {
     @Transactional
     public List<ExamSignUp> getExamSignUpsByExamTerm(int idExamTerm) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
-                "esu.courseExamTerm.id = :id_exam_term", ExamSignUp.class);
+                "esu.courseExamTerm.id = :id_exam_term ORDER BY " +
+                "esu.studentCourses.enrolment.student.surname, " +
+                "esu.studentCourses.enrolment.student.name", ExamSignUp.class);
 
         q.setParameter("id_exam_term", idExamTerm);
 

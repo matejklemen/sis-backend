@@ -83,7 +83,7 @@ public class ExamSignUpSource {
             SignUpInfoResponse currInfo = new SignUpInfoResponse();
             currInfo.setStudentInfo(currStudentCourseInfo.getEnrolment().getStudent());
             currInfo.setYearOfTakingCourse(currStudentCourseInfo.getEnrolment().getStudyYear());
-            currInfo.setFinalGrade(currStudentCourseInfo.getGrade());
+            currInfo.setFinalGrade(signups.get(idx).getCurrFinalGrade());
             currInfo.setCurrentGrade(signups.get(idx).getGrade());
             currInfo.setCurrentNumberOfTakings(numPriorTakings);
 
