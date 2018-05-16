@@ -15,12 +15,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import pojo.ResponseError;
+import pojo.SignUpInfoResponse;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -68,14 +70,23 @@ public class ExamSignUpSource {
         if(signups == null || signups.isEmpty())
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        for(ExamSignUp esu: signups) {
-            StudentCourses currStudentCourseInfo = scb.getStudentCourses(esu.
+        List<SignUpInfoResponse> signUpInfo = new ArrayList<>(signups.size());
+
+        // copying only the necessary data into new object so that we do not waste bandwidth
+        for(int idx = 0; idx < signups.size(); idx++) {
+            StudentCourses currStudentCourseInfo = scb.getStudentCourses(signups.get(idx).
                     getStudentCourses().getIdStudentCourses());
 
-            esu.setFinalGrade(currStudentCourseInfo.getGrade());
+            SignUpInfoResponse currInfo = new SignUpInfoResponse();
+            currInfo.setStudentInfo(currStudentCourseInfo.getEnrolment().getStudent());
+            currInfo.setYearOfTakingCourse(currStudentCourseInfo.getEnrolment().getStudyYear());
+            currInfo.setFinalGrade(currStudentCourseInfo.getGrade());
+            currInfo.setCurrentGrade(signups.get(idx).getGrade());
+
+            signUpInfo.add(idx, currInfo);
         }
 
-        return Response.status(Response.Status.OK).entity(signups).build();
+        return Response.status(Response.Status.OK).entity(signUpInfo).build();
     }
 
     @Operation(description = "Signs up a student for an exam.", summary = "Sign-up student for exam",

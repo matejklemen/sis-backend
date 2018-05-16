@@ -44,9 +44,6 @@ public class ExamSignUp implements Serializable {
     @Column(columnDefinition="boolean default 'true'")
     private boolean confirmed = true;
 
-    @Transient
-    private Integer finalGrade;
-
     public CourseExamTerm getCourseExamTerm() {
         return courseExamTerm;
     }
@@ -93,13 +90,5 @@ public class ExamSignUp implements Serializable {
 
     public void setReturned(boolean returned) {
         this.returned = returned;
-    }
-
-    public Integer getFinalGrade() {
-        return finalGrade;
-    }
-
-    public void setFinalGrade(Integer finalGrade) {
-        this.finalGrade = finalGrade;
     }
 }
