@@ -134,7 +134,8 @@ public class ExamSignUpBean {
     @Transactional
     public List<ExamSignUp> getExamSignUpsByExamTerm(int idExamTerm) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
-                "esu.courseExamTerm.id = :id_exam_term ORDER BY " +
+                "esu.courseExamTerm.id = :id_exam_term AND " +
+                "esu.returned = false ORDER BY " +
                 "esu.studentCourses.enrolment.student.surname, " +
                 "esu.studentCourses.enrolment.student.name", ExamSignUp.class);
 
@@ -191,28 +192,14 @@ public class ExamSignUpBean {
         }
     }
 
-    /*
-        TODO: rewrite this (and update doc)
-        - examDate is exam date in UNIX timestamp format (i.e. number of seconds since 1. 1. 1970)
-        - we do not physically delete exam sign ups, we invalidate them
-    */
-    @Transactional
-    public void invalidateExamSignUp(long examDate, String studentRegistration) {
-        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getStudentTermSignUp", ExamSignUp.class);
+    public List<ExamSignUp> getExamSignUpsForStudentCourse(int idStudentCourse) {
+        TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
+                "esu.studentCourses.idStudentCourses = :id_student_course AND esu.returned = false " +
+                "ORDER BY esu.courseExamTerm.datetime DESC", ExamSignUp.class);
 
-        q.setParameter("student_registration", studentRegistration);
-        q.setParameter("exam_date", examDate);
+        q.setParameter("id_student_course", idStudentCourse);
 
-        // should only be 1 -> otherwise, there is a mistake (2 non-invalidated sign ups for same exam term can not exist)
-        ExamSignUp es = q.getSingleResult();
-        es.setReturned(true);
-
-        try {
-            em.merge(es);
-        }
-        catch(Exception e) {
-            log.severe("Something went wrong when trying to insert new ExamSignUp!");
-        }
+        return q.getResultList();
     }
 
     @Transactional

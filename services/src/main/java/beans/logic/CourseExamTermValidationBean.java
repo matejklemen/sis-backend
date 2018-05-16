@@ -32,6 +32,15 @@ public class CourseExamTermValidationBean {
         return errList;
     }
 
+    private boolean checkIfExamTermHasSignUps(CourseExamTerm cet) {
+        List<ExamSignUp> signUps = esub.getExamSignUpsByExamTerm(cet.getId());
+
+        if(signUps == null)
+            return false;
+
+        return !signUps.isEmpty();
+    }
+
     private List<String> validateDate(CourseExamTerm cet, List<String> errList) {
         Date enteredDatetime = cet.getDatetimeObject();
         Date currDate = new Date();
