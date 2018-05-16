@@ -35,16 +35,6 @@ public class ExamSignUpBean {
         return q.getResultList();
     }
 
-    // TODO: rewrite this (examDate used to be written in unix timestamp)
-    public List<ExamSignUp> getExamSignUpsForExamTerm(int courseId, long examDate) {
-        TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getByCourseIdAndExamTermDate", ExamSignUp.class);
-
-        q.setParameter("id_course", courseId);
-        q.setParameter("exam_date", examDate);
-
-        return q.getResultList();
-    }
-
     public Integer getNumberOfExamTakingsInLatestEnrolment(int studentCoursesId) {
         int num = ((Number)em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInLatestEnrolment", Integer.class).setParameter("student_courses_id", studentCoursesId).getSingleResult()).intValue();
         return num;
@@ -113,6 +103,16 @@ public class ExamSignUpBean {
         } else {
             return null;
         }
+    }
+
+    @Transactional
+    public List<ExamSignUp> getExamSignUpsByExamTerm(int idExamTerm) {
+        TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
+                "esu.courseExamTerm.id = :id_exam_term", ExamSignUp.class);
+
+        q.setParameter("id_exam_term", idExamTerm);
+
+        return q.getResultList();
     }
 
     @Transactional

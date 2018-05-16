@@ -4,8 +4,8 @@ import api.interceptors.annotations.LogApiCalls;
 import beans.crud.*;
 import beans.logic.ExamSignUpLogicBean;
 import entities.ExamSignUpHistory;
-import entities.curriculum.CourseExamTerm;
 import entities.curriculum.ExamSignUp;
+import entities.curriculum.StudentCourses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -21,8 +21,6 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -38,6 +36,7 @@ public class ExamSignUpSource {
     @Inject private CourseExamTermBean cetb;
     @Inject private ExamSignUpHistoryBean esuhb;
     @Inject private UserLoginBean ulb;
+    @Inject private StudentCoursesBean scb;
 
     @Operation(description = "Returns exam sign-ups for a student (and course).", summary = "Get exam sign-ups by studentId and/or query parameters",
             parameters = {
@@ -58,6 +57,25 @@ public class ExamSignUpSource {
 
         return signups == null ? Response.status(Response.Status.NOT_FOUND).build():
                 Response.status(Response.Status.OK).entity(signups).build();
+    }
+
+    @Path("augmented")
+    @GET
+    // get exam sign ups and their final grade for an exam term
+    public Response getAugmentedSignUpsForExamTerm(@QueryParam("examtermid") int idExamTerm) {
+        List<ExamSignUp> signups = esb.getExamSignUpsByExamTerm(idExamTerm);
+
+        if(signups == null || signups.isEmpty())
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        for(ExamSignUp esu: signups) {
+            StudentCourses currStudentCourseInfo = scb.getStudentCourses(esu.
+                    getStudentCourses().getIdStudentCourses());
+
+            esu.setFinalGrade(currStudentCourseInfo.getGrade());
+        }
+
+        return Response.status(Response.Status.OK).entity(signups).build();
     }
 
     @Operation(description = "Signs up a student for an exam.", summary = "Sign-up student for exam",
