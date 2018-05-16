@@ -1,16 +1,17 @@
 package beans.logic;
 
 import beans.crud.*;
-import entities.*;
+import entities.Enrolment;
+import entities.ExamSignUpHistory;
+import entities.Staff;
+import entities.Student;
 import entities.curriculum.CourseExamTerm;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
-import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
-import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -127,7 +128,7 @@ public class ExamSignUpLogicBean {
             }
 
             /*Preveri za prijavo, kjer za prejsnji rok se ni bila zakljucena ocena */
-            if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getGrade() == null) {
+            if(esub.getLastSignUp(sc.getCourse().getId(), studentId) != null && esub.getLastSignUp(sc.getCourse().getId(), studentId).getWrittenScore() == null) {
                 errors.add("ocena za prejšnji rok še ni bila zaključena");
             }
 
@@ -171,7 +172,7 @@ public class ExamSignUpLogicBean {
         ExamSignUp esu = esub.getExamSignUp(courseExamTermId, studentCourseId);
         CourseExamTerm cet = cetb.getExamTermById(courseExamTermId);
 
-        if(esu.getGrade() != null) {
+        if(esu.getWrittenScore() != null) {
             errors.add("ocena za ta izpitni rok je že vpisana");
         }
 

@@ -24,7 +24,7 @@ public class CourseExamTermValidationBean {
 
         for(ExamSignUp esu: signUps)
             // if we find someone who has grade already entered, changing/deleting the exam term becomes impossible
-            if(esu.getGrade() != null || esu.getCurrFinalGrade() != null) {
+            if(esu.getWrittenScore() != null || esu.getSuggestedGrade() != null) {
                 errList.add("nekdo izmed vpisanih že ima vpisano oceno izpita ali končno oceno");
                 return errList;
             }

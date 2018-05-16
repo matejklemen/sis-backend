@@ -10,7 +10,7 @@ import java.io.Serializable;
         @NamedQuery(name = "ExamSignUp.getByCourseIdAndStudentId", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :id_course AND es.studentCourses.enrolment.student.id = :id_student AND es.returned = false ORDER BY es.courseExamTerm.datetime ASC"),
         @NamedQuery(name = "ExamSignUp.getStudentTermSignUp", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.registerNumber = :student_registration AND es.courseExamTerm.datetime = :exam_date AND es.returned = false"),
         @NamedQuery(name = "ExamSignUp.getLastSignUp", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.course.id = :course_id AND es.studentCourses.enrolment.student.id = :student_id AND es.returned = false ORDER BY es.courseExamTerm.datetime DESC"),
-        @NamedQuery(name = "ExamSignUp.getByStudentIdAndCourseIdAndGrade", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.id = :student_id AND es.studentCourses.course.id = :course_id AND es.grade > :grade"),
+        @NamedQuery(name = "ExamSignUp.getByStudentIdAndCourseIdAndGrade", query = "SELECT es FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.id = :student_id AND es.studentCourses.course.id = :course_id AND es.writtenScore > :grade"),
 
         @NamedQuery(name = "ExamSignUp.getNumberOfExamTakingsInLatestEnrolment", query = "SELECT COUNT(es) FROM exam_sign_up es WHERE es.studentCourses.idStudentCourses = :student_courses_id AND es.returned = false"),
         @NamedQuery(name = "ExamSignUp.getNumberOfExamTakingsInAllEnrolments", query = "SELECT COUNT(es) FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.id = :student_id AND es.studentCourses.course.id = :course_id AND es.returned = false AND es.studentCourses.enrolment.id <> :enrolment_id"),
@@ -35,12 +35,14 @@ public class ExamSignUp implements Serializable {
     @JoinColumn(name = "id_student_course")
     private StudentCourses studentCourses;
 
-    // Integer instead of int so it can be 'null' until Student gets grade
-    private Integer grade;
+    // Written exam score, in range [1 - 100], can be null
+    @Column(name = "written_score")
+    private Integer writtenScore;
 
-    @Column(name = "curr_final_grade")
-    // final grade that was given according to exam grade and (sometimes) additional work during the semester
-    private Integer currFinalGrade;
+    // Grade that was given according to written exam score and (sometimes) additional work during the semester,
+    // a "suggested grade", if you will
+    @Column(name = "suggested_grade")
+    private Integer suggestedGrade;
 
     // the student decided not to attend the exam and cancelled it in time
     private boolean returned;
@@ -56,12 +58,12 @@ public class ExamSignUp implements Serializable {
         this.courseExamTerm = courseExamTerm;
     }
 
-    public Integer getGrade() {
-        return grade;
+    public Integer getWrittenScore() {
+        return writtenScore;
     }
 
-    public void setGrade(Integer grade) {
-        this.grade = grade;
+    public void setWrittenScore(Integer grade) {
+        this.writtenScore = grade;
     }
 
     public int getId() {
@@ -96,11 +98,11 @@ public class ExamSignUp implements Serializable {
         this.returned = returned;
     }
 
-    public Integer getCurrFinalGrade() {
-        return currFinalGrade;
+    public Integer getSuggestedGrade() {
+        return suggestedGrade;
     }
 
-    public void setCurrFinalGrade(Integer currFinalGrade) {
-        this.currFinalGrade = currFinalGrade;
+    public void setSuggestedGrade(Integer currFinalGrade) {
+        this.suggestedGrade = currFinalGrade;
     }
 }

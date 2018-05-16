@@ -6,7 +6,6 @@ import entities.curriculum.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -189,7 +188,7 @@ public class ArtificialDataBean {
                     ExamSignUp esu = new ExamSignUp();
                     esu.setCourseExamTerm(availableTerms.get(i));
                     esu.setStudentCourses(course);
-                    esu.setGrade(5);
+                    esu.setWrittenScore(5); // TODO: this should be in range 0-100
                     esu.setReturned(false);
                     esub.addExamSignUp(esu);
                     log.info(String.format("Added an exam sign up for course %d %s with grade %d",
@@ -202,7 +201,7 @@ public class ArtificialDataBean {
                 ExamSignUp esu = new ExamSignUp();
                 esu.setCourseExamTerm(availableTerms.get(numberOfTerms - 1));
                 esu.setStudentCourses(course);
-                esu.setGrade(finalGrade);
+                esu.setWrittenScore(finalGrade); // TODO: check if that's what you want
                 esu.setReturned(false);
                 esub.addExamSignUp(esu);
 
@@ -210,7 +209,7 @@ public class ArtificialDataBean {
                 course.setGrade(finalGrade);
                 scb.updateCourse(course);
                 log.info(String.format("Added an exam sign up for course %d %s with grade %d [ = FINAL GRADE]",
-                        course.getCourse().getId(), course.getCourse().getName(), esu.getGrade()));
+                        course.getCourse().getId(), course.getCourse().getName(), esu.getWrittenScore())); // TODO: check if that's what you want
             }
         }
     }
@@ -236,9 +235,9 @@ public class ArtificialDataBean {
                 ExamSignUp lastSignUp = esub.getLastSignUpForStudentCourse(sc.getIdStudentCourses());
 
                 if(lastSignUp != null) {
-                    log.info(String.format("Setting final grade to %d for course %d %s...", lastSignUp.getGrade(),
+                    log.info(String.format("Setting final grade to %d for course %d %s...", lastSignUp.getWrittenScore(),
                             sc.getCourse().getId(), sc.getCourse().getName()));
-                    sc.setGrade(lastSignUp.getGrade());
+                    sc.setGrade(lastSignUp.getWrittenScore());
 
                     scb.updateCourse(sc);
                 }

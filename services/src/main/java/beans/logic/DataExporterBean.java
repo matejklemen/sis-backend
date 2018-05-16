@@ -491,7 +491,7 @@ public class DataExporterBean {
                             }
                             first = false;
 
-                            if(examSignUp.getCurrFinalGrade() == null){
+                            if(examSignUp.getSuggestedGrade() == null){
                                 fullEmptyRows(row, 4);
                                 rows.add(row);
                                 index++;
@@ -503,7 +503,7 @@ public class DataExporterBean {
                             row.add(dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()));
 
                             // Grade
-                            row.add(String.valueOf(examSignUp.getCurrFinalGrade()));
+                            row.add(String.valueOf(examSignUp.getSuggestedGrade()));
 
                             // Count
                             row.add("?");
@@ -515,7 +515,7 @@ public class DataExporterBean {
                     }else{
                         ExamSignUp examSignUp = esuB.getLastSignUpForStudentCourse(studentCourse.getIdStudentCourses());
 
-                        if(examSignUp == null || examSignUp.getCurrFinalGrade() == null){
+                        if(examSignUp == null || examSignUp.getSuggestedGrade() == null){
                             fullEmptyRows(row, 4);
                             rows.add(row);
                             index++;
@@ -527,7 +527,8 @@ public class DataExporterBean {
                         row.add(dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()));
 
                         // Grade
-                        row.add(String.valueOf(examSignUp.getCurrFinalGrade()));
+                        row.add(String.valueOf(examSignUp.getSuggestedGrade()));
+
 
                         // Count
                         row.add("?");
