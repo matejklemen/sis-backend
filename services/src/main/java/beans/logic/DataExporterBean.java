@@ -472,34 +472,37 @@ public class DataExporterBean {
                     CourseOrganization co = coB.getCourseOrganizationsByCourseIdAndYear(studentCourse.getCourse().getId(), enrolment.getStudyYear().getId());
                     row.add(co.formatCourseOrganizers().toUpperCase());
 
-                    if(full){
-                        List<ExamSignUp> allExamSignUps = esuB.getExamSignUpsOnCourseForStudent(studentCourse.getCourse().getId(), student.getId());
 
-                        if(allExamSignUps.isEmpty()){
+                    List<ExamSignUp> allExamSignUps = esuB.getExamSignUpsOnCourseForStudent(studentCourse.getCourse().getId(), student.getId());
+
+                    if(allExamSignUps.isEmpty()){
+                        fullEmptyRows(row, 4);
+                        rows.add(row);
+                        index++;
+                        continue;
+                    }
+
+                    Integer numb = esuB.getNumberOfExamTakingsBeforeStudyYear(studentCourse.getIdStudentCourses(), enrolment.getStudyYear().getId());
+
+                    boolean first = true;
+                    int signUpsCout = 0;
+                    for(ExamSignUp examSignUp : allExamSignUps){
+
+                        if(!first && full){
+                            row = new ArrayList<>();
+                            fullEmptyRows(row, 5);
+                        }
+                        first = false;
+
+                        // If no grade -> fill with empty
+                        if(examSignUp.getSuggestedGrade() == null){
                             fullEmptyRows(row, 4);
                             rows.add(row);
                             index++;
                             continue;
                         }
 
-                        boolean first = true;
-                        int signUpsCout = 0;
-                        for(ExamSignUp examSignUp : allExamSignUps){
-
-                            if(!first){
-                                row = new ArrayList<>();
-                                fullEmptyRows(row, 5);
-                            }
-                            first = false;
-
-                            if(examSignUp.getSuggestedGrade() == null){
-                                fullEmptyRows(row, 4);
-                                rows.add(row);
-                                index++;
-                                signUpsCout++;
-                                continue;
-                            }
-
+                        if(full || signUpsCout == allExamSignUps.size() - 1){
                             // Date
                             dateFormat = new SimpleDateFormat("dd.MM.yy");
                             row.add(dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()));
@@ -510,36 +513,14 @@ public class DataExporterBean {
 
                             // Count
                             row.add(String.valueOf(signUpsCout + 1));
-                            row.add("?");
+
+                            row.add( numb == null? String.valueOf(signUpsCout + 1) : String.valueOf(numb + signUpsCout + 1));
 
                             rows.add(row);
                             index++;
-                            signUpsCout++;
-                        }
-                    }else{
-                        ExamSignUp examSignUp = esuB.getLastSignUpForStudentCourse(studentCourse.getIdStudentCourses());
-
-                        if(examSignUp == null || examSignUp.getSuggestedGrade() == null){
-                            fullEmptyRows(row, 4);
-                            rows.add(row);
-                            index++;
-                            continue;
                         }
 
-                        // Date
-                        dateFormat = new SimpleDateFormat("dd.MM.yy");
-                        row.add(dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()));
-
-                        // Grade
-                        row.add(String.valueOf(examSignUp.getSuggestedGrade()));
-                        examGrade = examSignUp.getSuggestedGrade();
-
-                        // Count
-                        row.add("?");
-                        row.add("?");
-
-                        rows.add(row);
-                        index++;
+                        signUpsCout++;
                     }
 
                     // Get statistics

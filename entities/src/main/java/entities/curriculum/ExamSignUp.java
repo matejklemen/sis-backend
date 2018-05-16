@@ -14,6 +14,7 @@ import java.io.Serializable;
 
         @NamedQuery(name = "ExamSignUp.getNumberOfExamTakingsInLatestEnrolment", query = "SELECT COUNT(es) FROM exam_sign_up es WHERE es.studentCourses.idStudentCourses = :student_courses_id AND es.returned = false"),
         @NamedQuery(name = "ExamSignUp.getNumberOfExamTakingsInAllEnrolments", query = "SELECT COUNT(es) FROM exam_sign_up es WHERE es.studentCourses.enrolment.student.id = :student_id AND es.studentCourses.course.id = :course_id AND es.returned = false AND es.studentCourses.enrolment.id <> :enrolment_id"),
+        @NamedQuery(name = "ExamSignUp.getNumberOfExamTakingsBeforeStudyYear", query = "SELECT COUNT(es) FROM exam_sign_up es WHERE es.studentCourses.idStudentCourses = :student_courses_id AND es.studentCourses.enrolment.studyYear.id < :studyYearId AND es.returned = false"),
 
 
         @NamedQuery(name = "ExamSignUp.getExamSignUp", query = "SELECT es FROM exam_sign_up es WHERE es.courseExamTerm.id = :course_exam_term_id AND es.studentCourses.idStudentCourses = :student_course_id"),
