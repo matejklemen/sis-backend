@@ -11,7 +11,8 @@ import java.io.Serializable;
                 @NamedQuery(name = "Enrolment.getFirstByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id=:id AND e.studyProgram.id = :studyProgramId ORDER BY e.studyYear.id ASC"),
                 @NamedQuery(name = "Enrolment.getByStudentId", query = "SELECT e FROM enrolment e WHERE e.student.id = :id"),
                 @NamedQuery(name = "Enrolment.getRetryYearEnrolment", query = "SELECT e FROM enrolment e WHERE e.student.id = :student_id AND e.type.id = 2"),
-                @NamedQuery(name = "Enrolment.getOriginalYearOfRetryYearEnrolment", query = "SELECT e FROM enrolment e WHERE e.student.id = :student_id AND e.type.id <> 2 AND e.year = :year")
+                @NamedQuery(name = "Enrolment.getOriginalYearOfRetryYearEnrolment", query = "SELECT e FROM enrolment e WHERE e.student.id = :student_id AND e.type.id <> 2 AND e.year = :year"),
+                @NamedQuery(name = "Enrolment.getByStudentIdAndStudyYearId", query = "SELECT e FROM enrolment e WHERE e.student.id=:studentId AND e.studyYear.id=:studyYearId"),
         }
 )
 public class Enrolment implements Serializable {
