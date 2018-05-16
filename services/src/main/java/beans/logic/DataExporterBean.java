@@ -443,30 +443,40 @@ public class DataExporterBean {
 
                 List<List<String>> rows = new ArrayList<>();
                 int index = 1;
+                int allKT = 0;
+                int passedKT = 0;
+                int passedCounter = 0;
+                int gradeSum = 0;
+                Integer examGrade = 0;
 
                 List<StudentCourses> allstudentCourses = scB.getStudentCoursesByEnrolmentId(enrolment.getId());
                 for(StudentCourses studentCourse : allstudentCourses){
+                    allKT += studentCourse.getCourse().getCreditPoints();
+
                     List<String> row = new ArrayList<>();
                     Course course = studentCourse.getCourse();
 
+                    // Index
                     row.add(String.valueOf(index));
+
+                    // Course id
                     row.add(String.valueOf(course.getId()));
-                    row.add(course.getName());
+
+                    // Course name
+                    row.add(course.getName().toUpperCase());
+
+                    // Credit points (KT)
                     row.add(String.valueOf(course.getCreditPoints()));
 
+                    // Professor
                     CourseOrganization co = coB.getCourseOrganizationsByCourseIdAndYear(studentCourse.getCourse().getId(), enrolment.getStudyYear().getId());
-                    row.add(co.formatCourseOrganizers());
-
+                    row.add(co.formatCourseOrganizers().toUpperCase());
 
                     if(full){
                         List<ExamSignUp> allExamSignUps = esuB.getExamSignUpsOnCourseForStudent(studentCourse.getCourse().getId(), student.getId());
 
                         if(allExamSignUps.isEmpty()){
-                            row.add(" ");
-                            row.add("0/0");
-                            row.add("?");
-                            row.add("?");
-
+                            fullEmptyRows(row, 4);
                             rows.add(row);
                             index++;
                             continue;
@@ -477,57 +487,67 @@ public class DataExporterBean {
 
                             if(!first){
                                 row = new ArrayList<>();
-                                for(int i = 0; i < 5; i++){
-                                    row.add(" ");
-                                }
+                                fullEmptyRows(row, 5);
                             }
-
                             first = false;
 
+                            if(examSignUp.getCurrFinalGrade() == null){
+                                fullEmptyRows(row, 4);
+                                rows.add(row);
+                                index++;
+                                continue;
+                            }
+
+                            // Date
                             dateFormat = new SimpleDateFormat("dd.MM.yy");
                             row.add(dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()));
 
-                            Integer finalGrade = studentCourse.getGrade() == null? 0: studentCourse.getGrade();
+                            // Grade
+                            row.add(String.valueOf(examSignUp.getCurrFinalGrade()));
 
-                            Integer examGrade = 0;
-                            if(examSignUp != null) examGrade = examSignUp.getGrade();
-                            examGrade = examGrade == null? 0: examGrade;
-
-                            row.add(String.valueOf(examGrade ) + "/" + String.valueOf(finalGrade));
+                            // Count
                             row.add("?");
                             row.add("?");
 
                             rows.add(row);
                             index++;
                         }
-
                     }else{
                         ExamSignUp examSignUp = esuB.getLastSignUpForStudentCourse(studentCourse.getIdStudentCourses());
 
+                        if(examSignUp == null || examSignUp.getCurrFinalGrade() == null){
+                            fullEmptyRows(row, 4);
+                            rows.add(row);
+                            index++;
+                            continue;
+                        }
+
+                        // Date
                         dateFormat = new SimpleDateFormat("dd.MM.yy");
-                        String examDate = examSignUp != null? dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()): "";
-                        row.add(examDate);
+                        row.add(dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()));
 
-                        Integer finalGrade = studentCourse.getGrade() == null? 0: studentCourse.getGrade();
+                        // Grade
+                        row.add(String.valueOf(examSignUp.getCurrFinalGrade()));
 
-                        Integer examGrade = 0;
-                        if(examSignUp != null) examGrade = examSignUp.getGrade();
-                        examGrade = examGrade == null? 0: examGrade;
-
-                        row.add(String.valueOf(examGrade ) + "/" + String.valueOf(finalGrade));
+                        // Count
                         row.add("?");
                         row.add("?");
 
                         rows.add(row);
                         index++;
                     }
+
+                    // Get statistics
+                    if(examGrade > 5){
+                        passedKT += studentCourse.getCourse().getCreditPoints();
+                        gradeSum += examGrade;
+                        passedCounter++;
+                    }
                 }
 
                 PdfPTable table = new PdfPTable(9);
                 table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
                 table.setWidthPercentage(100);
-                //float[] columnWidths = getOptimizedTableWidths(indexHeader, rows);
-                //table.setWidths(columnWidths);
                 addTableHeader(table, font3, indexHeader, false);
                 addRows(table, font3, rows);
                 document.add(table);
@@ -539,10 +559,8 @@ public class DataExporterBean {
                 infoTable.setHorizontalAlignment(Element.ALIGN_CENTER);
 
                 List<String> footerLine = new ArrayList<>();
-                footerLine.add("\n Skupno število kreditnih točk: \n\n");
-                footerLine.add("\n Povprečje izpitov: \n\n");
-                footerLine.add("\n Povprečje vaj: \n\n");
-                footerLine.add("\n Skupno povprečje: \n\n");
+                footerLine.add("\n Skupno število kreditnih točk: " + passedKT + " od " + allKT + "\n\n");
+                footerLine.add("\n Povprečje izpitov: " + (passedCounter > 0? gradeSum / passedCounter : 0) + "\n\n");
                 addTableHeader(infoTable, font3, footerLine, false);
 
                 infoTable.setSpacingBefore(20);
@@ -654,5 +672,11 @@ public class DataExporterBean {
         }
 
         return widths;
+    }
+
+    private void fullEmptyRows(List<String> row, int count){
+        for(int i = 0; i < count; i++){
+            row.add("");
+        }
     }
 }
