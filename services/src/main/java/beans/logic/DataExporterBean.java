@@ -510,7 +510,9 @@ public class DataExporterBean {
 
                             // Count
                             row.add(String.valueOf(signUpsCout + 1));
-                            row.add("?");
+
+                            Integer numb = esuB.getNumberOfExamTakingsBeforeStudyYear(studentCourse.getIdStudentCourses(), enrolment.getStudyYear().getId());
+                            row.add( numb == null? String.valueOf(signUpsCout + 1) : String.valueOf(numb + signUpsCout + 1));
 
                             rows.add(row);
                             index++;
