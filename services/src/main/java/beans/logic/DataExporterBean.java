@@ -483,6 +483,7 @@ public class DataExporterBean {
                         }
 
                         boolean first = true;
+                        int signUpsCout = 0;
                         for(ExamSignUp examSignUp : allExamSignUps){
 
                             if(!first){
@@ -495,6 +496,7 @@ public class DataExporterBean {
                                 fullEmptyRows(row, 4);
                                 rows.add(row);
                                 index++;
+                                signUpsCout++;
                                 continue;
                             }
 
@@ -504,13 +506,15 @@ public class DataExporterBean {
 
                             // Grade
                             row.add(String.valueOf(examSignUp.getSuggestedGrade()));
+                            examGrade = examSignUp.getSuggestedGrade();
 
                             // Count
-                            row.add("?");
+                            row.add(String.valueOf(signUpsCout + 1));
                             row.add("?");
 
                             rows.add(row);
                             index++;
+                            signUpsCout++;
                         }
                     }else{
                         ExamSignUp examSignUp = esuB.getLastSignUpForStudentCourse(studentCourse.getIdStudentCourses());
@@ -528,7 +532,7 @@ public class DataExporterBean {
 
                         // Grade
                         row.add(String.valueOf(examSignUp.getSuggestedGrade()));
-
+                        examGrade = examSignUp.getSuggestedGrade();
 
                         // Count
                         row.add("?");
@@ -546,6 +550,7 @@ public class DataExporterBean {
                     }
                 }
 
+                // Set table
                 PdfPTable table = new PdfPTable(9);
                 table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
                 table.setWidthPercentage(100);
@@ -561,7 +566,7 @@ public class DataExporterBean {
 
                 List<String> footerLine = new ArrayList<>();
                 footerLine.add("\n Skupno število kreditnih točk: " + passedKT + " od " + allKT + "\n\n");
-                footerLine.add("\n Povprečje izpitov: " + (passedCounter > 0? gradeSum / passedCounter : 0) + "\n\n");
+                footerLine.add("\n Povprečje izpitov: " + (float)(passedCounter > 0? (float)gradeSum / (float)passedCounter : 0) + "\n\n");
                 addTableHeader(infoTable, font3, footerLine, false);
 
                 infoTable.setSpacingBefore(20);
