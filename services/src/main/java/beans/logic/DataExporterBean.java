@@ -5,6 +5,8 @@ import beans.crud.StudentCoursesBean;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import entities.Enrolment;
+import entities.Student;
+import entities.StudyProgram;
 import entities.curriculum.Course;
 import entities.curriculum.StudentCourses;
 import entities.logic.TableData;
@@ -64,7 +66,7 @@ public class DataExporterBean {
             mainHeader.setPhrase(new Phrase(tableData.getTableName()+", datum: "+ dateFormat.format(date), font1));
             table.addCell(mainHeader);
 
-            addTableHeader(table, font3, tableData.getColoumnNames());
+            addTableHeader(table, font3, tableData.getColoumnNames(), true);
             addRows(table, font3, tableData.getRows());
 
             document.add(table);
@@ -93,6 +95,48 @@ public class DataExporterBean {
             return null;
         }
 
+    }
+
+    public ByteArrayInputStream generateTableCsv(TableData tableData){
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(baos);
+
+            try {
+                Iterator<String> namesIt = tableData.getColoumnNames().iterator();
+                while (namesIt.hasNext()) {
+                    out.write(namesIt.next().getBytes(CHARSET));
+                    if(namesIt.hasNext()) {
+                        out.write(DELIMETER.getBytes(CHARSET));
+                    } else {
+                        out.write(NEW_LINE.getBytes(CHARSET));
+                    }
+                }
+                Iterator<List<String>> rowIt = tableData.getRows().iterator();
+                while (rowIt.hasNext()) {
+                    Iterator<String> cellIt = rowIt.next().iterator();
+                    while (cellIt.hasNext()) {
+                        out.write(cellIt.next().getBytes(CHARSET));
+                        if(cellIt.hasNext()) {
+                            out.write(DELIMETER.getBytes(CHARSET));
+                        } else {
+                            out.write(NEW_LINE.getBytes(CHARSET));
+                        }
+                    }
+                }
+                baos.flush();
+                baos.close();
+            } catch (Exception e) {
+                log.severe(e.getMessage());
+                return null;
+            }
+            byte[] csv = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(csv);
+            return bais;
+        } catch (Exception e) {
+            log.severe(e.getMessage());
+            return null;
+        }
     }
 
     public ByteArrayInputStream generateEnrolmentSheet(int studentId){
@@ -210,7 +254,7 @@ public class DataExporterBean {
             table.setWidthPercentage(100);
             float[] columnWidths = getOptimizedTableWidths(header, rows);
             table.setWidths(columnWidths);
-            addTableHeader(table, font3, header);
+            addTableHeader(table, font3, header, true);
             addRows(table, font3, rows);
             document.add(table);
 
@@ -309,6 +353,140 @@ public class DataExporterBean {
         }
     }
 
+    public ByteArrayInputStream genarateIndex(int studentId){
+        //pridobi vse podatke o vpisih in opravljanih predmetih in ocenah
+        List<Enrolment> allEnrolments = eB.getEnrolmentsByStudentId(studentId);
+        Student student = allEnrolments.get(0).getStudent();
+        try{
+            Document document = new Document();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            document.open();
+
+            /* File header */
+            Paragraph para = new Paragraph("\nUNIVERZA V LJUBLJANI\n\n", font4);
+            para.setAlignment(Element.ALIGN_LEFT);
+            document.add(para);
+
+            para = new Paragraph("\nFakulteta za računalništvo in informatiko\n\n", font4);
+            para.setAlignment(Element.ALIGN_LEFT);
+            document.add(para);
+
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
+            Date date = new Date();
+            para = new Paragraph("\n\"Datum: " + dateFormat.format(date) + "\n\n", font3);
+            para.setAlignment(Element.ALIGN_RIGHT);
+            document.add(para);
+
+            para = new Paragraph("\nStran: 1 od 2\n\n", font3);
+            para.setAlignment(Element.ALIGN_RIGHT);
+            document.add(para);
+
+            para = new Paragraph("\nKARTOTEČNI LIST\n\n", font4);
+            para.setAlignment(Element.ALIGN_LEFT);
+            document.add(para);
+
+            para = new Paragraph("\nPregled opravljenih izpitov\n\n", font4);
+            para.setAlignment(Element.ALIGN_CENTER);
+            document.add(para);
+
+            para = new Paragraph("\n" + student.getRegisterNumber() + " " + student.getName().toUpperCase() +" "+ student.getSurname().toUpperCase()+ "\n\n", font3);
+            para.setAlignment(Element.ALIGN_CENTER);
+            document.add(para);
+
+            /* Sections */
+            StudyProgram lastStudyProgram = null;
+            for(Enrolment enrolment : allEnrolments){
+                // We group by Study Program
+                if(lastStudyProgram  == null || lastStudyProgram.getId() != enrolment.getStudyProgram().getId()){
+                    para = new Paragraph("\n" + enrolment.getStudyProgram().getName() + "\n\n", font1);
+                    para.setAlignment(Element.ALIGN_CENTER);
+                    document.add(para);
+                }
+
+                lastStudyProgram = enrolment.getStudyProgram();
+
+                /* Inner header */
+                PdfPTable infoTable = new PdfPTable(2);
+                infoTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+                infoTable.setWidthPercentage(80);
+                infoTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+                List<String> headerLine = new ArrayList<>();
+                headerLine.add("\nŠtudijsko leto: " + enrolment.getStudyYear().getName() + "\n\n");
+                headerLine.add("\nSmer: " + "?" + " \n\n");
+                addTableHeader(infoTable, font3, headerLine, false);
+
+                headerLine = new ArrayList<>();
+                headerLine.add("\nLetnik: " + enrolment.getYear() + " \n\n");
+                headerLine.add("\nVrsta vpisa: " + enrolment.getType().getName() + " \n\n");
+                addTableHeader(infoTable, font3, headerLine, false);
+
+                headerLine = new ArrayList<>();
+                headerLine.add("\nNačin: " + enrolment.getKind().getName() + " študij \n\n");
+                headerLine.add("\nSkupina: LJUBLJANA \n\n");
+                addTableHeader(infoTable, font3, headerLine, false);
+
+                infoTable.setSpacingAfter(20);
+                document.add(infoTable);
+
+                List<StudentCourses> allstudentCourses = scB.getStudentCoursesByEnrolmentId(enrolment.getId());
+
+                List<String> header = new ArrayList<>();
+                header.add("#");
+                header.add("Šifra");
+                header.add("Predmet");
+                header.add("KT/U");
+                header.add("Predavatelj(i)");
+                header.add("Datum");
+                header.add("Ocena");
+                header.add("št.polaganj");
+                header.add("   ");
+
+                List<List<String>> rows = new ArrayList<>();
+                int index = 1;
+
+                for(StudentCourses studentCourse : allstudentCourses){
+                    List<String> row = new ArrayList<>();
+                    Course course = studentCourse.getCourse();
+
+                    row.add(String.valueOf(index));
+                    row.add(String.valueOf(course.getId()));
+                    row.add(course.getName());
+                    row.add(String.valueOf(course.getCreditPoints()));
+                    row.add("predavatelji");
+                    row.add("datum");
+                    row.add("7/8");
+                    row.add("1");
+                    row.add("1");
+
+                    rows.add(row);
+                    index++;
+                }
+
+                PdfPTable table = new PdfPTable(9);
+                table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+                table.setWidthPercentage(100);
+                float[] columnWidths = getOptimizedTableWidths(header, rows);
+                table.setWidths(columnWidths);
+                addTableHeader(table, font3, header, false);
+                addRows(table, font3, rows);
+                document.add(table);
+            }
+
+            document.close();
+
+            byte[] pdf = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(pdf);
+            return bais;
+        }catch(Exception e){
+            log.severe(e.getMessage());
+            return null;
+        }
+    }
+
+    /* Helpers */
+
     private void addSpacing(String text, PdfPTable table, int numCols, Font font) {
         PdfPCell cell = new PdfPCell(new Paragraph("\n\n"+text+"\n", font));
         cell.setColspan(numCols);
@@ -316,7 +494,7 @@ public class DataExporterBean {
         table.addCell(cell);
     }
 
-    public PdfPCell getCell(String text1, String text2, int alignment, Font font1, Font font2) {
+    private PdfPCell getCell(String text1, String text2, int alignment, Font font1, Font font2) {
         PdfPCell cell = new PdfPCell();
         if(!text1.equals("")) {
             cell.addElement(new Paragraph(text1, font2));
@@ -330,7 +508,7 @@ public class DataExporterBean {
         return cell;
     }
 
-    public PdfPCell getCell(String text1, String text2, Font font1, Font font2, int colspan) {
+    private PdfPCell getCell(String text1, String text2, Font font1, Font font2, int colspan) {
         PdfPCell cell = new PdfPCell();
         cell.setColspan(colspan);
         if(!text1.equals("")) {
@@ -344,12 +522,13 @@ public class DataExporterBean {
         return cell;
     }
 
-    private void addTableHeader(PdfPTable table, Font font, List<String> names) {
+    private void addTableHeader(PdfPTable table, Font font, List<String> names, boolean border) {
         Iterator<String> namesIt = names.iterator();
         while (namesIt.hasNext()) {
             PdfPCell header = new PdfPCell();
             header.setBackgroundColor(BaseColor.LIGHT_GRAY);
             header.setPhrase(new Phrase(namesIt.next(), font));
+            if(!border)header.setBorder(Rectangle.NO_BORDER);
             table.addCell(header);
         }
     }
@@ -361,48 +540,6 @@ public class DataExporterBean {
             while (cellIt.hasNext()) {
                 table.addCell(new Paragraph(cellIt.next(), font));
             }
-        }
-    }
-
-    public ByteArrayInputStream generateTableCsv(TableData tableData){
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(baos);
-
-            try {
-                Iterator<String> namesIt = tableData.getColoumnNames().iterator();
-                while (namesIt.hasNext()) {
-                    out.write(namesIt.next().getBytes(CHARSET));
-                    if(namesIt.hasNext()) {
-                        out.write(DELIMETER.getBytes(CHARSET));
-                    } else {
-                        out.write(NEW_LINE.getBytes(CHARSET));
-                    }
-                }
-                Iterator<List<String>> rowIt = tableData.getRows().iterator();
-                while (rowIt.hasNext()) {
-                    Iterator<String> cellIt = rowIt.next().iterator();
-                    while (cellIt.hasNext()) {
-                        out.write(cellIt.next().getBytes(CHARSET));
-                        if(cellIt.hasNext()) {
-                            out.write(DELIMETER.getBytes(CHARSET));
-                        } else {
-                            out.write(NEW_LINE.getBytes(CHARSET));
-                        }
-                    }
-                }
-                baos.flush();
-                baos.close();
-            } catch (Exception e) {
-                log.severe(e.getMessage());
-                return null;
-            }
-            byte[] csv = baos.toByteArray();
-            ByteArrayInputStream bais = new ByteArrayInputStream(csv);
-            return bais;
-        } catch (Exception e) {
-            log.severe(e.getMessage());
-            return null;
         }
     }
 
