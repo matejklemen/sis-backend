@@ -490,7 +490,7 @@ public class DataExporterBean {
                             Integer finalGrade = studentCourse.getGrade() == null? 0: studentCourse.getGrade();
 
                             Integer examGrade = 0;
-                            if(examSignUp != null) examGrade = examSignUp.getGrade();
+                            if(examSignUp != null) examGrade = examSignUp.getWrittenScore();
                             examGrade = examGrade == null? 0: examGrade;
 
                             row.add(String.valueOf(examGrade ) + "/" + String.valueOf(finalGrade));
@@ -511,7 +511,7 @@ public class DataExporterBean {
                         Integer finalGrade = studentCourse.getGrade() == null? 0: studentCourse.getGrade();
 
                         Integer examGrade = 0;
-                        if(examSignUp != null) examGrade = examSignUp.getGrade();
+                        if(examSignUp != null) examGrade = examSignUp.getWrittenScore();
                         examGrade = examGrade == null? 0: examGrade;
 
                         row.add(String.valueOf(examGrade ) + "/" + String.valueOf(finalGrade));

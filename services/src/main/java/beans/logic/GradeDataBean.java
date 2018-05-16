@@ -13,7 +13,6 @@ import pojo.GradeData;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -38,10 +37,10 @@ public class GradeDataBean {
             Integer examGrade = null;
             if(!esu.isEmpty()){
                 esu.sort(Comparator.comparingInt(ExamSignUp::getId));
-                if(esu.get(0).getGrade() != null){
-                    examGrade = esu.get(0).getGrade();
+                if(esu.get(0).getWrittenScore() != null){
+                    examGrade = esu.get(0).getWrittenScore();
                 }else if(esu.size() > 1){
-                    examGrade = esu.get(1).getGrade();
+                    examGrade = esu.get(1).getWrittenScore();
                 }
             }
 
