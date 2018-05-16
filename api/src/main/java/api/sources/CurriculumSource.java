@@ -86,7 +86,7 @@ public class CurriculumSource {
     public Response getCurriculumByCurriculumId(@PathParam(value = "id-curriculum") int idCurriculum) {
         Curriculum c = cb.getCurriculumByIdCurriculum(idCurriculum);
 
-        return c == null ? Response.status(Response.Status.NOT_FOUND).build():
+        return c == null ? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
                 Response.status(Response.Status.OK).entity(c).build();
     }
 
@@ -106,7 +106,7 @@ public class CurriculumSource {
     public Response getCurriculumByStudyProgramId(@PathParam(value = "study-program") String studyProgramId) {
         List<Curriculum> c = cb.getCurriculumByStudyProgramId(studyProgramId);
 
-        return c == null ? Response.status(Response.Status.NOT_FOUND).build():
+        return c == null ? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
                 Response.status(Response.Status.OK).entity(c).build();
     }
 
@@ -148,7 +148,7 @@ public class CurriculumSource {
         c.addAll(cSpecialEle);
         c.addAll(cGeneralEle);
 
-        return c == null ? Response.status(Response.Status.NOT_FOUND).build():
+        return c == null ? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
                 Response.status(Response.Status.OK).entity(c).build();
     }
 
@@ -232,7 +232,7 @@ public class CurriculumSource {
 
         List<Curriculum> currList = cb.getCurriculumByPOC(idPoc, studyYear, studyProgram, yearOfProgram);
 
-        return currList == null ? Response.status(Response.Status.NOT_FOUND).build():
+        return currList == null ? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
                 Response.status(Response.Status.OK).entity(currList).build();
     }
 

@@ -57,7 +57,7 @@ public class ExamSignUpSource {
 
         List<ExamSignUp> signups = esb.getExamSignUpsOnCourseForStudent(courseId, studentId);
 
-        return signups == null ? Response.status(Response.Status.NOT_FOUND).build():
+        return signups == null ? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
                 Response.status(Response.Status.OK).entity(signups).build();
     }
 
@@ -68,7 +68,7 @@ public class ExamSignUpSource {
         List<ExamSignUp> signups = esb.getExamSignUpsByExamTerm(idExamTerm);
 
         if(signups == null || signups.isEmpty())
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build();
 
         List<SignUpInfoResponse> signUpInfo = new ArrayList<>(signups.size());
 
@@ -177,7 +177,7 @@ public class ExamSignUpSource {
         ExamSignUp esu = esb.getExamSignUp(courseExamTermId, studentCourseId);
 
         if(esu == null)
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build();
 
         return Response.ok().entity(esulb.getExamSignUpHistry(esu)).build();
     }

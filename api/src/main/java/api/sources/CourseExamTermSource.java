@@ -170,7 +170,7 @@ public class CourseExamTermSource {
                                                         int id) {
         CourseExamTerm cet = cetb.getExamTermById(id);
 
-        return cet == null? Response.status(Response.Status.NOT_FOUND).build():
+        return cet == null? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
                 Response.status(Response.Status.OK).entity(cet).build();
     }
 
