@@ -6,10 +6,12 @@ import entities.curriculum.ExamSignUp;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -131,6 +133,13 @@ public class ExamSignUpBean {
     }
 
     @Transactional
+    public ExamSignUp getExamSignUp(int examSignUpId) {
+        ExamSignUp e = em.find(ExamSignUp.class, examSignUpId);
+        if(e == null) throw new NoResultException("No exam sign up by this id");
+        return e;
+    }
+
+    @Transactional
     public List<ExamSignUp> getExamSignUpsByExamTerm(int idExamTerm) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
                 "esu.courseExamTerm.id = :id_exam_term AND " +
@@ -217,5 +226,14 @@ public class ExamSignUpBean {
             em.persist(esu);
             em.remove(esu);
         }
+    }
+
+    @Transactional
+    public List<String> updateScoreAndGrade(int examSignUpId, Integer writtenScore, Integer suggestedGrade) {
+        ExamSignUp e = getExamSignUp(examSignUpId);
+        e.setWrittenScore(writtenScore);
+        e.setSuggestedGrade(suggestedGrade);
+        updateExamSignUp(e);
+        return new ArrayList<>(); // TODO
     }
 }

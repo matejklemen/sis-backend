@@ -103,7 +103,7 @@ public class ExamSignUp implements Serializable {
         return suggestedGrade;
     }
 
-    public void setSuggestedGrade(Integer currFinalGrade) {
-        this.suggestedGrade = currFinalGrade;
+    public void setSuggestedGrade(Integer suggestedGrade) {
+        this.suggestedGrade = suggestedGrade;
     }
 }
