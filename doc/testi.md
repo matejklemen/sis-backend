@@ -135,12 +135,21 @@ Vsi testi: `janez@nov.ak` `123`
 # Kartotečni list (#30)
 
 ###
-
-- [ ] Študent/referentka/učitelj
-- [ ] Za vsako študijsko leto se izpišejo vsi predmeti, ki jih je študent vpisal, ne glede na to, ali je izpit že opravil ali ne.
-- [ ] Preveri izpis kartotečnega lista takoj po vpisu. Izpis mora obsegati vse predmete, ki jih je študent vpisal, brez ocen. 
+- [ ] Preveri izpis kartotečnega lista takoj po vpisu. Izpis mora obsegati vse predmete, ki jih je študent vpisal, brez ocen:
+		- Za: `peter@kopljem.net` `123`
+		- REF: generiraj token
+		- PETER: prijavi
+		- REF: potrdi
+		- REF/PETER/UČITELJ: poglej oba izpisa
 - [ ] Vnesi nekaj ocen in preveri izpis na oba načina (vsa polaganja, samo zadnje polaganje). 
+		- Za: `janez@nov.ak` `123`
+		- Ocene: 
+			- OMA: 5, 5 
+			- FIZIKA: 5, 6
+			- ODV: 8
+			- P1: 5, 5
 - [ ] Preveri za študenta, ki je vpisan v več študijskih letih. 
+		- Za: `ip8012@student.uni-lj.si` `ip_63180012` (Imenko Priimkovič)
 - [ ] Preveri za študenta, ki je vpisan v več študijskih programov. 
 - [ ] Preveri izpis glave (študijsko leto, študijski program, letnik, vrsta vpisa, način študija) in noge (za vsako študijsko leto posebej število doseženih kreditnih točk in povprečna ocena). 
 - [ ] Preveri izpis podatkov o vsakem polaganju (šifra predmeta, ime predmeta, izpraševalci, datum izpita, zaporedna številka polaganja v celoti, zaporedna številka polaganja v tekočem študijskem letu, število kreditnih točk, ocena). 

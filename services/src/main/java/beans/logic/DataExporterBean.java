@@ -5,6 +5,9 @@ import beans.crud.EnrolmentBean;
 import beans.crud.ExamSignUpBean;
 import beans.crud.StudentCoursesBean;
 import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import entities.Enrolment;
 import entities.Student;
@@ -17,6 +20,7 @@ import entities.logic.TableData;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.awt.*;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -373,38 +377,36 @@ public class DataExporterBean {
             document.open();
 
             /* File header */
-            Paragraph para = new Paragraph("\nUNIVERZA V LJUBLJANI\n\n", font4);
-            para.setAlignment(Element.ALIGN_LEFT);
-            document.add(para);
+            PdfPTable table = new PdfPTable(2);
+            table.setWidthPercentage(100);
 
-            para = new Paragraph("\nFakulteta za računalništvo in informatiko\n\n", font4);
-            para.setAlignment(Element.ALIGN_LEFT);
-            document.add(para);
+            // Left
+            table.addCell(getCell("UNIVERZA V LJUBLJANI", PdfPCell.ALIGN_LEFT, font4, false));
+            table.addCell(getCell("", PdfPCell.ALIGN_LEFT, font4, false));
+            table.addCell(getCell("Fakulteta za računalništvo in informatiko", PdfPCell.ALIGN_LEFT, font4, false));
 
+            // Right
             DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
             Date date = new Date();
-            para = new Paragraph("\nDatum: " + dateFormat.format(date) + "\n\n", font3);
-            para.setAlignment(Element.ALIGN_RIGHT);
-            document.add(para);
+            table.addCell(getCell("Datum: " + dateFormat.format(date), PdfPCell.ALIGN_RIGHT, font3, false));
+            table.addCell(getCell("", PdfPCell.ALIGN_LEFT, font4, false));
+            table.addCell(getCell("Stran: 1 od 2", PdfPCell.ALIGN_RIGHT, font3, false));
 
-            para = new Paragraph("\nStran: 1 od 2\n\n", font3);
-            para.setAlignment(Element.ALIGN_RIGHT);
-            document.add(para);
+            // Left
+            table.addCell(getCell("KARTOTEČNI LIST", PdfPCell.ALIGN_LEFT, font4, true));
+            table.addCell(getCell("", PdfPCell.ALIGN_RIGHT, font4, true));
+            document.add(table);
 
-            para = new Paragraph("\nKARTOTEČNI LIST\n\n", font4);
-            para.setAlignment(Element.ALIGN_LEFT);
-            document.add(para);
-
-            para = new Paragraph("\nPregled opravljenih izpitov\n\n", font4);
-            para.setAlignment(Element.ALIGN_CENTER);
-            document.add(para);
-
-            para = new Paragraph("\n" + student.getRegisterNumber() + " " + student.getName().toUpperCase() +" "+ student.getSurname().toUpperCase()+ "\n\n", font3);
-            para.setAlignment(Element.ALIGN_CENTER);
-            document.add(para);
+            /* Under line */
+            table = new PdfPTable(1);
+            table.setWidthPercentage(100);
+            table.addCell(getCell("Pregled opravljenih izpitov", Element.ALIGN_CENTER, font4, false));
+            table.addCell(getCell(student.getRegisterNumber() + " " + student.getName().toUpperCase() +" "+ student.getSurname().toUpperCase(), Element.ALIGN_CENTER, font3, false));
+            document.add(table);
 
             /* Sections */
             StudyProgram lastStudyProgram = null;
+            Paragraph para;
             for(Enrolment enrolment : allEnrolments){
 
                 // We group by Study Program
@@ -419,7 +421,16 @@ public class DataExporterBean {
                 /* Inner header */
                 PdfPTable infoTable = new PdfPTable(2);
                 infoTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-                infoTable.setWidthPercentage(80);
+                infoTable.setWidthPercentage(100);
+
+
+                infoTable.addCell(getHeaderCell("Študijsko leto: ", enrolment.getStudyYear().getName()));
+                infoTable.addCell(getHeaderCell("Smer: ", "?"));
+                infoTable.addCell(getHeaderCell("Letnik: ", String.valueOf(enrolment.getYear())));
+                infoTable.addCell(getHeaderCell("Vrsta vpisa: ", enrolment.getType().getName()));
+                infoTable.addCell(getHeaderCell("Način: ", enrolment.getKind().getName() + " študij"));
+                infoTable.addCell(getHeaderCell("Skupina: ", "LJUBLJANA"));
+                /*
                 infoTable.setHorizontalAlignment(Element.ALIGN_CENTER);
 
                 List<String> headerLine = new ArrayList<>();
@@ -436,7 +447,7 @@ public class DataExporterBean {
                 headerLine.add("\nNačin: " + enrolment.getKind().getName() + " študij \n\n");
                 headerLine.add("\nSkupina: LJUBLJANA \n\n");
                 addTableHeader(infoTable, font3, headerLine, false);
-
+                */
                 infoTable.setSpacingAfter(20);
                 document.add(infoTable);
 
@@ -482,7 +493,7 @@ public class DataExporterBean {
                         continue;
                     }
 
-                    Integer numb = esuB.getNumberOfExamTakingsBeforeStudyYear(studentCourse.getIdStudentCourses(), enrolment.getStudyYear().getId());
+                    Integer numb = esuB.getNumberOfExamTakingsBeforeStudyYear(student.getId(), studentCourse.getCourse().getId(), enrolment.getStudyYear().getId());
 
                     boolean first = true;
                     int signUpsCout = 0;
@@ -533,7 +544,7 @@ public class DataExporterBean {
                 }
 
                 // Set table
-                PdfPTable table = new PdfPTable(9);
+                table = new PdfPTable(9);
                 table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
                 table.setWidthPercentage(100);
                 addTableHeader(table, font3, indexHeader, false);
@@ -604,6 +615,19 @@ public class DataExporterBean {
         return cell;
     }
 
+    public PdfPCell getCell(String text, int alignment, Font font, boolean bottomBorder) {
+        PdfPCell cell = new PdfPCell(new Phrase(text,font));
+        cell.setPadding(0);
+        cell.setHorizontalAlignment(alignment);
+        if(!bottomBorder)cell.setBorder(PdfPCell.NO_BORDER);
+        if(bottomBorder){
+            cell.setBorder(Rectangle.BOTTOM);
+            cell.setBorderWidthBottom(2);
+            cell.setPaddingBottom(5);
+        }
+        return cell;
+    }
+
     private void addTableHeader(PdfPTable table, Font font, List<String> names, boolean border) {
         Iterator<String> namesIt = names.iterator();
         while (namesIt.hasNext()) {
@@ -666,5 +690,17 @@ public class DataExporterBean {
         for(int i = 0; i < count; i++){
             row.add("");
         }
+    }
+
+    private PdfPCell getHeaderCell(String placeHolder,String data) {
+        Paragraph p = new Paragraph();
+        p.add(new Chunk(placeHolder, font4));
+        p.add(new Chunk(" " + data, font3));
+        PdfPCell cell = new PdfPCell(p);
+        cell.setPadding(7);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBackgroundColor(new GrayColor(240));
+        cell.setBorder(PdfPCell.NO_BORDER);
+        return cell;
     }
 }
