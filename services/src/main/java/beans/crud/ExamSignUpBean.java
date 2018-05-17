@@ -208,4 +208,13 @@ public class ExamSignUpBean {
         em.flush();
         return esu;
     }
+
+    @Transactional
+    public void removeExamSignUps(List<ExamSignUp> signUps) {
+        for(ExamSignUp esu: signUps) {
+            log.info(String.format("Removing exam sign up with ID=%d...", esu.getId()));
+            em.persist(esu);
+            em.remove(esu);
+        }
+    }
 }

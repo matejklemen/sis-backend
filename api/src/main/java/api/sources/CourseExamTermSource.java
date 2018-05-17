@@ -5,10 +5,7 @@ import beans.crud.*;
 import beans.logic.CourseExamTermValidationBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.Enrolment;
-import entities.curriculum.Course;
-import entities.curriculum.CourseExamTerm;
-import entities.curriculum.CourseOrganization;
-import entities.curriculum.StudentCourses;
+import entities.curriculum.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -243,7 +240,13 @@ public class CourseExamTermSource {
     public Response deleteExamTerm(@PathParam("id") @Parameter(description = "ID of exam term to delete", in = ParameterIn.PATH)
                                                int idExamTerm) {
         try {
+            List<ExamSignUp> signups = esub.getExamSignUpsByExamTerm(idExamTerm);
             cetb.deleteExamTerm(idExamTerm);
+
+            // when deleting an exam term, also delete the sign ups from students
+            if(signups != null && !signups.isEmpty())
+                esub.removeExamSignUps(signups);
+
             return Response.status(Response.Status.OK).build();
         }
         catch(NoResultException nre) {
