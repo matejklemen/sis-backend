@@ -511,9 +511,10 @@ public class DataExporterBean {
                             row.add(String.valueOf(examSignUp.getSuggestedGrade()));
                             examGrade = examSignUp.getSuggestedGrade();
 
-                            // Count
+                            // Count this year
                             row.add(String.valueOf(signUpsCout + 1));
 
+                            // Count all
                             row.add( numb == null? String.valueOf(signUpsCout + 1) : String.valueOf(numb + signUpsCout + 1));
 
                             rows.add(row);
