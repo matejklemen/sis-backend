@@ -7,6 +7,7 @@ import entities.curriculum.Course;
 import java.sql.Timestamp;
 
 public class SignUpInfoResponse {
+    private int idExamSignUp;
     private Student studentInfo;
     private StudyYear yearOfTakingCourse; // study year in which student selected course
     private Integer currentGrade;
@@ -14,6 +15,13 @@ public class SignUpInfoResponse {
     // number of times that the student took an exam on this course prior to (and including) this sign up
     private Integer currentNumberOfTakings;
 
+    public int getIdExamSignUp() {
+        return idExamSignUp;
+    }
+
+    public void setIdExamSignUp(int idExamSignUp) {
+        this.idExamSignUp = idExamSignUp;
+    }
 
     public Student getStudentInfo() {
         return studentInfo;

@@ -86,6 +86,7 @@ public class ExamSignUpSource {
             currInfo.setFinalGrade(signups.get(idx).getSuggestedGrade());
             currInfo.setCurrentGrade(signups.get(idx).getWrittenScore());
             currInfo.setCurrentNumberOfTakings(numPriorTakings);
+            currInfo.setIdExamSignUp(signups.get(idx).getId());
 
             signUpInfo.add(idx, currInfo);
         }
