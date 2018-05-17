@@ -183,4 +183,23 @@ public class ExamSignUpSource {
         return Response.ok().entity(esulb.getExamSignUpHistry(esu)).build();
     }
 
+    @Operation(description = "Update written score and suggested grade. Both score and grade are ALWAYS updated: not passing a parameter sets the grade to null (has no grade)", summary = "Update written score and suggested grade.",
+            parameters = {
+                    @Parameter(name = "writtenScore", description = "Written score to be set, in range 0 - 100", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
+                    @Parameter(name = "suggestedGrade", description = "Suggested grade to be set, in range 1 - 10", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
+            },
+            responses = {
+
+            })
+    @POST
+    @Path("/{examSignUpId}/grades")
+    public Response postGrades(@PathParam("examSignUpId") Integer examSignUpId, @QueryParam("writtenScore") Integer writtenScore, @QueryParam("suggestedGrade") Integer suggestedGrade) {
+        List<String> err = esb.updateScoreAndGrade(examSignUpId, writtenScore, suggestedGrade);
+        if(err.isEmpty()) {
+            return Response.ok().type(MediaType.TEXT_PLAIN).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, err.toArray(new String[0]))).build();
+        }
+    }
+
 }
