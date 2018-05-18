@@ -251,7 +251,7 @@ public class ExamSignUpLogicBean {
         return newTaking.after(fortniteAfterLastTaking);
     }
 
-    private void logExamSignUpHistory(ExamSignUp esu, Integer loginId, String action){
+    public void logExamSignUpHistory(ExamSignUp esu, Integer loginId, String action){
         ExamSignUpHistory esuh = new ExamSignUpHistory();
         esuh.setDatetime(new Timestamp(System.currentTimeMillis()));
         esuh.setExamSignUp(esu);

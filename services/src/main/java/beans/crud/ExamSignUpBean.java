@@ -1,5 +1,6 @@
 package beans.crud;
 
+import beans.logic.ExamSignUpLogicBean;
 import entities.Enrolment;
 import entities.curriculum.ExamSignUp;
 
@@ -24,10 +25,10 @@ public class ExamSignUpBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
-    @Inject
-    private EnrolmentBean eb;
+    @Inject private EnrolmentBean eb;
+    @Inject private StudyYearBean syb;
+    @Inject private ExamSignUpLogicBean signUpLogicBean;
 
-    @Inject StudyYearBean syb;
 
     public List<ExamSignUp> getExamSignUpsForCourse(int idCourse) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
@@ -152,6 +153,19 @@ public class ExamSignUpBean {
     }
 
     @Transactional
+    public List<ExamSignUp> getExamSignUpsByExamTermWithReturned(int idExamTerm) {
+        TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
+                "esu.courseExamTerm.id = :id_exam_term " +
+                "ORDER BY " +
+                "esu.studentCourses.enrolment.student.surname, " +
+                "esu.studentCourses.enrolment.student.name", ExamSignUp.class);
+
+        q.setParameter("id_exam_term", idExamTerm);
+
+        return q.getResultList();
+    }
+
+    @Transactional
     public ExamSignUp getExamSignUpWithReturn(int courseExamTermId, int studentCourseId, Boolean returned) {
         TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getExamSignUpWithReturn", ExamSignUp.class)
         .setParameter("course_exam_term_id", courseExamTermId)
@@ -213,7 +227,7 @@ public class ExamSignUpBean {
     public ExamSignUp updateExamSignUp(ExamSignUp esu){
         log.info("Will update exam sign up with id: "+esu.getId());
 
-        em.merge(esu);
+        esu = em.merge(esu);
         em.flush();
         return esu;
     }
@@ -228,11 +242,49 @@ public class ExamSignUpBean {
     }
 
     @Transactional
-    public List<String> updateScoreAndGrade(int examSignUpId, Integer writtenScore, Integer suggestedGrade) {
-        ExamSignUp e = getExamSignUp(examSignUpId);
-        e.setWrittenScore(writtenScore);
-        e.setSuggestedGrade(suggestedGrade);
-        updateExamSignUp(e);
-        return new ArrayList<>(); // TODO
+    public List<String> updateScoreAndGrade(int examSignUpId, int loginId, Integer writtenScore, Integer suggestedGrade, Boolean isReturned) {
+        ArrayList<String> errors = new ArrayList<>();
+
+        ExamSignUp signUp = getExamSignUp(examSignUpId);
+
+        if(isReturned != null) {
+            if (isReturned) {
+                // if sign up was returned, remove both score & grade
+                signUp.setReturned(true);
+                signUp.setWrittenScore(null);
+                signUp.setSuggestedGrade(null);
+                updateExamSignUp(signUp);
+                signUpLogicBean.logExamSignUpHistory(signUp, loginId, "odjava (ob vnosu ocen)");
+                return errors;
+            } else {
+                signUp.setReturned(false);
+                updateExamSignUp(signUp);
+                signUpLogicBean.logExamSignUpHistory(signUp, loginId, "prijava (ob vnosu ocen)");
+                // proceed with adding score/grade
+            }
+        }
+
+        boolean scoreOk = true, gradeOk = true;
+
+        if(writtenScore != null) {
+            if(writtenScore < 0 || writtenScore > 100) {
+                errors.add("neveljaven vnos za točke pisnega izpita");
+                scoreOk = false;
+            }
+        }
+
+        if(suggestedGrade != null) {
+            if(suggestedGrade < 1 || suggestedGrade > 10) {
+                errors.add("neveljaven vnos za končno oceno");
+                gradeOk = false;
+            }
+        }
+
+        if(scoreOk) signUp.setWrittenScore(writtenScore);
+        if(gradeOk) signUp.setSuggestedGrade(suggestedGrade);
+
+        updateExamSignUp(signUp);
+
+        return errors;
     }
 }

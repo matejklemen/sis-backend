@@ -53,6 +53,9 @@ public class CourseExamTerm implements Serializable {
     @Transient
     private Boolean confirmed = true; // is latest examsignup confirmed?
 
+    @Transient
+    private Integer signedUpCount = null;
+
     public Integer getId() {
         return id;
     }
@@ -153,5 +156,13 @@ public class CourseExamTerm implements Serializable {
 
     public void setConfirmed(Boolean confirmed) {
         this.confirmed = confirmed;
+    }
+
+    public Integer getSignedUpCount() {
+        return signedUpCount;
+    }
+
+    public void setSignedUpCount(Integer signedUpCount) {
+        this.signedUpCount = signedUpCount;
     }
 }

@@ -65,7 +65,7 @@ public class ExamSignUpSource {
     @GET
     // get exam sign ups and their final grade for an exam term
     public Response getAugmentedSignUpsForExamTerm(@QueryParam("examtermid") int idExamTerm) {
-        List<ExamSignUp> signups = esb.getExamSignUpsByExamTerm(idExamTerm);
+        List<ExamSignUp> signups = esb.getExamSignUpsByExamTermWithReturned(idExamTerm);
 
         if(signups == null || signups.isEmpty())
             return Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build();
@@ -83,10 +83,11 @@ public class ExamSignUpSource {
             SignUpInfoResponse currInfo = new SignUpInfoResponse();
             currInfo.setStudentInfo(currStudentCourseInfo.getEnrolment().getStudent());
             currInfo.setYearOfTakingCourse(currStudentCourseInfo.getEnrolment().getStudyYear());
-            currInfo.setFinalGrade(signups.get(idx).getSuggestedGrade());
-            currInfo.setCurrentGrade(signups.get(idx).getWrittenScore());
+            currInfo.setSuggestedGrade(signups.get(idx).getSuggestedGrade());
+            currInfo.setWrittenScore(signups.get(idx).getWrittenScore());
             currInfo.setCurrentNumberOfTakings(numPriorTakings);
             currInfo.setIdExamSignUp(signups.get(idx).getId());
+            currInfo.setReturned(signups.get(idx).isReturned());
 
             signUpInfo.add(idx, currInfo);
         }
@@ -183,18 +184,25 @@ public class ExamSignUpSource {
         return Response.ok().entity(esulb.getExamSignUpHistry(esu)).build();
     }
 
-    @Operation(description = "Update written score and suggested grade. Both score and grade are ALWAYS updated: not passing a parameter sets the grade to null (has no grade)", summary = "Update written score and suggested grade.",
+    @Operation(description = "Update written score and suggested grade. Both score and grade are ALWAYS updated: not passing a parameter sets the grade to null (has no grade). If isReturned=true is passed, both score and grade are removed from ExamSignUp and ExamSignUp is marked as returned.", summary = "Update written score and suggested grade.",
             parameters = {
-                    @Parameter(name = "writtenScore", description = "Written score to be set, in range 0 - 100", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
-                    @Parameter(name = "suggestedGrade", description = "Suggested grade to be set, in range 1 - 10", in = ParameterIn.QUERY, schema = @Schema(type = "int")),
+                    @Parameter(name = "examSignUpId", required = true, description = "Id of the ExamSignUp to be edited", in = ParameterIn.PATH, schema = @Schema(implementation = Integer.class)),
+                    @Parameter(name = "loginId", required = true, description = "LoginId of the person submitting grades", in = ParameterIn.QUERY, schema = @Schema(implementation = Integer.class)),
+                    @Parameter(name = "writtenScore", description = "Written score to be set, in range 0 - 100", in = ParameterIn.QUERY, schema = @Schema(implementation = Integer.class)),
+                    @Parameter(name = "suggestedGrade", description = "Suggested grade to be set, in range 1 - 10", in = ParameterIn.QUERY, schema = @Schema(implementation = Integer.class)),
+                    @Parameter(name = "isReturned", description = "If the ExamSignUp should be marked as returned. If it is, it removes both writtenScore and suggestedGrade", in = ParameterIn.QUERY, schema = @Schema(implementation = Boolean.class)),
             },
             responses = {
 
             })
     @POST
     @Path("/{examSignUpId}/grades")
-    public Response postGrades(@PathParam("examSignUpId") Integer examSignUpId, @QueryParam("writtenScore") Integer writtenScore, @QueryParam("suggestedGrade") Integer suggestedGrade) {
-        List<String> err = esb.updateScoreAndGrade(examSignUpId, writtenScore, suggestedGrade);
+    public Response postGrades(@PathParam("examSignUpId") Integer examSignUpId,
+                               @QueryParam("loginId") Integer loginId,
+                               @QueryParam("writtenScore") Integer writtenScore,
+                               @QueryParam("suggestedGrade") Integer suggestedGrade,
+                               @QueryParam("isReturned") Boolean isReturned) {
+        List<String> err = esb.updateScoreAndGrade(examSignUpId, loginId, writtenScore, suggestedGrade, isReturned);
         if(err.isEmpty()) {
             return Response.ok().type(MediaType.TEXT_PLAIN).build();
         } else {

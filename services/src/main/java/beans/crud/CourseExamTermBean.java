@@ -5,6 +5,7 @@ import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.curriculum.CourseExamTerm;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -15,13 +16,20 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 public class CourseExamTermBean {
+
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    @Inject
+    private ExamSignUpBean signUpBean;
+
     public List<CourseExamTerm> getAllExamTerms(QueryParameters query) {
         List<CourseExamTerm> examTerms = JPAUtils.queryEntities(em, CourseExamTerm.class, query);
+        for(CourseExamTerm e : examTerms) {
+            e.setSignedUpCount(signUpBean.getExamSignUpsByExamTerm(e.getId()).size());
+        }
         return examTerms;
     }
 
@@ -34,10 +42,13 @@ public class CourseExamTermBean {
 
         List<CourseExamTerm> res = q.getResultList();
 
-        if(res != null && !res.isEmpty())
-            return res.get(0);
-
-        return null;
+        if(res != null && !res.isEmpty()) {
+            CourseExamTerm e = res.get(0);
+            e.setSignedUpCount(signUpBean.getExamSignUpsByExamTerm(idCourseExamTerm).size());
+            return e;
+        } else {
+            return null;
+        }
     }
 
     public List<CourseExamTerm> getExamTermsByCourse(int idCourseOrganization) {
