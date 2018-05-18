@@ -5,6 +5,9 @@ import beans.crud.EnrolmentBean;
 import beans.crud.ExamSignUpBean;
 import beans.crud.StudentCoursesBean;
 import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import entities.Enrolment;
 import entities.Student;
@@ -14,9 +17,11 @@ import entities.curriculum.CourseOrganization;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
 import entities.logic.TableData;
+import javafx.scene.control.Tab;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.awt.*;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -39,7 +44,7 @@ public class DataExporterBean {
     private final Font font4 = new Font(base, 10, Font.BOLD);
     private final Font font5 = new Font(base, 8, Font.BOLDITALIC);
 
-    private final List<String> indexHeader = Arrays.asList("#","Šifra","Predmet","KT/U","Predavatelj(i)","Datum","Ocena","št.polaganj","   ");
+    private final List<String> indexHeader = Arrays.asList("#","Šifra","Predmet","KT","Predavatelj(i)","Datum","Ocena","Polaganja");
 
     @Inject
     EnrolmentBean eB;
@@ -76,7 +81,7 @@ public class DataExporterBean {
             mainHeader.setPhrase(new Phrase(tableData.getTableName()+", datum: "+ dateFormat.format(date), font1));
             table.addCell(mainHeader);
 
-            addTableHeader(table, font3, tableData.getColoumnNames(), true);
+            addTableHeader(table, font3, tableData.getColoumnNames());
             addRows(table, font3, tableData.getRows());
 
             document.add(table);
@@ -264,7 +269,7 @@ public class DataExporterBean {
             table.setWidthPercentage(100);
             float[] columnWidths = getOptimizedTableWidths(header, rows);
             table.setWidths(columnWidths);
-            addTableHeader(table, font3, header, true);
+            addTableHeader(table, font3, header);
             addRows(table, font3, rows);
             document.add(table);
 
@@ -363,7 +368,7 @@ public class DataExporterBean {
         }
     }
 
-    public ByteArrayInputStream genarateIndex(int studentId, boolean full){
+    public ByteArrayInputStream genarateIndexPdf(int studentId, boolean full){
         List<Enrolment> allEnrolments = eB.getEnrolmentsByStudentId(studentId);
         Student student = allEnrolments.get(0).getStudent();
         try{
@@ -372,40 +377,56 @@ public class DataExporterBean {
             PdfWriter writer = PdfWriter.getInstance(document, baos);
             document.open();
 
-            /* File header */
-            Paragraph para = new Paragraph("\nUNIVERZA V LJUBLJANI\n\n", font4);
-            para.setAlignment(Element.ALIGN_LEFT);
-            document.add(para);
-
-            para = new Paragraph("\nFakulteta za računalništvo in informatiko\n\n", font4);
-            para.setAlignment(Element.ALIGN_LEFT);
-            document.add(para);
-
-            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
-            Date date = new Date();
-            para = new Paragraph("\nDatum: " + dateFormat.format(date) + "\n\n", font3);
-            para.setAlignment(Element.ALIGN_RIGHT);
-            document.add(para);
-
-            para = new Paragraph("\nStran: 1 od 2\n\n", font3);
-            para.setAlignment(Element.ALIGN_RIGHT);
-            document.add(para);
-
-            para = new Paragraph("\nKARTOTEČNI LIST\n\n", font4);
-            para.setAlignment(Element.ALIGN_LEFT);
-            document.add(para);
-
-            para = new Paragraph("\nPregled opravljenih izpitov\n\n", font4);
-            para.setAlignment(Element.ALIGN_CENTER);
-            document.add(para);
-
-            para = new Paragraph("\n" + student.getRegisterNumber() + " " + student.getName().toUpperCase() +" "+ student.getSurname().toUpperCase()+ "\n\n", font3);
-            para.setAlignment(Element.ALIGN_CENTER);
-            document.add(para);
+            boolean firstPage = true;
 
             /* Sections */
             StudyProgram lastStudyProgram = null;
+            Paragraph para;
             for(Enrolment enrolment : allEnrolments){
+
+                /* File header */
+                PdfPTable table = new PdfPTable(2);
+                table.setWidthPercentage(100);
+
+                // Left
+                table.addCell(getCell("UNIVERZA V LJUBLJANI", PdfPCell.ALIGN_LEFT, font4, false));
+                table.addCell(getCell("", PdfPCell.ALIGN_LEFT, font4, false));
+                table.addCell(getCell("Fakulteta za računalništvo in informatiko", PdfPCell.ALIGN_LEFT, font4, false));
+
+                // Right
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
+                Date date = new Date();
+                table.addCell(getCell("Datum: " + dateFormat.format(date), PdfPCell.ALIGN_RIGHT, font3, false));
+
+                PdfPCell cell = new PdfPCell(new Phrase(" "));
+                cell.setBorder(PdfPCell.NO_BORDER);
+                cell.setMinimumHeight(24);
+
+                table.addCell(cell);
+                table.addCell(cell);
+
+                // Left
+                table.addCell(getCell("KARTOTEČNI LIST", PdfPCell.ALIGN_LEFT, font4, true));
+                table.addCell(getCell("", PdfPCell.ALIGN_RIGHT, font4, true));
+
+                if(!firstPage)
+                    document.newPage();
+
+                document.add(table);
+
+                if(firstPage){
+                    /* Under line */
+                    table = new PdfPTable(1);
+                    table.setWidthPercentage(100);
+                    table.addCell(getCell("Pregled opravljenih izpitov", Element.ALIGN_CENTER, font4, false));
+                    table.addCell(getCell("   ", Element.ALIGN_CENTER, font4, false));
+                    table.addCell(getCell(student.getRegisterNumber() + " " + student.getName().toUpperCase() +" "+ student.getSurname().toUpperCase(), Element.ALIGN_CENTER, font3, false));
+                    table.setSpacingBefore(10);
+                    document.add(table);
+                }
+                firstPage = false;
+
+
 
                 // We group by Study Program
                 if(lastStudyProgram  == null || lastStudyProgram.getId() != enrolment.getStudyProgram().getId()){
@@ -419,25 +440,17 @@ public class DataExporterBean {
                 /* Inner header */
                 PdfPTable infoTable = new PdfPTable(2);
                 infoTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-                infoTable.setWidthPercentage(80);
-                infoTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+                infoTable.setWidthPercentage(100);
 
-                List<String> headerLine = new ArrayList<>();
-                headerLine.add("\nŠtudijsko leto: " + enrolment.getStudyYear().getName() + "\n\n");
-                headerLine.add("\nSmer: " + "?" + " \n\n");
-                addTableHeader(infoTable, font3, headerLine, false);
+                infoTable.addCell(getHeaderCell("Študijsko leto: ", enrolment.getStudyYear().getName()));
+                infoTable.addCell(getHeaderCell("Smer: ", enrolment.getStudyProgram().getName()+", Ni smeri"));
+                infoTable.addCell(getHeaderCell("Letnik: ", String.valueOf(enrolment.getYear())));
+                infoTable.addCell(getHeaderCell("Vrsta vpisa: ", enrolment.getType().getName()));
+                infoTable.addCell(getHeaderCell("Način: ", enrolment.getKind().getName() + " študij"));
+                infoTable.addCell(getHeaderCell("Skupina: ", "LJUBLJANA"));
 
-                headerLine = new ArrayList<>();
-                headerLine.add("\nLetnik: " + enrolment.getYear() + " \n\n");
-                headerLine.add("\nVrsta vpisa: " + enrolment.getType().getName() + " \n\n");
-                addTableHeader(infoTable, font3, headerLine, false);
-
-                headerLine = new ArrayList<>();
-                headerLine.add("\nNačin: " + enrolment.getKind().getName() + " študij \n\n");
-                headerLine.add("\nSkupina: LJUBLJANA \n\n");
-                addTableHeader(infoTable, font3, headerLine, false);
-
-                infoTable.setSpacingAfter(20);
+                infoTable.setSpacingAfter(10);
+                infoTable.setSpacingBefore(10);
                 document.add(infoTable);
 
 
@@ -482,7 +495,7 @@ public class DataExporterBean {
                         continue;
                     }
 
-                    Integer numb = esuB.getNumberOfExamTakingsBeforeStudyYear(studentCourse.getIdStudentCourses(), enrolment.getStudyYear().getId());
+                    Integer numb = esuB.getNumberOfExamTakingsBeforeStudyYear(student.getId(), studentCourse.getCourse().getId(), enrolment.getStudyYear().getId());
 
                     boolean first = true;
                     int signUpsCout = 0;
@@ -533,36 +546,229 @@ public class DataExporterBean {
                 }
 
                 // Set table
-                PdfPTable table = new PdfPTable(9);
+                table = new PdfPTable(9);
                 table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
                 table.setWidthPercentage(100);
-                addTableHeader(table, font3, indexHeader, false);
+                table.setWidths(new float[] { 2,3,12,2,11,4,3,2,2 });
+                addTableHeaderNoBorder(table, font3, indexHeader,true);
                 addRows(table, font3, rows);
                 document.add(table);
 
                 /* Inner footer */
-                infoTable = new PdfPTable(1);
+                infoTable = new PdfPTable(2);
                 infoTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-                infoTable.setWidthPercentage(80);
-                infoTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+                infoTable.setWidthPercentage(100);
 
-                List<String> footerLine = new ArrayList<>();
-                footerLine.add("\n Skupno število kreditnih točk: " + passedKT + " od " + allKT + "\n\n");
-                footerLine.add("\n Povprečje izpitov: " + (float)(passedCounter > 0? (float)gradeSum / (float)passedCounter : 0) + "\n\n");
-                addTableHeader(infoTable, font3, footerLine, false);
+                infoTable.addCell(getHeaderCell("Skupno število kreditnih točk: ", passedKT + " od " + allKT));
+                infoTable.addCell(getHeaderCell("",""));
+                infoTable.addCell(getHeaderCell("Povprečje izpitov: ", String.valueOf((float)(passedCounter > 0? (float)gradeSum / (float)passedCounter : 0))));
+                infoTable.addCell(getHeaderCell("",""));
 
-                infoTable.setSpacingBefore(20);
-                infoTable.setSpacingAfter(20);
+                infoTable.setSpacingBefore(10);
                 document.add(infoTable);
             }
 
             document.close();
 
             byte[] pdf = baos.toByteArray();
-            ByteArrayInputStream bais = new ByteArrayInputStream(pdf);
+
+            PdfReader reader = new PdfReader(pdf);
+            int pages = reader.getNumberOfPages();
+
+            ByteArrayOutputStream pagedPdf = new ByteArrayOutputStream();
+            PdfStamper stamper = new PdfStamper(reader, pagedPdf);
+            PdfContentByte pageContent;
+            for(int i=1; i<=pages; i++) {
+                pageContent = stamper.getOverContent(i);
+                ColumnText.showTextAligned(pageContent, Element.ALIGN_RIGHT, new Phrase(String.format("Stran: %d od %d", i, pages), font3), pageContent.getPdfDocument().right(), pageContent.getPdfDocument().top()-31, 0);
+            }
+            stamper.close();
+            reader.close();
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(pagedPdf.toByteArray());
             return bais;
         }catch(Exception e){
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ByteArrayInputStream generateIndexCsv(int studentId, boolean full){
+        List<Enrolment> allEnrolments = eB.getEnrolmentsByStudentId(studentId);
+        Student student = allEnrolments.get(0).getStudent();
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(baos);
+
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
+            Date date = new Date();
+            out.write(("Datum: "+dateFormat.format(date)).getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+
+            out.write((student.getRegisterNumber() + " " + student.getName().toUpperCase() +" "+ student.getSurname().toUpperCase()).getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+
+            /* Sections */
+            StudyProgram lastStudyProgram = null;
+            Paragraph para;
+            for(Enrolment enrolment : allEnrolments){
+                // We group by Study Program
+                if(lastStudyProgram  == null || lastStudyProgram.getId() != enrolment.getStudyProgram().getId()){
+                    para = new Paragraph("\n" + enrolment.getStudyProgram().getName() + "\n\n", font1);
+                    para.setAlignment(Element.ALIGN_CENTER);
+                }
+
+                lastStudyProgram = enrolment.getStudyProgram();
+
+                /* Inner header */
+                out.write(("Študijsko leto: "+enrolment.getStudyYear().getName()).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                out.write(("Smer: "+ enrolment.getStudyProgram().getName()+", Ni smeri").getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                out.write(("Letnik: "+ String.valueOf(enrolment.getYear())).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                out.write(("Vrsta vpisa: "+ enrolment.getType().getName()).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                out.write(("Način: "+ enrolment.getKind().getName() + " študij").getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                // Set table header
+                int i = 0;
+                for(String header: indexHeader){
+                    if(i>0)
+                        out.write(DELIMETER.getBytes(CHARSET));
+                    out.write(header.getBytes());
+                    i++;
+                }
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                List<List<String>> rows = new ArrayList<>();
+                int index = 1;
+                int allKT = 0;
+                int passedKT = 0;
+                int passedCounter = 0;
+                int gradeSum = 0;
+                Integer examGrade = 0;
+
+                List<StudentCourses> allstudentCourses = scB.getStudentCoursesByEnrolmentId(enrolment.getId());
+                for(StudentCourses studentCourse : allstudentCourses){
+                    allKT += studentCourse.getCourse().getCreditPoints();
+
+                    List<String> row = new ArrayList<>();
+                    Course course = studentCourse.getCourse();
+
+                    // Index
+                    out.write(String.valueOf(index).getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    // Course id
+                    out.write(String.valueOf(course.getId()).getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    // Course name
+                    out.write(course.getName().toUpperCase().getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    // Credit points (KT)
+                    out.write(String.valueOf(course.getCreditPoints()).getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    // Professor
+                    CourseOrganization co = coB.getCourseOrganizationsByCourseIdAndYear(studentCourse.getCourse().getId(), enrolment.getStudyYear().getId());
+                    out.write(co.formatCourseOrganizers().toUpperCase().getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    List<ExamSignUp> allExamSignUps = esuB.getExamSignUpsOnCourseForStudent(studentCourse.getCourse().getId(), student.getId());
+
+                    if(allExamSignUps.isEmpty()){
+                        out.write(DELIMETER.getBytes(CHARSET));
+                        out.write(DELIMETER.getBytes(CHARSET));
+                        out.write(DELIMETER.getBytes(CHARSET));
+                        out.write(DELIMETER.getBytes(CHARSET));
+                        out.write(NEW_LINE.getBytes(CHARSET));
+                        index++;
+                        continue;
+                    }
+
+                    Integer numb = esuB.getNumberOfExamTakingsBeforeStudyYear(student.getId(), studentCourse.getCourse().getId(), enrolment.getStudyYear().getId());
+
+                    boolean first = true;
+                    int signUpsCout = 0;
+                    for(ExamSignUp examSignUp : allExamSignUps){
+
+                        if(!first && full){
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                        }
+                        first = false;
+
+                        // If no grade -> fill with empty
+                        if(examSignUp.getSuggestedGrade() == null){
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(NEW_LINE.getBytes(CHARSET));
+                            index++;
+                            continue;
+                        }
+
+                        if(full || signUpsCout == allExamSignUps.size() - 1){
+                            // Date
+                            dateFormat = new SimpleDateFormat("dd.MM.yy");
+                            out.write(dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()).getBytes());
+                            out.write(DELIMETER.getBytes(CHARSET));
+
+                            // Grade
+                            out.write(String.valueOf(examSignUp.getSuggestedGrade()).getBytes());
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            examGrade = examSignUp.getSuggestedGrade();
+
+                            // Count this year
+                            out.write(String.valueOf(signUpsCout + 1).getBytes());
+                            out.write(DELIMETER.getBytes(CHARSET));
+
+                            // Count all
+                            out.write((numb == null? String.valueOf(signUpsCout + 1) : String.valueOf(numb + signUpsCout + 1)).getBytes());
+                            out.write(NEW_LINE.getBytes(CHARSET));
+
+                            rows.add(row);
+                            index++;
+                        }
+
+                        signUpsCout++;
+                    }
+
+                    // Get statistics
+                    if(examGrade > 5){
+                        passedKT += studentCourse.getCourse().getCreditPoints();
+                        gradeSum += examGrade;
+                        passedCounter++;
+                    }
+                }
+
+                /* Inner footer */
+                out.write(("Skupno število kreditnih točk: " + String.valueOf(passedKT) + " od " + String.valueOf(allKT)).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+                out.write(("Povprečje izpitov: " + String.valueOf((float)(passedCounter > 0? (float)gradeSum / (float)passedCounter : 0))).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+            }
+
+            baos.flush();
+            baos.close();
+
+            byte[] csv = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(csv);
+            return bais;
+        } catch (Exception e) {
+            log.severe(e.getMessage());
             return null;
         }
     }
@@ -604,14 +810,41 @@ public class DataExporterBean {
         return cell;
     }
 
-    private void addTableHeader(PdfPTable table, Font font, List<String> names, boolean border) {
+    public PdfPCell getCell(String text, int alignment, Font font, boolean bottomBorder) {
+        PdfPCell cell = new PdfPCell(new Phrase(text,font));
+        cell.setPadding(0);
+        cell.setHorizontalAlignment(alignment);
+        if(!bottomBorder)cell.setBorder(PdfPCell.NO_BORDER);
+        if(bottomBorder){
+            cell.setBorder(Rectangle.BOTTOM);
+            cell.setBorderWidthBottom(2);
+            cell.setPaddingBottom(5);
+        }
+        return cell;
+    }
+
+    private void addTableHeader(PdfPTable table, Font font, List<String> names) {
         Iterator<String> namesIt = names.iterator();
         while (namesIt.hasNext()) {
             PdfPCell header = new PdfPCell();
             header.setBackgroundColor(BaseColor.LIGHT_GRAY);
             header.setPhrase(new Phrase(namesIt.next(), font));
-            if(!border)header.setBorder(Rectangle.NO_BORDER);
             table.addCell(header);
+        }
+    }
+
+    private void addTableHeaderNoBorder(PdfPTable table, Font font, List<String> names, boolean lastColSpan2) {
+        int i = 0;
+        Iterator<String> namesIt = names.iterator();
+        while (namesIt.hasNext()) {
+            PdfPCell header = new PdfPCell();
+            header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            header.setPhrase(new Phrase(namesIt.next(), font));
+            header.setBorder(Rectangle.NO_BORDER);
+            if(i == names.size()-1)
+                header.setColspan(2);
+            table.addCell(header);
+            i++;
         }
     }
 
@@ -666,5 +899,17 @@ public class DataExporterBean {
         for(int i = 0; i < count; i++){
             row.add("");
         }
+    }
+
+    private PdfPCell getHeaderCell(String placeHolder,String data) {
+        Paragraph p = new Paragraph();
+        p.add(new Chunk(placeHolder, font4));
+        p.add(new Chunk(" " + data, font3));
+        PdfPCell cell = new PdfPCell(p);
+        cell.setPadding(7);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBackgroundColor(new GrayColor(240));
+        cell.setBorder(PdfPCell.NO_BORDER);
+        return cell;
     }
 }

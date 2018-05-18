@@ -59,9 +59,10 @@ public class ExamSignUpBean {
         return res;
     }
 
-    public Integer getNumberOfExamTakingsBeforeStudyYear(int studentCoursesId, int studyYearId){
+    public Integer getNumberOfExamTakingsBeforeStudyYear(int studentId, int courseId, int studyYearId){
         TypedQuery<Integer> q = em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsBeforeStudyYear", Integer.class)
-                .setParameter("student_courses_id", studentCoursesId)
+                .setParameter("student_id", studentId)
+                .setParameter("course_id", courseId)
                 .setParameter("studyYearId", studyYearId);
 
         return ((Number)q.getSingleResult()).intValue();
