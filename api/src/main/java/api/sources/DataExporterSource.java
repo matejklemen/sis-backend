@@ -1,7 +1,6 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
 import pojo.ResponseError;
 import beans.logic.DataExporterBean;
@@ -111,15 +110,30 @@ public class DataExporterSource {
     }
 
     @Operation(description = "Generates index in PDF form for student with given studenId. NOTE: studentId != registerNumber", summary = "Generate PDF index")
-    @Path("index/{studentId}")
+    @Path("indexpdf/{studentId}")
     @GET
-    public Response returnIndex(@PathParam("studentId") int studentId,
+    public Response returnIndexPdf(@PathParam("studentId") int studentId,
                                 @QueryParam("full") boolean full) {
-        ByteArrayInputStream bais = dataExporterBean.genarateIndex(studentId, full);
+        ByteArrayInputStream bais = dataExporterBean.genarateIndexPdf(studentId, full);
         String filename = String.format("index_%d.pdf", studentId);
         return Response
                 .ok(bais)
                 .type("application/pdf")
+                .header("Content-Disposition", "attachment; filename=" + filename)
+                .header("X-Export-Filename", filename)
+                .build();
+    }
+
+    @Operation(description = "Generates index in CSV form for student with given studenId. NOTE: studentId != registerNumber", summary = "Generate CSV index")
+    @Path("indexcsv/{studentId}")
+    @GET
+    public Response returnIndexCsv(@PathParam("studentId") int studentId,
+                                @QueryParam("full") boolean full) {
+        ByteArrayInputStream bais = dataExporterBean.generateIndexCsv(studentId, full);
+        String filename = String.format("index_%d.csv", studentId);
+        return Response
+                .ok(bais)
+                .type("text/csv")
                 .header("Content-Disposition", "attachment; filename=" + filename)
                 .header("X-Export-Filename", filename)
                 .build();

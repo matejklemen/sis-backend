@@ -17,6 +17,7 @@ import entities.curriculum.CourseOrganization;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
 import entities.logic.TableData;
+import javafx.scene.control.Tab;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -367,7 +368,7 @@ public class DataExporterBean {
         }
     }
 
-    public ByteArrayInputStream genarateIndex(int studentId, boolean full){
+    public ByteArrayInputStream genarateIndexPdf(int studentId, boolean full){
         List<Enrolment> allEnrolments = eB.getEnrolmentsByStudentId(studentId);
         Student student = allEnrolments.get(0).getStudent();
         try{
@@ -588,6 +589,186 @@ public class DataExporterBean {
             return bais;
         }catch(Exception e){
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ByteArrayInputStream generateIndexCsv(int studentId, boolean full){
+        List<Enrolment> allEnrolments = eB.getEnrolmentsByStudentId(studentId);
+        Student student = allEnrolments.get(0).getStudent();
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(baos);
+
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
+            Date date = new Date();
+            out.write(("Datum: "+dateFormat.format(date)).getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+
+            out.write((student.getRegisterNumber() + " " + student.getName().toUpperCase() +" "+ student.getSurname().toUpperCase()).getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+
+            /* Sections */
+            StudyProgram lastStudyProgram = null;
+            Paragraph para;
+            for(Enrolment enrolment : allEnrolments){
+                // We group by Study Program
+                if(lastStudyProgram  == null || lastStudyProgram.getId() != enrolment.getStudyProgram().getId()){
+                    para = new Paragraph("\n" + enrolment.getStudyProgram().getName() + "\n\n", font1);
+                    para.setAlignment(Element.ALIGN_CENTER);
+                }
+
+                lastStudyProgram = enrolment.getStudyProgram();
+
+                /* Inner header */
+                out.write(("Študijsko leto: "+enrolment.getStudyYear().getName()).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                out.write(("Smer: "+ enrolment.getStudyProgram().getName()+", Ni smeri").getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                out.write(("Letnik: "+ String.valueOf(enrolment.getYear())).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                out.write(("Vrsta vpisa: "+ enrolment.getType().getName()).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                out.write(("Način: "+ enrolment.getKind().getName() + " študij").getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                // Set table header
+                int i = 0;
+                for(String header: indexHeader){
+                    if(i>0)
+                        out.write(DELIMETER.getBytes(CHARSET));
+                    out.write(header.getBytes());
+                    i++;
+                }
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                List<List<String>> rows = new ArrayList<>();
+                int index = 1;
+                int allKT = 0;
+                int passedKT = 0;
+                int passedCounter = 0;
+                int gradeSum = 0;
+                Integer examGrade = 0;
+
+                List<StudentCourses> allstudentCourses = scB.getStudentCoursesByEnrolmentId(enrolment.getId());
+                for(StudentCourses studentCourse : allstudentCourses){
+                    allKT += studentCourse.getCourse().getCreditPoints();
+
+                    List<String> row = new ArrayList<>();
+                    Course course = studentCourse.getCourse();
+
+                    // Index
+                    out.write(String.valueOf(index).getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    // Course id
+                    out.write(String.valueOf(course.getId()).getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    // Course name
+                    out.write(course.getName().toUpperCase().getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    // Credit points (KT)
+                    out.write(String.valueOf(course.getCreditPoints()).getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    // Professor
+                    CourseOrganization co = coB.getCourseOrganizationsByCourseIdAndYear(studentCourse.getCourse().getId(), enrolment.getStudyYear().getId());
+                    out.write(co.formatCourseOrganizers().toUpperCase().getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+
+                    List<ExamSignUp> allExamSignUps = esuB.getExamSignUpsOnCourseForStudent(studentCourse.getCourse().getId(), student.getId());
+
+                    if(allExamSignUps.isEmpty()){
+                        out.write(DELIMETER.getBytes(CHARSET));
+                        out.write(DELIMETER.getBytes(CHARSET));
+                        out.write(DELIMETER.getBytes(CHARSET));
+                        out.write(DELIMETER.getBytes(CHARSET));
+                        out.write(NEW_LINE.getBytes(CHARSET));
+                        index++;
+                        continue;
+                    }
+
+                    Integer numb = esuB.getNumberOfExamTakingsBeforeStudyYear(student.getId(), studentCourse.getCourse().getId(), enrolment.getStudyYear().getId());
+
+                    boolean first = true;
+                    int signUpsCout = 0;
+                    for(ExamSignUp examSignUp : allExamSignUps){
+
+                        if(!first && full){
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                        }
+                        first = false;
+
+                        // If no grade -> fill with empty
+                        if(examSignUp.getSuggestedGrade() == null){
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            out.write(NEW_LINE.getBytes(CHARSET));
+                            index++;
+                            continue;
+                        }
+
+                        if(full || signUpsCout == allExamSignUps.size() - 1){
+                            // Date
+                            dateFormat = new SimpleDateFormat("dd.MM.yy");
+                            out.write(dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()).getBytes());
+                            out.write(DELIMETER.getBytes(CHARSET));
+
+                            // Grade
+                            out.write(String.valueOf(examSignUp.getSuggestedGrade()).getBytes());
+                            out.write(DELIMETER.getBytes(CHARSET));
+                            examGrade = examSignUp.getSuggestedGrade();
+
+                            // Count this year
+                            out.write(String.valueOf(signUpsCout + 1).getBytes());
+                            out.write(DELIMETER.getBytes(CHARSET));
+
+                            // Count all
+                            out.write((numb == null? String.valueOf(signUpsCout + 1) : String.valueOf(numb + signUpsCout + 1)).getBytes());
+                            out.write(NEW_LINE.getBytes(CHARSET));
+
+                            rows.add(row);
+                            index++;
+                        }
+
+                        signUpsCout++;
+                    }
+
+                    // Get statistics
+                    if(examGrade > 5){
+                        passedKT += studentCourse.getCourse().getCreditPoints();
+                        gradeSum += examGrade;
+                        passedCounter++;
+                    }
+                }
+
+                /* Inner footer */
+                out.write(("Skupno število kreditnih točk: " + String.valueOf(passedKT) + " od " + String.valueOf(allKT)).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+                out.write(("Povprečje izpitov: " + String.valueOf((float)(passedCounter > 0? (float)gradeSum / (float)passedCounter : 0))).getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+            }
+
+            baos.flush();
+            baos.close();
+
+            byte[] csv = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(csv);
+            return bais;
+        } catch (Exception e) {
+            log.severe(e.getMessage());
             return null;
         }
     }
