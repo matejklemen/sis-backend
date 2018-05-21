@@ -28,9 +28,9 @@ INSERT INTO exam_sign_up (id,confirmed,suggested_grade,returned,id_course_exam_t
 -- staff (ref and joze1)
 INSERT INTO staff (id, first_name, last_name1, last_name2, id_login) VALUES (1, 'Referen', 'Tka', 'Fri', 4), (2, 'Jože', 'Može', NULL, 1);
 
-ALTER SEQUENCE course_exam_term_id_course_exam_term_seq RESTART WITH 279;
+ALTER SEQUENCE course_exam_term_id_course_exam_term_seq RESTART WITH 289;
 ALTER SEQUENCE student_courses_id_student_courses_seq RESTART WITH 2644;
-ALTER SEQUENCE course_organization_id_course_organization_seq RESTART WITH 318;
+ALTER SEQUENCE course_organization_id_course_organization_seq RESTART WITH 308;
 ALTER SEQUENCE exam_sign_up_id_seq RESTART WITH 3277;
 ALTER SEQUENCE enrolment_id_seq RESTART WITH 272;
 ALTER SEQUENCE enrolment_token_id_seq RESTART WITH 242;
