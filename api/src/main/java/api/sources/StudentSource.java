@@ -123,16 +123,18 @@ public class StudentSource {
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
                     @Parameter(name = "filter", description = "Filter", in = ParameterIn.QUERY),
                     @Parameter(name = "course", required = true, description = "Course id that students are enrolled in", in = ParameterIn.QUERY),
-                    @Parameter(name = "study_year", required = true, description = "Study year id that students are enrolled in", in = ParameterIn.QUERY)
+                    @Parameter(name = "study_year", required = true, description = "Study year id that students are enrolled in", in = ParameterIn.QUERY),
+                    @Parameter(name = "study_program", description = "Study program id that students are enrolled in", in = ParameterIn.QUERY),
+                    @Parameter(name = "year", description = "Year that students are enrolled in", in = ParameterIn.QUERY)
             })
     @Path("enrolled")
     @GET
-    public Response getStudentsByCourse(@QueryParam("course") Integer courseId, @QueryParam("study_year") Integer studyYearId) {
+    public Response getStudentsByCourse(@QueryParam("course") Integer courseId, @QueryParam("study_year") Integer studyYearId, @QueryParam("study_program") String studyProgramId, @QueryParam("year") Integer year) {
         if(courseId == null || studyYearId == null) {
             return Response.status(400).entity(new ResponseError(400, "Manjkata parametra course in study_year.")).build();
         }
         QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        List<Student> sdl = sdB.getStudentsByCourse(queryParameters, courseId, studyYearId);
+        List<Student> sdl = sdB.getStudentsByCourse(queryParameters, courseId, studyYearId, studyProgramId, year);
         return Response
                 .ok(sdl)
                 .header("X-Total-Count", sdl.size())
