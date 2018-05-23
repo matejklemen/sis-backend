@@ -124,7 +124,7 @@ public class StudentBean {
     }
 
     @Transactional
-    public List<Student> getStudentsByCourse(QueryParameters queryParameters, int courseId, int studyYearId) {
+    public List<Student> getStudentsByCourse(QueryParameters queryParameters, int courseId, int studyYearId, String studyProgramId, Integer year) {
         List<Student> queryResult = JPAUtils.queryEntities(em, Student.class, queryParameters, new CriteriaFilter<Student>() {
             @Override
             public Predicate createPredicate(Predicate predicate, CriteriaBuilder cBuilder, Root<Student> root) {
@@ -144,7 +144,20 @@ public class StudentBean {
                 Predicate coursePredicate = cBuilder.equal(rootCourse.get("id"), courseId);
                 Predicate studyYearPredicate = cBuilder.equal(rootEnrolment.get("studyYear").get("id"), studyYearId);
 
-                return cBuilder.and(predicate, cBuilder.and(keys), coursePredicate, studyYearPredicate);
+                Predicate studyProgramPredicate, yearPredicate;
+                if(studyProgramId != null && year != null) {
+                    studyProgramPredicate = cBuilder.equal(rootEnrolment.get("studyProgram").get("id"), studyProgramId);
+                    yearPredicate = cBuilder.equal(rootEnrolment.get("year"), year);
+                    return cBuilder.and(predicate, cBuilder.and(keys), coursePredicate, studyYearPredicate, studyProgramPredicate, yearPredicate);
+                } else if(studyProgramId != null && year == null) {
+                    studyProgramPredicate = cBuilder.equal(rootEnrolment.get("studyProgram").get("id"), studyProgramId);
+                    return cBuilder.and(predicate, cBuilder.and(keys), coursePredicate, studyYearPredicate, studyProgramPredicate);
+                } else if(studyProgramId == null && year != null) {
+                    yearPredicate = cBuilder.equal(rootEnrolment.get("year"), year);
+                    return cBuilder.and(predicate, cBuilder.and(keys), coursePredicate, studyYearPredicate, yearPredicate);
+                } else {
+                    return cBuilder.and(predicate, cBuilder.and(keys), coursePredicate, studyYearPredicate);
+                }
             }
         });
         return queryResult;
