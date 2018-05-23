@@ -281,8 +281,18 @@ public class ExamSignUpBean {
             }
         }
 
-        if(scoreOk) signUp.setWrittenScore(writtenScore);
-        if(gradeOk) signUp.setSuggestedGrade(suggestedGrade);
+        if(scoreOk) {
+            signUp.setWrittenScore(writtenScore);
+        }
+        if(gradeOk) {
+            signUp.setSuggestedGrade(suggestedGrade);
+            ExamSignUp lastSignUp = getLastSignUpForStudentCourse(signUp.getStudentCourses().getIdStudentCourses());
+            // if this sign up is the last sign up for the course, also write grade to studentcourses
+            // TODO: what if the grade is set to null (removed)? Should then get the grade from one signup earlier, if it exists?
+            if(lastSignUp.getId() == signUp.getId()) {
+                signUp.getStudentCourses().setGrade(suggestedGrade);
+            }
+        }
 
         updateExamSignUp(signUp);
 
