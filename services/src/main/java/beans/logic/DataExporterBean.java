@@ -68,20 +68,24 @@ public class DataExporterBean {
             PdfWriter.getInstance(document, baos);
             document.open();
 
+            PdfPTable header = new PdfPTable(2);
+            header.setWidthPercentage(100);
+            header.addCell(createHeader(tableData.getHead()));
+            PdfPTable legend = createLegend(tableData.getInLegend(), tableData.getColoumnNames());
+            PdfPCell cell = new PdfPCell();
+            if(legend != null) {
+                cell.addElement(legend);
+            }
+            cell.setBorder(PdfPCell.NO_BORDER);
+            header.addCell(cell);
+            document.add(header);
+
             PdfPTable table = new PdfPTable(tableData.getColoumnNames().size());
-            float[] columnWidths = getOptimizedTableWidths(tableData.getColoumnNames(), tableData.getRows());
+            float[] columnWidths = getOptimizedTableWidths(tableData.getColoumnNames(), tableData.getRows(), tableData.getInLegend());
             table.setWidths(columnWidths);
             table.setWidthPercentage(100);
 
-            PdfPCell mainHeader = new PdfPCell();
-            mainHeader.setColspan(tableData.getColoumnNames().size());
-            mainHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
-            Date date = new Date();
-            mainHeader.setPhrase(new Phrase(tableData.getTableName()+", datum: "+ dateFormat.format(date), font1));
-            table.addCell(mainHeader);
-
-            addTableHeader(table, font3, tableData.getColoumnNames());
+            addTableHeader(table, font3, tableData.getColoumnNames(), tableData.getInLegend());
             addRows(table, font3, tableData.getRows());
 
             document.add(table);
@@ -267,9 +271,9 @@ public class DataExporterBean {
 
             table = new PdfPTable(4);
             table.setWidthPercentage(100);
-            float[] columnWidths = getOptimizedTableWidths(header, rows);
+            float[] columnWidths = getOptimizedTableWidths(header, rows, new ArrayList<>());
             table.setWidths(columnWidths);
-            addTableHeader(table, font3, header);
+            addTableHeader(table, font3, header, new ArrayList<>());
             addRows(table, font3, rows);
             document.add(table);
 
@@ -775,6 +779,65 @@ public class DataExporterBean {
 
     /* Helpers */
 
+    private PdfPCell createHeader(List<String> head) throws DocumentException {
+        PdfPCell cell = new PdfPCell();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
+        Date date = new Date();
+        cell.addElement(new Paragraph("Datum kreiranja izpisa: "+ dateFormat.format(date)+"\n", font5));
+
+        Iterator<String> headIt = head.iterator();
+        int i = 0;
+        while (headIt.hasNext()) {
+            String st = headIt.next();
+            if(i == 0) {
+                cell.addElement(new Paragraph(st+"\n", font1));
+            } else {
+                cell.addElement(new Paragraph(st+"\n", font2));
+            }
+            i++;
+        }
+        cell.addElement( Chunk.NEWLINE );
+        cell.setBorder(PdfPCell.NO_BORDER);
+        return cell;
+    }
+
+    private PdfPTable createLegend(List<Boolean> inLegend, List<String> coloumnNames) throws DocumentException {
+        Iterator<Boolean> inLegendIt = inLegend.iterator();
+        boolean createLegend = false;
+        while (inLegendIt.hasNext()) {
+            boolean tmp = inLegendIt.next();
+            log.info(String.valueOf(tmp));
+            if(tmp) {
+                createLegend = true;
+                break;
+            }
+        }
+        if(createLegend) {
+            PdfPTable legend = new PdfPTable(2);
+            legend.setWidthPercentage(100);
+            PdfPCell header = new PdfPCell(new Paragraph("Legenda:", font3));
+            header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            header.setColspan(2);
+            header.setBorder(PdfPCell.NO_BORDER);
+            legend.addCell(header);
+            int i = 0, j = 1;
+            inLegendIt = inLegend.iterator();
+            while (inLegendIt.hasNext()) {
+                if(inLegendIt.next()) {
+                    PdfPCell cell = new PdfPCell(new Paragraph(String.valueOf(j++), font3));
+                    cell.setBorder(PdfPCell.NO_BORDER);
+                    legend.addCell(cell);
+                    cell = new PdfPCell(new Paragraph(coloumnNames.get(i), font3));
+                    cell.setBorder(PdfPCell.NO_BORDER);
+                    legend.addCell(cell);
+                }
+                i++;
+            }
+            return legend;
+        }
+        return null;
+    }
+
     private void addSpacing(String text, PdfPTable table, int numCols, Font font) {
         PdfPCell cell = new PdfPCell(new Paragraph("\n\n"+text+"\n", font));
         cell.setColspan(numCols);
@@ -823,13 +886,17 @@ public class DataExporterBean {
         return cell;
     }
 
-    private void addTableHeader(PdfPTable table, Font font, List<String> names) {
+    private void addTableHeader(PdfPTable table, Font font, List<String> names, List<Boolean> inLegend) {
         Iterator<String> namesIt = names.iterator();
+        int i = 0, j=1;
         while (namesIt.hasNext()) {
             PdfPCell header = new PdfPCell();
             header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-            header.setPhrase(new Phrase(namesIt.next(), font));
+            String name = namesIt.next();
+            String phrase = i > 0 && inLegend.get(i-1) ? String.valueOf(j++) : name;
+            header.setPhrase(new Phrase(phrase, font));
             table.addCell(header);
+            i++;
         }
     }
 
@@ -858,7 +925,7 @@ public class DataExporterBean {
         }
     }
 
-    private float[] getOptimizedTableWidths(List<String> coloumnNames, List<List<String>> rows) {
+    private float[] getOptimizedTableWidths(List<String> coloumnNames, List<List<String>> rows, List<Boolean> inLegend) {
         float[] widths = new float[coloumnNames.size()];
 
         int i = 0;
@@ -866,7 +933,9 @@ public class DataExporterBean {
         while (coloumnNamesIt.hasNext()) {
             String coloumnName = coloumnNamesIt.next();
             if(coloumnName.length() > widths[i]) {
-                widths[i] = coloumnName.length();
+                if(i > 0 && !inLegend.get(i-1)) {
+                    widths[i] = coloumnName.length();
+                }
             }
             i++;
         }
