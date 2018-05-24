@@ -91,18 +91,18 @@
 - prijavi se na rok verjetnost in statistika in pokaži, da je to 4. polaganje predmeta verjetnost in statistika, in ne 6., ker se odštejeta dve polaganji iz rednega vpisa v drugi letnik, študent mora vseeno plačati, ker je presegel kvoto treh polaganj
 - če v bazi spremenimo exam_sign_up z id-jem 165 (kar je polaganje iz ponavljanja drugega letnika) in damo returned na true, študentu ni potrebno plačati, ker je potem to njegovo tretje polaganje (verjetno bo treba spremenit v init-db.sql, ker bere iz pomnilnika)
 
-# 19 Sprememba izpitnega roka
+# Sprememba izpitnega roka (#19)
 
 ###
 - [x] 1. Preveri veljavnost novih izvajalcev.
 *Na uporabniškem vmesniku se pokažejo samo izvajalci za izbrani predmet*
 - [x] 2. Preveri veljavnost novega datuma izpita (večji od trenutnega, ne sme biti sobota, nedelja ali praznik)
 - [x] 3. Preveri, ali obstajajo prijave (sprememba roka je možna ob potrditvi uporabnika).
-    3.1 *Probaj spremenit izpit TPO 13.6.2018 ob 08:00.* (bo pustilo čez brez opozorila)
-    3.2 *Vpiši študenta Simona Zoreta (`sz8003@student.uni-lj.si` - `sz_63180003`) na TPO izpit 13.6.2018 ob 08:00. in sedaj probaj popravit isti izpit.*
+    1. *Probaj spremenit izpit TPO 13.6.2018 ob 08:00.* (bo pustilo čez brez opozorila)
+    2. *Vpiši študenta Simona Zoreta (`sz8003@student.uni-lj.si` - `sz_63180003`) na TPO izpit 13.6.2018 ob 08:00. in sedaj probaj popravit isti izpit.*
     (bo izpisalo opozorilo)
-- [ ] 4. Preveri, ali so se prijave prenesle na nov rok. **(TODO: preveri prikaz tega in dopiši)**
-- [ ] 5. Preveri, ali so za ta rok že vpisane ocene (sprememba roka ni možna). **(TODO: hardcodaj neki v bazo)**
+- [X] 4. Preveri, ali so se prijave prenesle na nov rok. *(nadaljevanje scenarija prejšnjih testov) Spremeni rok izpita pri predmetu TPO, vpiši se v račun Simona Zoreta in preveri, da je datum spremenjen, študent pa je še vseeno prijavljen na rok.*
+- [X] 5. Preveri, ali so za ta rok že vpisane ocene (sprememba roka ni možna). *Ocene lahko vpisujemo samo v izpitne roke, katerih datum izvajanja je že mimo (teh izpitnih rokov pa ne moramo več spreminjati). Sicer pa ima za potrebe demota študent Simon Zore hardcodano prijavo na PRPO 13. 6. ob 10:00 z vnešeno oceno (tako da mora sistem pri urejanju tega roka izpisati napako).*
 
 # Odjava izpita (študent) (#22)
 
