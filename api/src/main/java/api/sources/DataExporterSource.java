@@ -1,6 +1,12 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
+import beans.crud.EnrolmentConfirmationRequestBean;
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import entities.EnrolmentConfirmationRequest;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.headers.Header;
 import pojo.ResponseError;
 import beans.logic.DataExporterBean;
@@ -16,8 +22,10 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,6 +58,10 @@ public class DataExporterSource {
     //       prikazejo... dodal sem header "X-Export-Filename", ki vsebuje predlagano ime datoteke.
     @Inject
     private DataExporterBean dataExporterBean;
+    @Inject
+    private EnrolmentConfirmationRequestBean ecrB;
+    @Context
+    protected UriInfo uriInfo;
 
     @Operation(description = "Generates a PDF file from table data", summary = "Generate PDF")
     @Path("tablepdf")
@@ -137,6 +149,40 @@ public class DataExporterSource {
                 .header("Content-Disposition", "attachment; filename=" + filename)
                 .header("X-Export-Filename", filename)
                 .build();
+    }
+
+    @Operation(description = "Puts new request for enrolment confirmation for student", summary = "Put new enrolment confirmation request")
+    @Path("requests/{studentId}/{copies}")
+    @PUT
+    public Response putEnrolmentConfirmationRequest(@PathParam("studentId") int studentId, @PathParam("copies") int copies) {
+        ecrB.insertNewEnrolmentConfirmationRequest(studentId,copies);
+        return Response.ok().build();
+    }
+
+    @Operation(description = "Gets all requests (for enrolment confirmation)", summary = "Gets all requests")
+    @Parameters({
+            @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
+            @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
+            @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
+            @Parameter(name = "search", description = "Search", in = ParameterIn.QUERY)
+    })
+    @Path("requests")
+    @GET
+    @Produces("application/json")
+    public Response getAllRequests() {
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+        return Response
+                .ok(ecrB.getAllRequests(query))
+                .header("X-Total-Count", ecrB.getAllRequests().size())
+                .build();
+    }
+
+    @Operation(description = "Deletes requests for given id", summary = "Deletes requests")
+    @Path("requests/{requestId}")
+    @DELETE
+    public Response deleteEnrolmentConfirmationRequest(@PathParam("requestId") int requestId) {
+        ecrB.deleteRequest(requestId);
+        return Response.ok().build();
     }
 
 }
