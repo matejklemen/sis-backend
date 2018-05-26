@@ -511,15 +511,19 @@ public class DataExporterBean {
                         }
                         first = false;
 
-                        // If no grade -> fill with empty
-                        if(examSignUp.getSuggestedGrade() == null){
-                            fullEmptyRows(row, 4);
-                            rows.add(row);
-                            index++;
-                            continue;
-                        }
+                        if(full || (signUpsCout == allExamSignUps.size() - 1 )){
+                            // Special case where last exam sign up has no grade
+                            if(examSignUp.getSuggestedGrade() == null && signUpsCout == allExamSignUps.size() - 1){
+                                if(allExamSignUps.size() > 1 && !full){
+                                    examSignUp = allExamSignUps.get(allExamSignUps.size() - 2);
+                                }else{
+                                    fullEmptyRows(row, 4);
+                                    rows.add(row);
+                                    index++;
+                                    continue;
+                                }
+                            }
 
-                        if(full || signUpsCout == allExamSignUps.size() - 1){
                             // Date
                             dateFormat = new SimpleDateFormat("dd.MM.yy");
                             row.add(dateFormat.format(examSignUp.getCourseExamTerm().getDatetimeObject()));
