@@ -149,7 +149,7 @@ Vsi testi: `janez@nov.ak` `123`
 			- ODV: 8  
 			- P1: 5, 5   
 - [ ] Preveri za študenta, ki je vpisan v več študijskih letih.   
-		- Za: `ip8012@student.uni-lj.si` `ip_63180012` (Imenko Priimkovič)  
+		- Za: `ni8075@student.uni-lj.si` `ni_63180075` (Nejc Ivanc)  
 - [ ] Preveri za študenta, ki je vpisan v več študijskih programov.   
 - [ ] Preveri izpis glave (študijsko leto, študijski program, letnik, vrsta vpisa, način študija) in noge (za vsako študijsko leto posebej število doseženih kreditnih točk in povprečna ocena).   
 - [ ] Preveri izpis podatkov o vsakem polaganju (šifra predmeta, ime predmeta, izpraševalci, datum izpita, zaporedna številka polaganja v celoti, zaporedna številka polaganja v tekočem študijskem letu, število kreditnih točk, ocena).   
