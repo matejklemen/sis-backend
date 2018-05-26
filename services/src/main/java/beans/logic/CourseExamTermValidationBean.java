@@ -20,6 +20,10 @@ public class CourseExamTermValidationBean {
     @Inject private ExamSignUpBean esub;
 
     private List<String> checkIfExamTermHasGradesEntered(CourseExamTerm cet, List<String> errList) {
+        // TO-DO: bug??
+        if(cet.getId() == null)
+            return errList;
+
         List<ExamSignUp> signUps = esub.getExamSignUpsByExamTerm(cet.getId());
 
         for(ExamSignUp esu: signUps)
