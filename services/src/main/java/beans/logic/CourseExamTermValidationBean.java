@@ -20,7 +20,7 @@ public class CourseExamTermValidationBean {
     @Inject private ExamSignUpBean esub;
 
     private List<String> checkIfExamTermHasGradesEntered(CourseExamTerm cet, List<String> errList) {
-        // TO-DO: bug??
+        // TODO: bug??
         if(cet.getId() == null)
             return errList;
 

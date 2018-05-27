@@ -367,7 +367,7 @@ public class DataExporterBean {
             ByteArrayInputStream bais = new ByteArrayInputStream(pdf);
             return bais;
         }catch(Exception e){
-            log.severe(e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
