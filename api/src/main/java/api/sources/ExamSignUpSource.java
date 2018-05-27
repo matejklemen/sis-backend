@@ -23,6 +23,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -91,6 +93,16 @@ public class ExamSignUpSource {
 
             signUpInfo.add(idx, currInfo);
         }
+
+        Collections.sort(signUpInfo, new Comparator<SignUpInfoResponse>() {
+            public int compare(SignUpInfoResponse signup1, SignUpInfoResponse signup2) {
+                int lname = signup1.getStudentInfo().getSurname().compareToIgnoreCase(signup2.getStudentInfo().getSurname());
+                if(lname == 0)
+                    return signup1.getStudentInfo().getName().compareToIgnoreCase(signup2.getStudentInfo().getName());
+
+                return lname;
+            }
+        });
 
         return Response.status(Response.Status.OK).entity(signUpInfo).build();
     }
