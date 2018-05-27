@@ -20,7 +20,8 @@ public class CourseExamTermValidationBean {
     @Inject private ExamSignUpBean esub;
 
     private List<String> checkIfExamTermHasGradesEntered(CourseExamTerm cet, List<String> errList) {
-        // TODO: bug??
+        /* If course exam term has no ID, that means we are inserting a new entity and therefore do not need
+            to check for existing sign ups or grades */
         if(cet.getId() == null)
             return errList;
 
