@@ -155,3 +155,31 @@ Vsi testi: `janez@nov.ak` `123`
 - [ ] Preveri izpis glave (študijsko leto, študijski program, letnik, vrsta vpisa, način študija) in noge (za vsako študijsko leto posebej število doseženih kreditnih točk in povprečna ocena).   
 - [ ] Preveri izpis podatkov o vsakem polaganju (šifra predmeta, ime predmeta, izpraševalci, datum izpita, zaporedna številka polaganja v celoti, zaporedna številka polaganja v tekočem študijskem letu, število kreditnih točk, ocena).   
 - [ ] Preveri izvoz v PDF in CSV.
+
+# Naročilo potrdila o vpisu (#16)
+
+###
+Študent lahko naroči potrdilo o vpisu. Naročila se zbirajo na posebni datoteki. 
+- [ ] Preveri za vpisanega študenta:
+	- Za: `janez@nov.ak` `123` (Janez Novak)
+	- Naroči
+- [ ] Preveri za študenta brez statusa. 
+	- Za: `jd8004@student.uni-lj.si` `jd_63180004` (John Doe)
+	- Naroči
+- [ ] Preveri za absolventa (dodatno leto). 
+	- Za: `tz8008@student.uni-lj.si` `tz_63180008` (Teja Zupanc)
+	- Naroči
+- [ ] Preveri za različna števila izvodov. 
+- [ ] Preveri vsebino datoteke z naročili.
+
+
+# Naročilo potrdila o vpisu (#17)
+
+###
+Referentka lahko izpiše potrdila o vpisu, ki so jih naročili študenti. 
+- [ ] Preveri, da se izpišejo vsa naročila. 
+- [ ] Preveri za vpisanega študenta. (Janez Novak)
+- [ ] Preveri za študenta brez statusa. (ne more niti naročiti)
+- [ ] Preveri za absolventa (dodatno leto). (Teja Zupanc)
+- [ ] Preveri za različna števila izvodov. 
+- [ ] Preveri možnost ponovnega tiskanja v primeru, da se papir zatakne.
