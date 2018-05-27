@@ -104,6 +104,11 @@
 - [X] 4. Preveri, ali so se prijave prenesle na nov rok. *(nadaljevanje scenarija prejšnjih testov) Spremeni rok izpita pri predmetu TPO, vpiši se v račun Simona Zoreta in preveri, da je datum spremenjen, študent pa je še vseeno prijavljen na rok.*
 - [X] 5. Preveri, ali so za ta rok že vpisane ocene (sprememba roka ni možna). *Ocene lahko vpisujemo samo v izpitne roke, katerih datum izvajanja je že mimo (teh izpitnih rokov pa ne moramo več spreminjati). Sicer pa ima za potrebe demota študent Simon Zore hardcodano prijavo na PRPO 13. 6. ob 10:00 z vnešeno oceno (tako da mora sistem pri urejanju tega roka izpisati napako).*
 
+# Brisanje izpitnega roka (#20)
+- briši nek izpitni rok, za katerega ne obstaja nobena prijava (mora it čez brez opozoril)
+- briši izpitni rok TPO ali PRPO, omenjen v testih za zgodbo #19 (mora izpisat opozorilo)
+- poglej na račun študenta Simona Zoreta (izpitni rok se mora izbrisati)
+
 # Odjava izpita (študent) (#22)
 
 ###
