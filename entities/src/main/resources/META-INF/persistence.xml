@@ -3,6 +3,7 @@
     <persistence-unit name="sis-jpa" transaction-type="JTA">
         <jta-data-source>jdbc/sisTestDB</jta-data-source>
 
+        <class>entities.Agreement</class>
         <class>entities.Enrolment</class>
         <class>entities.EnrolmentToken</class>
         <class>entities.KlasiusSrv</class>
