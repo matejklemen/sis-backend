@@ -6,15 +6,20 @@ import com.kumuluz.ee.rest.utils.JPAUtils;
 import entities.Enrolment;
 import entities.Student;
 import entities.curriculum.Course;
+import entities.curriculum.Curriculum;
 import entities.curriculum.StudentCourses;
+import entities.logic.CourseWithNumberOfEnrolledStudents;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -25,6 +30,9 @@ public class StudentBean {
 
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
+
+    @Inject
+    private CurriculumBean cb;
 
     @Transactional
     public List<Student> getStudents(QueryParameters query) {
@@ -161,5 +169,23 @@ public class StudentBean {
             }
         });
         return queryResult;
+    }
+
+    @Transactional
+    public List<CourseWithNumberOfEnrolledStudents> getNumberOfStudentsForEachCourse(int studyYearId, String studyProgramId, Integer year) {
+        List<CourseWithNumberOfEnrolledStudents> cwnoesl = new ArrayList<>();
+
+        List<Curriculum> cl = cb.getByStudyProgramStudyYearYearOfProgram(studyYearId, studyProgramId, year);
+        Iterator<Curriculum> curIte = cl.iterator();
+        while(curIte.hasNext()) {
+            Curriculum c = curIte.next();
+            int num = ((Number)em.createNamedQuery("StudentCourses.getNumberOfStudentsForEachCourse", Integer.class).setParameter("study_year_id", studyYearId).setParameter("study_program_id", studyProgramId).setParameter("year", year).setParameter("course_id", c.getIdCourse().getId()).getSingleResult()).intValue();
+            CourseWithNumberOfEnrolledStudents cwnoes = new CourseWithNumberOfEnrolledStudents();
+            cwnoes.setCourse(c.getIdCourse());
+            cwnoes.setNumberOfEnrolledStudents(num);
+            cwnoesl.add(cwnoes);
+        }
+
+        return cwnoesl;
     }
 }

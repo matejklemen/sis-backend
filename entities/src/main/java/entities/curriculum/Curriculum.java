@@ -61,7 +61,12 @@ import java.io.Serializable;
                                 "AND cur.studyYear.name = :name_study_year " +
                                 "AND cur.idStudyProgram.id = :id_study_program " +
                                 "AND cur.yearOfProgram = :year_of_program " +
-                                "ORDER BY cur.idCourse.id DESC")
+                                "ORDER BY cur.idCourse.id DESC"),
+                @NamedQuery(name = "Curriculum.getByStudyProgramStudyYearYearOfProgram",
+                        query = "SELECT cur FROM curriculum cur WHERE " +
+                                " cur.studyYear.id = :id_study_year " +
+                                "AND cur.idStudyProgram.id = :id_study_program " +
+                                "AND cur.yearOfProgram = :year_of_program ")
         }
 )
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames =

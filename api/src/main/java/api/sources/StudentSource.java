@@ -4,6 +4,7 @@ import api.interceptors.annotations.LogApiCalls;
 import beans.crud.StudentBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.Student;
+import entities.logic.CourseWithNumberOfEnrolledStudents;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -57,6 +58,26 @@ public class StudentSource {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         return Response.ok(sdB.getStudents(query)).build();
     }
+
+    @Operation(description = "Returns a list of courses with number of enrolled students.", summary = "Get list of courses with number of enrolled students", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "List of courses with number of enrolled students",
+                    content = @Content(
+                            schema = @Schema(implementation = CourseWithNumberOfEnrolledStudents.class))
+            )}
+    )
+    @GET
+    @Path("countbycourses")
+    public Response getNumberOfStudentsForEachCourse(@QueryParam("study_year") Integer studyYearId, @QueryParam("study_program") String studyProgramId, @QueryParam("year") Integer year) {
+        if(studyYearId == null || studyProgramId == null || year == null) {
+            return Response.status(400).entity(new ResponseError(400, "Manjkajo parametri study_year, stuy_program in year.")).build();
+        }
+        List<CourseWithNumberOfEnrolledStudents> cwnoes = sdB.getNumberOfStudentsForEachCourse(studyYearId, studyProgramId, year);
+        return Response
+                .ok(cwnoes)
+                .build();
+    }
+
 
     @GET
     @Path("count")

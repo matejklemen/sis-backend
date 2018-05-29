@@ -12,7 +12,8 @@ import java.io.Serializable;
 @Entity(name = "student_courses")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "StudentCourses.getByEnrolmentId", query = "SELECT c FROM student_courses c WHERE c.enrolment = :enrolment")
+                @NamedQuery(name = "StudentCourses.getByEnrolmentId", query = "SELECT c FROM student_courses c WHERE c.enrolment = :enrolment"),
+                @NamedQuery(name = "StudentCourses.getNumberOfStudentsForEachCourse", query = "SELECT COUNT(sc) FROM student_courses sc WHERE sc.course.id = :course_id AND sc.enrolment.studyYear.id = :study_year_id AND sc.enrolment.studyProgram.id = :study_program_id AND sc.enrolment.year = :year")
         }
 )
 public class StudentCourses implements Serializable {
