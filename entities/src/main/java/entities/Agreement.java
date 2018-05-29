@@ -1,6 +1,8 @@
 package entities;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,7 +18,7 @@ public class Agreement implements Serializable {
     // ! note: String formatted as: YYYY-MM-DD
     private Date issueDate;
 
-    @Column(name = "valid_until", columnDefinition = "DATE")
+    @Column(name = "valid_until", nullable = true, columnDefinition = "DATE")
     // ! note: String formatted as: YYYY-MM-DD
     private Date validUntil;
 
@@ -28,6 +30,12 @@ public class Agreement implements Serializable {
 
     private String issuer;
 
+    @ManyToOne
+    @JoinColumn
+    private Student student;
+
+    private boolean deleted;
+
     public int getIdAgreement() {
         return idAgreement;
     }
@@ -36,6 +44,7 @@ public class Agreement implements Serializable {
         this.idAgreement = idAgreement;
     }
 
+    @XmlTransient
     public Date getIssueDateObject() { /* I guess technically String is also an object... You get the point though. */
         return issueDate;
     }
@@ -49,11 +58,14 @@ public class Agreement implements Serializable {
         this.issueDate = issueDate;
     }
 
+    @XmlTransient
     public Date getValidUntilObject() {
         return validUntil;
     }
 
     public String getValidUntilString() {
+        if(validUntil == null)
+            return "/";
         // format for JSON output
         return new SimpleDateFormat("yyyy-MM-dd").format(validUntil);
     }
@@ -84,5 +96,22 @@ public class Agreement implements Serializable {
 
     public void setIssuer(String issuer) {
         this.issuer = issuer;
+    }
+
+    @XmlIDREF
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

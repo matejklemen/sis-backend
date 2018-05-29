@@ -1,8 +1,10 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
+import beans.crud.EnrolmentBean;
 import beans.crud.StudentBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import entities.Enrolment;
 import entities.Student;
 import entities.logic.CourseWithNumberOfEnrolledStudents;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -40,6 +43,8 @@ public class StudentSource {
 
     @Inject
     private StudentBean sdB;
+    @Inject
+    private EnrolmentBean enB;
 
     @Operation(description = "Returns a list of students.", summary = "Get list of students", responses = {
             @ApiResponse(responseCode = "200",
@@ -162,6 +167,17 @@ public class StudentSource {
                 .build();
     }
 
+    @Path("currently-enrolled")
+    @GET
+    public Response getCurrentlyEnrolledStudents() {
+        List<Enrolment> enrolments = enB.getEnrolmentsForCurrentYear();
 
+        List<Student> students = new ArrayList<>(enrolments.size());
+
+        for(int i = 0; i < enrolments.size(); i++)
+            students.add(i, enrolments.get(i).getStudent());
+
+        return Response.status(Response.Status.OK).entity(students).build();
+    }
 
 }
