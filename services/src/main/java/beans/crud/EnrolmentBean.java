@@ -12,6 +12,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -123,6 +125,32 @@ public class EnrolmentBean {
 
     public List<Enrolment> getAllEnrolments() {
         TypedQuery<Enrolment> q = em.createQuery("SELECT enr FROM enrolment enr", Enrolment.class);
+
+        return q.getResultList();
+    }
+
+    public List<Enrolment> getEnrolmentsForCurrentYear() {
+        // months start with 0
+        final int MONTH_OCTOBER = 10 - 1;
+        Date d = new Date();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+
+        // if current date is less than 1st October, 'previous' study year is still in progress
+        // example: if current date is 7th of June 2015, the current study year is 2014/2015, not 2015/2016
+        String studyYear = month < MONTH_OCTOBER ? String.format("%s/%s", year - 1, year):
+                String.format("%s/%s", year, year + 1);
+
+        log.info(String.format("Getting enrolments for year %s...", studyYear));
+
+        TypedQuery<Enrolment> q = em.createQuery("SELECT enr FROM enrolment enr WHERE " +
+                "enr.studyYear.name = :study_year " +
+                "ORDER BY enr.student.surname, enr.student.name", Enrolment.class);
+
+        q.setParameter("study_year", studyYear);
 
         return q.getResultList();
     }
