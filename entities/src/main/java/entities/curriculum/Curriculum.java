@@ -58,6 +58,11 @@ import java.io.Serializable;
                                 "cur.poc.type = \"piz\" " +
                                 "AND cur.studyYear.name = :name_study_year " +
                                 "AND cur.idStudyProgram.id = :id_study_program " +
+                                "AND cur.yearOfProgram = :year_of_program "),
+                @NamedQuery(name = "Curriculum.getByStudyProgramStudyYearYearOfProgram",
+                        query = "SELECT cur FROM curriculum cur WHERE " +
+                                " cur.studyYear.id = :id_study_year " +
+                                "AND cur.idStudyProgram.id = :id_study_program " +
                                 "AND cur.yearOfProgram = :year_of_program ")
         }
 )
