@@ -36,3 +36,4 @@ ALTER SEQUENCE professor_id_seq RESTART WITH 61;
 ALTER SEQUENCE student_id_seq RESTART WITH 95;
 ALTER SEQUENCE user_login_id_seq RESTART WITH 98;
 ALTER SEQUENCE staff_id_seq RESTART WITH 3;
+ALTER SEQUENCE curriculum_id_curriculum_seq RESTART WITH 2500;

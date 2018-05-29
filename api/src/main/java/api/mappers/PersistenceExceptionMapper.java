@@ -16,10 +16,12 @@ public class PersistenceExceptionMapper implements ExceptionMapper<PersistenceEx
 
     private static Pattern[] patterns = {
             Pattern.compile("null value in column \"(.+)\" violates not-null constraint"),
+            Pattern.compile("duplicate key value violates unique constraint \"(.+)\"")
     };
 
     private static String[] responses = {
             "Polje '%s' ne sme biti prazno.",
+            "Podvojen ključ: '%s'",
     };
 
     @Override
