@@ -64,10 +64,10 @@ public class Agreement implements Serializable {
     }
 
     public String getValidUntilString() {
-        if(validUntil == null)
-            return "/";
-        // format for JSON output
-        return new SimpleDateFormat("yyyy-MM-dd").format(validUntil);
+        if(validUntil != null)
+            return new SimpleDateFormat("yyyy-MM-dd").format(validUntil);
+
+        return null;
     }
 
     public void setValidUntil(Date validUntil) {
@@ -98,7 +98,6 @@ public class Agreement implements Serializable {
         this.issuer = issuer;
     }
 
-    @XmlIDREF
     public Student getStudent() {
         return student;
     }

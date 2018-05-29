@@ -25,6 +25,20 @@ public class AgreementBean {
         return JPAUtils.queryEntities(em, Agreement.class, query);
     }
 
+    public Agreement getAgreementById(int idAgreement) {
+        TypedQuery<Agreement> q = em.createQuery("SELECT a FROM agreement a WHERE a.idAgreement = :id_agreement",
+                Agreement.class);
+
+        q.setParameter("id_agreement", idAgreement);
+
+        List<Agreement> agreements = q.getResultList();
+
+        if(agreements == null || agreements.isEmpty())
+            return null;
+
+        return agreements.get(0);
+    }
+
     public List<Agreement> getAgreementsForStudent(int idStudent) {
         TypedQuery<Agreement> q = em.createQuery("SELECT a FROM agreement a WHERE a.student.id = :id_student", Agreement.class);
 

@@ -17,6 +17,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -58,6 +59,18 @@ public class AgreementSource {
     }
 
     @GET
+    @Path("{id}")
+    public Response getAgreementById(@PathParam("id") int idAgreement) {
+        Agreement agreement = ab.getAgreementById(idAgreement);
+
+        if(agreement == null)
+            return Response.status(Response.Status.BAD_REQUEST).entity(
+                    new ResponseError(400, String.format("ni sklepa z ID-jem %d ... ", idAgreement))).build();
+
+        return Response.status(Response.Status.OK).entity(agreement).build();
+    }
+
+    @GET
     @Path("student")
     public Response getAgreementsForStudent(@QueryParam("studentid") int idStudent) {
         log.info("Calling getAgreementsForStudent()...");
@@ -75,6 +88,10 @@ public class AgreementSource {
         if(agreement == null)
             throw new NoRequestBodyException();
 
+        if(!sanityCheckDates(agreement))
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "datum konca veljavnosti sklepa je pred " +
+                    "datumom izdaje sklepa")).build();
+
         agreement = ab.updateAgreement(agreement);
 
         return Response.status(Response.Status.OK).entity(agreement).build();
@@ -84,6 +101,10 @@ public class AgreementSource {
     public Response createAgreement(@RequestBody Agreement agreement) {
         if(agreement == null)
             throw new NoRequestBodyException();
+
+        if(!sanityCheckDates(agreement))
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "datum konca veljavnosti sklepa je pred " +
+                    "datumom izdaje sklepa")).build();
 
         agreement = ab.insertAgreement(agreement);
 
@@ -96,6 +117,22 @@ public class AgreementSource {
         ab.deleteAgreement(idAgreement);
 
         return Response.ok().build();
+    }
+
+    // a bit of idiot-proofing
+    private boolean sanityCheckDates(Agreement agreement) {
+        Date issuedDate = agreement.getIssueDateObject();
+        Date validUntilDate = agreement.getValidUntilObject();
+
+        // the field is optional
+        if(validUntilDate == null)
+            return true;
+
+        // 'valid until' should be after 'issue date'
+        if(validUntilDate.before(issuedDate))
+            return false;
+
+        return true;
     }
 
 }
