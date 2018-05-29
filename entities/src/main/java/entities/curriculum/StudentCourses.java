@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity(name = "student_courses")
@@ -32,6 +34,9 @@ public class StudentCourses implements Serializable {
     private Course course;
 
     private Integer grade;
+
+    @Transient
+    private Timestamp dateOfGrade;
 
     public int getIdStudentCourses() {
         return idStudentCourses;
@@ -63,5 +68,13 @@ public class StudentCourses implements Serializable {
 
     public void setGrade(Integer grade) {
         this.grade = grade;
+    }
+
+    public Timestamp getDateOfGrade() {
+        return dateOfGrade;
+    }
+
+    public void setDateOfGrade(Timestamp dateOfGrade) {
+        this.dateOfGrade = dateOfGrade;
     }
 }

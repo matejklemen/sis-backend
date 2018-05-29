@@ -824,7 +824,7 @@ public class DataExporterBean {
             header.setColspan(2);
             header.setBorder(PdfPCell.NO_BORDER);
             legend.addCell(header);
-            int i = 0, j = 1;
+            int i = 1   , j = 1;
             inLegendIt = inLegend.iterator();
             while (inLegendIt.hasNext()) {
                 if(inLegendIt.next()) {
