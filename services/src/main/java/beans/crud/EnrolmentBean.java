@@ -9,6 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import java.util.Iterator;
@@ -118,5 +119,11 @@ public class EnrolmentBean {
                 .setParameter("studyYearId", studyYearId)
                 .setMaxResults(1)
                 .getSingleResult();
+    }
+
+    public List<Enrolment> getAllEnrolments() {
+        TypedQuery<Enrolment> q = em.createQuery("SELECT enr FROM enrolment enr", Enrolment.class);
+
+        return q.getResultList();
     }
 }

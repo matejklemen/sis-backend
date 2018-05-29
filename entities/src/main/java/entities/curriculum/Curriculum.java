@@ -31,7 +31,7 @@ import java.io.Serializable;
                                 "AND cur.studyYear.name = :name_study_year " +
                                 "AND cur.idStudyProgram.id = :id_study_program " +
                                 "AND cur.yearOfProgram = :year_of_program " +
-                                "ORDER BY cur.poc.id"),
+                                "ORDER BY cur.poc.id DESC, cur.idCourse.id DESC"),
                 /* Example use-case: get module courses for module "Informacijski sistemi" in year 2017/2018 */
                 @NamedQuery(name = "Curriculum.getCurriculumByPOC",
                             query = "SELECT cur FROM curriculum cur WHERE " +
@@ -44,19 +44,27 @@ import java.io.Serializable;
                                 "cur.poc.type = \"obv\" " +
                                 "AND cur.studyYear.name = :name_study_year " +
                                 "AND cur.idStudyProgram.id = :id_study_program " +
-                                "AND cur.yearOfProgram = :year_of_program "),
+                                "AND cur.yearOfProgram = :year_of_program " +
+                                "ORDER BY cur.idCourse.id DESC"),
                 /* Note: specialist elective courses = strokovni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getSpecialistElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.poc.type = \"siz\" " +
                                 "AND cur.studyYear.name = :name_study_year " +
                                 "AND cur.idStudyProgram.id = :id_study_program " +
-                                "AND cur.yearOfProgram = :year_of_program "),
+                                "AND cur.yearOfProgram = :year_of_program " +
+                                "ORDER BY cur.idCourse.id DESC"),
                 /* Note: general elective courses = splošni izbirni predmeti */
                 @NamedQuery(name = "Curriculum.getGeneralElectiveCourses",
                         query = "SELECT cur FROM curriculum cur WHERE " +
                                 "cur.poc.type = \"piz\" " +
                                 "AND cur.studyYear.name = :name_study_year " +
+                                "AND cur.idStudyProgram.id = :id_study_program " +
+                                "AND cur.yearOfProgram = :year_of_program " +
+                                "ORDER BY cur.idCourse.id DESC"),
+                @NamedQuery(name = "Curriculum.getByStudyProgramStudyYearYearOfProgram",
+                        query = "SELECT cur FROM curriculum cur WHERE " +
+                                " cur.studyYear.id = :id_study_year " +
                                 "AND cur.idStudyProgram.id = :id_study_program " +
                                 "AND cur.yearOfProgram = :year_of_program ")
         }

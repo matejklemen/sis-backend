@@ -110,27 +110,36 @@ public class CurriculumSource {
                 Response.status(Response.Status.OK).entity(c).build();
     }
 
-    @Operation(description = "Retrieves curriculum for particular study program for particular study year and particular year of program.", summary = "Get curriculum for specified study program, year and grade", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Retrieved curriculum",
-                    content = @Content(
-                            schema = @Schema(implementation = Curriculum.class))),
-            @ApiResponse(responseCode = "400",
-                    description = "The year is written incorrectly. Make sure it is in format XXXXXXXX (8 numbers), for example 2016/2017 would be written as 20162017.",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class)
-                    )),
-            @ApiResponse(responseCode = "404",
-                    description = "No curriculum found for specified parameters",
-                    content = @Content(
-                            schema = @Schema(implementation = ResponseError.class)
-                    ))
+    @Operation(description = "Retrieves curriculum for particular study program for particular study year and particular year of program.", summary = "Get curriculum for specified study program, year and grade",
+            parameters = {
+                    @Parameter(required = true, description = "Study year (for example 2017/2018) written without the dash (\"/\"), e.g. \"20172018\""),
+                    @Parameter(description = "EVS code for study program"),
+                    @Parameter(description = "Grade that the student is in"),
+                    @Parameter(description = "set to 'true' if you also want to get deleted curriculum entries")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Retrieved curriculum",
+                            content = @Content(
+                                    schema = @Schema(implementation = Curriculum.class))),
+                    @ApiResponse(responseCode = "400",
+                            description = "The year is written incorrectly. Make sure it is in format XXXXXXXX (8 numbers), for example 2016/2017 would be written as 20162017.",
+                            content = @Content(
+                                    schema = @Schema(implementation = ResponseError.class)
+                            )),
+                    @ApiResponse(responseCode = "404",
+                            description = "No curriculum found for specified parameters",
+                            content = @Content(
+                                    schema = @Schema(implementation = ResponseError.class)
+                        ))
     })
     @Path("{study-year}/{study-program}/{year-of-program}")
     @GET
-    public Response getAvailableCurriculumForProgramAndYear(@PathParam(value = "study-year") @Parameter(required = true, description = "Study year (for example 2017/2018) written without the dash (\"/\"), e.g. \"20172018\"") String studyYear,
-                                                   @PathParam(value = "study-program") @Parameter(description = "EVS code for study program") String studyProgramId,
-                                                   @PathParam(value = "year-of-program") @Parameter(description = "Grade that the student is in") int yearOfProgram) {
+    public Response getAvailableCurriculumForProgramAndYear(
+            @PathParam(value = "study-year") String studyYear,
+            @PathParam(value = "study-program") String studyProgramId,
+            @PathParam(value = "year-of-program") int yearOfProgram,
+            @QueryParam(value = "deleted") boolean deleted) {
         if (studyYear.length() != 8)
             return Response.status(Response.Status.BAD_REQUEST).build();
 
@@ -142,14 +151,19 @@ public class CurriculumSource {
         List<Curriculum> cSpecialEle = cb.getSpecialistElectiveCourses(studyYear, studyProgramId, yearOfProgram);
         List<Curriculum> cGeneralEle = cb.getGeneralElectiveCourses(studyYear, studyProgramId, yearOfProgram);
 
-        List<Curriculum> c = new LinkedList<Curriculum>();
+        List<Curriculum> c = new LinkedList<>();
         c.addAll(cMandatory);
         c.addAll(cModule);
         c.addAll(cSpecialEle);
         c.addAll(cGeneralEle);
 
-        return c == null ? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
-                Response.status(Response.Status.OK).entity(c).build();
+        // if deleted==false (that's also defalut), remove all deleted=true entries in the list
+        // if deleted==true, return all entries
+        if(!deleted) {
+            c.removeIf(Curriculum::getDeleted);
+        }
+
+        return Response.status(Response.Status.OK).entity(c).build();
     }
 
     @Operation(description = "Inserts a new curriculum.", summary = "Insert curriculum", responses = {
@@ -182,7 +196,7 @@ public class CurriculumSource {
     @DELETE
     public Response deleteCurriculum(@PathParam("id") int id) {
         cb.deleteCurriculum(id);
-        return Response.ok().build();
+        return Response.ok().type(MediaType.TEXT_PLAIN).build();
     }
 
     @Operation(description = "Updates an existing curriculum.", summary = "Update curriculum", responses = {

@@ -89,6 +89,15 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    public List<Curriculum> getByStudyProgramStudyYearYearOfProgram(int idStudyYear, String idStudyProgram, int yearOfProgram) {
+        TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByStudyProgramStudyYearYearOfProgram", Curriculum.class);
+        q.setParameter("id_study_year", idStudyYear);
+        q.setParameter("id_study_program", idStudyProgram);
+        q.setParameter("year_of_program", yearOfProgram);
+
+        return q.getResultList();
+    }
+
     /*
         NOTE: 4 almost same methods created for getting courses, could be merged into 1 method, but they're not because
         encoding for type of course is determined ad-hoc and would probably need to be looked up everytime.

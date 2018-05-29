@@ -2,7 +2,9 @@ package entities.curriculum;
 
 import interfaces.Codelistable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity(name = "part_of_curriculum")

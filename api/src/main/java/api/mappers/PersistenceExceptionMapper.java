@@ -7,7 +7,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,10 +15,12 @@ public class PersistenceExceptionMapper implements ExceptionMapper<PersistenceEx
 
     private static Pattern[] patterns = {
             Pattern.compile("null value in column \"(.+)\" violates not-null constraint"),
+            Pattern.compile("duplicate key value violates unique constraint \"(.+)\"")
     };
 
     private static String[] responses = {
             "Polje '%s' ne sme biti prazno.",
+            "Podvojen ključ: '%s'",
     };
 
     @Override
