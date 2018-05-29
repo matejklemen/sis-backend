@@ -781,6 +781,46 @@ public class DataExporterBean {
         }
     }
 
+    public ByteArrayInputStream generateDigitalIndexPdf(int studentId){
+        try{
+            Document document = new Document();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            document.open();
+
+            document.add(new Paragraph("Potrdilo o opravljenih predmetih",font2));
+
+            document.close();
+            byte[] pdf = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(pdf);
+            return bais;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public ByteArrayInputStream generateDigitalIndexCsv(int studentId){
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(baos);
+
+            out.write(("Potrdilo o opravljenih predmetih").getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+
+            baos.flush();
+            baos.close();
+
+            byte[] csv = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(csv);
+            return bais;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /* Helpers */
 
     private PdfPCell createHeader(List<String> head) throws DocumentException {

@@ -38,6 +38,9 @@ public class StudentCourses implements Serializable {
     @Transient
     private Timestamp dateOfGrade;
 
+    @Transient
+    private int year;
+
     public int getIdStudentCourses() {
         return idStudentCourses;
     }
@@ -76,5 +79,13 @@ public class StudentCourses implements Serializable {
 
     public void setDateOfGrade(Timestamp dateOfGrade) {
         this.dateOfGrade = dateOfGrade;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 }

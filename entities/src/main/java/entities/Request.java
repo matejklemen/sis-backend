@@ -3,13 +3,14 @@ package entities;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "enrolment_conformation_request")
+@Entity(name = "requests")
 @NamedQueries(
         value = {
-                @NamedQuery(name = "Request.getAllRequests", query = "SELECT r FROM enrolment_conformation_request r"),
+                @NamedQuery(name = "Request.getAllRequests", query = "SELECT r FROM requests r"),
+                @NamedQuery(name = "Request.getByType", query = "SELECT r FROM requests r WHERE r.type =:requesttype"),
         }
 )
-public class EnrolmentConfirmationRequest implements Serializable {
+public class Request implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,8 @@ public class EnrolmentConfirmationRequest implements Serializable {
     private Student student;
 
     private int numberOfCopies;
+
+    private String type;
 
     @Transient
     private String nameAndSurname;
@@ -54,5 +57,13 @@ public class EnrolmentConfirmationRequest implements Serializable {
 
     public void setNameAndSurname(String nameAndSurname) {
         this.nameAndSurname = nameAndSurname;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
