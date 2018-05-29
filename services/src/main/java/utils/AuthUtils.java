@@ -1,7 +1,6 @@
 package utils;
 
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
-import entities.UserLogin;
 import io.jsonwebtoken.*;
 
 import java.util.Date;

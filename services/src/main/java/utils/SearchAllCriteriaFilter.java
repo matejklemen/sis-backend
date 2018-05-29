@@ -9,7 +9,6 @@ import javax.persistence.metamodel.Attribute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 // Eno Java diplomo prosim
 

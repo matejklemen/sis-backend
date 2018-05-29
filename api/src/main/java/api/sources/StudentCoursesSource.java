@@ -1,9 +1,8 @@
 package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
-import beans.logic.ExamSignUpLogicBean;
-import pojo.ResponseError;
 import beans.crud.StudentCoursesBean;
+import beans.logic.ExamSignUpLogicBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.StudentCourses;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
