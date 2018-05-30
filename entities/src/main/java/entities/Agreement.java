@@ -1,7 +1,6 @@
 package entities;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -49,7 +48,7 @@ public class Agreement implements Serializable {
         return issueDate;
     }
 
-    public String getIssueDateString() {
+    public String getIssueDate() {
         // format for JSON output
         return new SimpleDateFormat("yyyy-MM-dd").format(issueDate);
     }
@@ -63,7 +62,7 @@ public class Agreement implements Serializable {
         return validUntil;
     }
 
-    public String getValidUntilString() {
+    public String getValidUntil() {
         if(validUntil != null)
             return new SimpleDateFormat("yyyy-MM-dd").format(validUntil);
 
