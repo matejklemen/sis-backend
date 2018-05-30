@@ -42,7 +42,7 @@ public class StudentCoursesLogicBean {
             int sumOfGrades = 0;
             for(StudentCourses studentCourse : allStudentCourses){
                 // We get last exam sign up with grade for each course
-                List<ExamSignUp>  allExamSignUps = esuB.getExamSignUpsForStudentCourse(studentCourse.getIdStudentCourses());
+                List<ExamSignUp>  allExamSignUps = esuB.getExamSignUpsForStudentCourseWithPositiveGrade(studentCourse.getIdStudentCourses());
 
                 if(allExamSignUps.isEmpty())
                     continue;

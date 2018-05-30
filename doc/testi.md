@@ -140,51 +140,87 @@ Vsi testi: `janez@nov.ak` `123`
 # Kartotečni list (#30)
 
 ###
-- [ ] Preveri izpis kartotečnega lista takoj po vpisu. Izpis mora obsegati vse predmete, ki jih je študent vpisal, brez ocen:  
+- [x] Preveri izpis kartotečnega lista takoj po vpisu. Izpis mora obsegati vse predmete, ki jih je študent vpisal, brez ocen:  
 		- Za: `peter@kopljem.net` `123`  
 		- REF: generiraj token  
 		- PETER: prijavi  
 		- REF: potrdi  
 		- REF/PETER/UČITELJ: poglej oba izpisa  
-- [ ] Vnesi nekaj ocen in preveri izpis na oba načina (vsa polaganja, samo zadnje polaganje).   
+- [x] Vnesi nekaj ocen in preveri izpis na oba načina (vsa polaganja, samo zadnje polaganje).   
 		- Za: `janez@nov.ak` `123`  
 		- Ocene:   
 			- OMA: 5, 5   
 			- FIZIKA: 5, 6  
 			- ODV: 8  
 			- P1: 5, 5   
-- [ ] Preveri za študenta, ki je vpisan v več študijskih letih.   
+- [x] Preveri za študenta, ki je vpisan v več študijskih letih.   
 		- Za: `ni8075@student.uni-lj.si` `ni_63180075` (Nejc Ivanc)  
-- [ ] Preveri za študenta, ki je vpisan v več študijskih programov.   
+- [x] Preveri za študenta, ki je vpisan v več študijskih programov.   
 		- Za: `nima logina` (Rok Berdnik)  
-- [ ] Preveri izpis glave (študijsko leto, študijski program, letnik, vrsta vpisa, način študija) in noge (za vsako študijsko leto posebej število doseženih kreditnih točk in povprečna ocena).   
-- [ ] Preveri izpis podatkov o vsakem polaganju (šifra predmeta, ime predmeta, izpraševalci, datum izpita, zaporedna številka polaganja v celoti, zaporedna številka polaganja v tekočem študijskem letu, število kreditnih točk, ocena).   
-- [ ] Preveri izvoz v PDF in CSV.
+- [x] Preveri izpis glave (študijsko leto, študijski program, letnik, vrsta vpisa, način študija) in noge (za vsako študijsko leto posebej število doseženih kreditnih točk in povprečna ocena).   
+- [x] Preveri izpis podatkov o vsakem polaganju (šifra predmeta, ime predmeta, izpraševalci, datum izpita, zaporedna številka polaganja v celoti, zaporedna številka polaganja v tekočem študijskem letu, število kreditnih točk, ocena).   
+- [x] Preveri izvoz v PDF in CSV.
 
 # Naročilo potrdila o vpisu (#16)
 
 ###
 Študent lahko naroči potrdilo o vpisu. Naročila se zbirajo na posebni datoteki. 
-- [ ] Preveri za vpisanega študenta:
+- [x] Preveri za vpisanega študenta:
 	- Za: `janez@nov.ak` `123` (Janez Novak)
 	- Naroči
-- [ ] Preveri za študenta brez statusa. 
+- [x] Preveri za študenta brez statusa. 
 	- Za: `jd8004@student.uni-lj.si` `jd_63180004` (John Doe)
 	- Naroči
-- [ ] Preveri za absolventa (dodatno leto). 
+- [x] Preveri za absolventa (dodatno leto). 
 	- Za: `tz8008@student.uni-lj.si` `tz_63180008` (Teja Zupanc)
 	- Naroči
-- [ ] Preveri za različna števila izvodov. 
-- [ ] Preveri vsebino datoteke z naročili.
+- [x] Preveri za različna števila izvodov. 
+- [x] Preveri vsebino datoteke z naročili.
 
 
 # Naročilo potrdila o vpisu (#17)
 
 ###
 Referentka lahko izpiše potrdila o vpisu, ki so jih naročili študenti. 
-- [ ] Preveri, da se izpišejo vsa naročila. 
-- [ ] Preveri za vpisanega študenta. (Janez Novak)
-- [ ] Preveri za študenta brez statusa. (ne more niti naročiti)
-- [ ] Preveri za absolventa (dodatno leto). (Teja Zupanc)
-- [ ] Preveri za različna števila izvodov. 
+- [x] Preveri, da se izpišejo vsa naročila. 
+- [x] Preveri za vpisanega študenta. (Janez Novak)
+- [x] Preveri za študenta brez statusa. (ne more niti naročiti)
+- [x] Preveri za absolventa (dodatno leto). (Teja Zupanc)
+- [x] Preveri za različna števila izvodov. 
+- [x] Preveri možnost ponovnega tiskanja v primeru, da se papir zatakne.
+
+
+# Elektronski indeks (#29)
+
+###
+Študent/referentka/učitelj lahko izpiše seznam vseh opravljenih izpitov. 
+
+Študent lahko izpiše elektronski indeks samo zase, referentka in učitelj pa lahko izpišeta elektronski indeks za kateregakoli študenta. 
+Opravljeni izpiti se izpišejo v kronološkem vrstnem redu. Na koncu se izpišejo število opravljenih izpitov, dosežene kreditne točke in povprečne ocene po posameznih študijskih letih ter sumarni podatki za celoten študij. 
+
+- [ ] Preveri za študenta z opravljenimi izpiti v enem samem študijskem letu. 
+- [ ] Preveri za študenta z opravljenimi izpiti v več študijskih letih (vmes naj bo tudi študijsko leto, ko ni opravil nobenega izpita). 
+- [ ] Preveri za študenta, ki ni opravil nobenega izpita. 
+- [ ] Preveri izvoz v PDF in CSV.
+
+
+# Naročilo potrdila o opravljenih izpitih (#31)
+
+###
+Študent lahko naroči potrdilo o opravljenih izpitih. Potrdila se zbirajo na posebni datoteki.
+- [ ] Preveri za vpisanega študenta. Za: `janez@nov.ak` `123` (Janez Novak)
+- [ ] Preveri za študenta brez statusa. Za: `jd8004@student.uni-lj.si` `jd_63180004` (John Doe)
+- [ ] Preveri za absolventa (dodatno leto). Za: `tz8008@student.uni-lj.si` `tz_63180008` (Teja Zupanc)
+- [ ] Preveri za študenta, ki je bil vpisan v več študijskih programov. Za: `nima logina` (Rok Berdnik)  
+- [ ] Preveri za različna števila izvodov (spodnja in zgornja meja). [!] FE nima meje?!
+- [ ] Preveri vsebino datoteke z naročili.
+
+
+# Tiskanje potrdil o opravljenih izpitih (#32)
+
+###
+Referentka lahko izpiše potrdila o opravljenih izpitih, ki so jih naročili študenti. 
+
+- [ ] Preveri, da se vsa potrdila ujemajo s stanjem v kartotečnem listu in elektronskem indeksu. 
+- [ ] Preveri, da se izpišejo vsa naročena potrdila. 
 - [ ] Preveri možnost ponovnega tiskanja v primeru, da se papir zatakne.
