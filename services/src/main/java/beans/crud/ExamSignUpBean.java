@@ -226,7 +226,7 @@ public class ExamSignUpBean {
 
     public List<ExamSignUp> getExamSignUpsForStudentCourseWithPositiveGrade(int idStudentCourse) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
-                "esu.studentCourses.idStudentCourses = :id_student_course AND esu.returned = false AND esu.suggestedGrade > 5" +
+                "esu.studentCourses.idStudentCourses = :id_student_course AND esu.returned = false AND esu.suggestedGrade > 5 " +
                 "ORDER BY esu.courseExamTerm.datetime DESC", ExamSignUp.class);
 
         q.setParameter("id_student_course", idStudentCourse);
