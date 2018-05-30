@@ -8,6 +8,7 @@ import entities.Agreement;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.AgreementData;
 import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -52,8 +54,29 @@ public class AgreementSource {
 
         List<Agreement> agreements = ab.getAgreements(query);
 
+        /* Created special class as a workaround for a bug where front-end would sometimes get full student information
+        (whole entity) and only ID (int) other times.
+        If at some point a spark of inspiration comes, the way to reproduce the error is creating 2 agreements for same
+        student and then opening the agreements list (this method should send Agreement objects in that case). */
+        List<AgreementData> agreementData = new ArrayList<>(agreements.size());
+
+        for(Agreement agr: agreements) {
+            AgreementData agrData = new AgreementData();
+
+            agrData.setIdAgreement(agr.getIdAgreement());
+            agrData.setContentEnglish(agr.getContentEnglish());
+            agrData.setContentSlovene(agr.getContentSlovene());
+            agrData.setIssueDate(agr.getIssueDate());
+            agrData.setValidUntil(agr.getValidUntil());
+            agrData.setStudentName(agr.getStudent().getName());
+            agrData.setStudentSurname(agr.getStudent().getSurname());
+            agrData.setIssuer(agr.getIssuer());
+
+            agreementData.add(agrData);
+        }
+
         return Response
-                .ok(agreements)
+                .ok(agreementData)
                 .header("X-Total-Count", ab.getAgreements(q2).size())
                 .build();
     }

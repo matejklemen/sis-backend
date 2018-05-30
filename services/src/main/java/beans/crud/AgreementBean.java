@@ -40,7 +40,8 @@ public class AgreementBean {
     }
 
     public List<Agreement> getAgreementsForStudent(int idStudent) {
-        TypedQuery<Agreement> q = em.createQuery("SELECT a FROM agreement a WHERE a.student.id = :id_student", Agreement.class);
+        TypedQuery<Agreement> q = em.createQuery("SELECT a FROM agreement a WHERE a.student.id = :id_student AND " +
+                "a.deleted = false ORDER BY a.issueDate DESC", Agreement.class);
 
         q.setParameter("id_student", idStudent);
         return q.getResultList();

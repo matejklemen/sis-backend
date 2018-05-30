@@ -46,6 +46,8 @@ INSERT INTO exam_sign_up (id,confirmed,suggested_grade,returned,id_course_exam_t
 -- staff (ref and joze1)
 INSERT INTO staff (id, first_name, last_name1, last_name2, id_login) VALUES (1, 'Referen', 'Tka', 'Fri', 4), (2, 'Jože', 'Može', NULL, 1);
 
+INSERT INTO agreement (id_agreement,content_eng,content_slo,deleted,issue_date,issuer,valid_until,student_id) VALUES ('1',NULL,'Pohvala za zgledno opravljene obveznosti.','false','2018-05-28','Dekanat FRI',NULL,'4'),('2',NULL,'Pohvala za izjemno znanje CLI.','false','2018-05-23','Aleksandar Jurišić','2018-06-07','4'),('3','Commendment for achieving above average grades in current study year.','Pohvala za zgledno opravljene obveznosti.','false','2018-05-31','Dekanat FRI',NULL,'34'),('4',NULL,'Prešernova nagrada za diplomsko delo.','false','2017-12-03','Univerza v Ljubljani',NULL,'45'),('5','Delete this.','Briši to.','false','2018-05-01','Dummy izdajatelj','2018-05-30','88'),('6',NULL,'Pohvala za doseženo srebrno Vegovo priznanje.','false','2018-02-06','Dekanat FRI',NULL,'76');
+
 ALTER SEQUENCE course_exam_term_id_course_exam_term_seq RESTART WITH 289;
 ALTER SEQUENCE student_courses_id_student_courses_seq RESTART WITH 2651;
 ALTER SEQUENCE course_organization_id_course_organization_seq RESTART WITH 308;
@@ -57,3 +59,4 @@ ALTER SEQUENCE student_id_seq RESTART WITH 95;
 ALTER SEQUENCE user_login_id_seq RESTART WITH 98;
 ALTER SEQUENCE staff_id_seq RESTART WITH 3;
 ALTER SEQUENCE curriculum_id_curriculum_seq RESTART WITH 2500;
+ALTER SEQUENCE agreement_id_agreement_seq RESTART WITH 7;

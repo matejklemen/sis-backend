@@ -1,3 +1,10 @@
+- Preveri vnos novega sklepa (datum, organ, besedilo). 
+- Preveri urejanje obstoječega sklepa
+- Preveri brisanje sklepa
+- Preveri, da se vsi sklepi izpišejo v okviru zgodbe Osebni podatki študenta
+    - vpiši se v račun Štefana Čolnarja: `steff@stef.anio`, `123`, videti bi morali 2 sklepa
+    - študenti brez sklepov razdelka 'Sklepi' sploh nimajo med osebnimi podatki
+
 # Prijava na izpit (#21)
 
 ###
