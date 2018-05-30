@@ -1,6 +1,8 @@
 package api.sources;
 
+import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import pojo.ResponseError;
 import beans.crud.CourseOrganizationBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
@@ -130,5 +132,22 @@ public class CourseOrganizationSource {
 
         return courseOrganizations == null ? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
                 Response.status(Response.Status.OK).entity(courseOrganizations).build();
+    }
+
+    @Operation(description = "Updates an existing course organization.", summary = "Update course organization", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Update successful",
+                    content = @Content(
+                            schema = @Schema(implementation = CourseOrganization.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Update failed",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class)))
+    })
+    @POST
+    public Response updateCountry(@RequestBody CourseOrganization co) {
+        if(co == null) throw new NoRequestBodyException();
+        co = cob.updateCourseOrganization(co);
+        return Response.ok().entity(co).build();
     }
 }

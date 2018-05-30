@@ -8,6 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,5 +66,12 @@ public class CourseOrganizationBean {
             return lco.get(0);
         else
             return null;
+    }
+
+    @Transactional
+    public CourseOrganization updateCourseOrganization(CourseOrganization co) {
+        em.merge(co);
+        em.flush();
+        return co;
     }
 }
