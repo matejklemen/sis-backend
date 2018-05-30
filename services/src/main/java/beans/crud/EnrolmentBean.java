@@ -115,6 +115,7 @@ public class EnrolmentBean {
 
     }
 
+    @Transactional
     public Enrolment getEnrolment(int studentId, int studyYearId) {
         return em.createNamedQuery("Enrolment.getByStudentIdAndStudyYearId", Enrolment.class)
                 .setParameter("studentId", studentId)
@@ -123,12 +124,14 @@ public class EnrolmentBean {
                 .getSingleResult();
     }
 
+    @Transactional
     public List<Enrolment> getAllEnrolments() {
         TypedQuery<Enrolment> q = em.createQuery("SELECT enr FROM enrolment enr", Enrolment.class);
 
         return q.getResultList();
     }
 
+    @Transactional
     public List<Enrolment> getEnrolmentsForCurrentYear() {
         // months start with 0
         final int MONTH_OCTOBER = 10 - 1;
