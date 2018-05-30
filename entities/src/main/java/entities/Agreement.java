@@ -22,10 +22,10 @@ public class Agreement implements Serializable {
     // ! note: String formatted as: YYYY-MM-DD
     private Date validUntil;
 
-    @Column(name = "content_slo")
+    @Column(name = "content_slo", length = 512)
     private String contentSlovene;
 
-    @Column(name = "content_eng")
+    @Column(name = "content_eng", length = 512)
     private String contentEnglish;
 
     private String issuer;
