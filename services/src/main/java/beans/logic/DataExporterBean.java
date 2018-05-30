@@ -1,9 +1,6 @@
 package beans.logic;
 
-import beans.crud.CourseOrganizationBean;
-import beans.crud.EnrolmentBean;
-import beans.crud.ExamSignUpBean;
-import beans.crud.StudentCoursesBean;
+import beans.crud.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import entities.Enrolment;
@@ -14,6 +11,8 @@ import entities.curriculum.CourseOrganization;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
 import entities.logic.TableData;
+import pojo.DigitalIndex;
+import pojo.Statistics;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -55,6 +54,12 @@ public class DataExporterBean {
 
     @Inject
     CourseOrganizationBean coB;
+
+    @Inject
+    StudentCoursesLogicBean sclB;
+
+    @Inject
+    StudentBean sB;
 
     public DataExporterBean() throws IOException, DocumentException {
     }
@@ -269,9 +274,9 @@ public class DataExporterBean {
 
             table = new PdfPTable(4);
             table.setWidthPercentage(100);
-            float[] columnWidths = getOptimizedTableWidths(header, rows, new ArrayList<>());
+            float[] columnWidths = getOptimizedTableWidths(header, rows);
             table.setWidths(columnWidths);
-            addTableHeader(table, font3, header, new ArrayList<>());
+            addTableHeader(table, font3, header);
             addRows(table, font3, rows);
             document.add(table);
 
@@ -779,18 +784,127 @@ public class DataExporterBean {
         }
     }
 
+    private int digitalIndexIndex = 1;
+
     public ByteArrayInputStream generateDigitalIndexPdf(int studentId){
         try{
+            DigitalIndex digitalIndex = sclB.getPassedCourses(studentId);
+            Student student = sB.getStudent(studentId);
+            Enrolment lastEnrolment = eB.getLastEnrolmentByStudentId(studentId);
             Document document = new Document();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfWriter writer = PdfWriter.getInstance(document, baos);
             document.open();
 
-            document.add(new Paragraph("Potrdilo o opravljenih predmetih",font2));
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+            PdfPCell cell = new PdfPCell();
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
+            PdfReader reader = new PdfReader("services/src/main/resources/logo-ul-fri.pdf");
+            PdfImportedPage page = writer.getImportedPage(reader, 1);
+            cell = new PdfPCell(Image.getInstance(page));
+            cell.setPadding(0);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
+            cell.addElement(new Paragraph("Večna pot 113\n1000 LJUBLJANA, Slovenija\ntelefon:01 47 98 100\nwww.fri.uni-lj.si\ne-mail: dekanat@fri.uni-lj.si",font5));
+            cell.setPadding(0);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
+
+            cell = new PdfPCell();
+            cell.setBorder(PdfPCell.NO_BORDER);
+
+            table.addCell(getCell(student.getSurname().toUpperCase() +" "+ student.getName().toUpperCase(), student.getAddress1() == null ? "Brezdomc" : student.getSendingAddress() != 2 ? student.getAddress1().getLine1().toUpperCase() +"\n"+ student.getAddress1().getPost().getId() +" "+ student.getAddress1().getPost().getName().toUpperCase() : student.getAddress2().getLine1().toUpperCase() +"\n"+ student.getAddress2().getPost().getId() +" "+ student.getAddress2().getPost().getName().toUpperCase(), PdfPCell.ALIGN_LEFT, font3, font4));
+            table.addCell(cell);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
+            Date date = new Date();
+            table.addCell(getCell("Številka: "+digitalIndexIndex++, "Datum: "+ dateFormat.format(date), PdfPCell.ALIGN_RIGHT, font3, font3));
+            document.add(table);
+
+            Paragraph para = new Paragraph("\nPOTRDILO O OPRAVLJENIH OBVEZNOSTIH\n\n", font4);
+            para.setAlignment(Element.ALIGN_CENTER);
+            document.add(para);
+
+            para = new Paragraph("Študent: "+ student.getSurname() +" "+ student.getName(), font3);
+            document.add(para);
+            para = new Paragraph("Vpisna številka: "+ student.getRegisterNumber(), font3);
+            document.add(para);
+            para = new Paragraph("Potrjujemo, da je študent opravil naslednje študijske obveznosti na študijskem programu: "+ lastEnrolment.getStudyProgram().getName().toUpperCase() +"-"+ lastEnrolment.getStudyProgram().getStudyDegree().getName()+"\n\n", font4);
+            document.add(para);
+
+            List<String> header = new ArrayList<>();
+            header.add("#");
+            header.add("Predmet");
+            header.add("Letnik");
+            header.add("KT");
+            header.add("Datum");
+            header.add("Ocena");
+
+            List<List<String>> rows = new ArrayList<>();
+            Iterator<StudentCourses> studentCoursesItr = digitalIndex.getPassedCourses().iterator();
+            int index = 1;
+            while (studentCoursesItr.hasNext()) {
+                List<String> row = new ArrayList<>();
+                StudentCourses student_course = studentCoursesItr.next();
+                row.add(String.valueOf(index));
+                row.add(student_course.getCourse().getName());
+                row.add(String.valueOf(student_course.getYear()));
+                row.add(String.valueOf(student_course.getCourse().getCreditPoints()));
+                row.add(student_course.getDateOfGrade().toString());
+                row.add(String.valueOf(student_course.getGrade()));
+                rows.add(row);
+                index++;
+            }
+
+            table = new PdfPTable(6);
+            table.setWidthPercentage(100);
+            float[] columnWidths = getOptimizedTableWidths(header, rows);
+            table.setWidths(columnWidths);
+            addTableHeader(table, font3, header);
+            addRows(table, font3, rows);
+            document.add(table);
+
+            Iterator<Statistics> statisticsItr = digitalIndex.getStatistics().iterator();
+            index = 0;
+            float sumAvg = 0;
+            while (statisticsItr.hasNext()) {
+                Statistics st = statisticsItr.next();
+                if(!Float.isNaN(st.getAvg())) {
+                    para = new Paragraph((index+1) +". letnik: opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".", font3);
+                    document.add(para);
+                    sumAvg += st.getAvg();
+                    index++;
+                } else {
+                    break;
+                }
+            }
+
+            if(index > 0) {
+                para = new Paragraph("Skupna povprečna ocena je "+ (float)Math.round(sumAvg/index*100d)/100d, font3);
+                document.add(para);
+            }
 
             document.close();
+
             byte[] pdf = baos.toByteArray();
-            ByteArrayInputStream bais = new ByteArrayInputStream(pdf);
+
+            reader = new PdfReader(pdf);
+            int pages = reader.getNumberOfPages();
+
+            ByteArrayOutputStream pagedPdf = new ByteArrayOutputStream();
+            PdfStamper stamper = new PdfStamper(reader, pagedPdf);
+            PdfContentByte pageContent;
+            for(int i=1; i<=pages; i++) {
+                pageContent = stamper.getOverContent(i);
+                ColumnText.showTextAligned(pageContent, Element.ALIGN_RIGHT, new Phrase(String.format("Stran: %d od %d", i, pages), font3), pageContent.getPdfDocument().right(), pageContent.getPdfDocument().bottom()+31, 0);
+            }
+            stamper.close();
+            reader.close();
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(pagedPdf.toByteArray());
             return bais;
         }catch(Exception e){
             e.printStackTrace();
@@ -804,8 +918,74 @@ public class DataExporterBean {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(baos);
 
-            out.write(("Potrdilo o opravljenih predmetih").getBytes());
+            DigitalIndex digitalIndex = sclB.getPassedCourses(studentId);
+            Student student = sB.getStudent(studentId);
+            Enrolment lastEnrolment = eB.getLastEnrolmentByStudentId(studentId);
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
+            Date date = new Date();
+            out.write(("Datum: "+ dateFormat.format(date)).getBytes());
             out.write(NEW_LINE.getBytes(CHARSET));
+            out.write(("POTRDILO O OPRAVLJENIH OBVEZNOSTIH").getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+            out.write(("Študent: "+ student.getSurname() +" "+ student.getName()).getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+            out.write(("Vpisna številka: "+ student.getRegisterNumber()).getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+            out.write(("Potrjujemo, da je študent opravil naslednje študijske obveznosti na študijskem programu: "+ lastEnrolment.getStudyProgram().getName().toUpperCase() +"-"+ lastEnrolment.getStudyProgram().getStudyDegree().getName()).getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+
+            out.write("#".getBytes());
+            out.write(DELIMETER.getBytes(CHARSET));
+            out.write("Predmet".getBytes());
+            out.write(DELIMETER.getBytes(CHARSET));
+            out.write("Letnik".getBytes());
+            out.write(DELIMETER.getBytes(CHARSET));
+            out.write("KT".getBytes());
+            out.write(DELIMETER.getBytes(CHARSET));
+            out.write("Datum".getBytes());
+            out.write(DELIMETER.getBytes(CHARSET));
+            out.write("Ocena".getBytes());
+            out.write(NEW_LINE.getBytes(CHARSET));
+
+            Iterator<StudentCourses> studentCoursesItr = digitalIndex.getPassedCourses().iterator();
+            int index = 1;
+            while (studentCoursesItr.hasNext()) {
+                List<String> row = new ArrayList<>();
+                StudentCourses student_course = studentCoursesItr.next();
+                out.write(String.valueOf(index).getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write(student_course.getCourse().getName().getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write(String.valueOf(student_course.getYear()).getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write(String.valueOf(student_course.getCourse().getCreditPoints()).getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write(student_course.getDateOfGrade().toString().getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write(String.valueOf(student_course.getGrade()).getBytes());
+                index++;
+                out.write(NEW_LINE.getBytes(CHARSET));
+            }
+
+            Iterator<Statistics> statisticsItr = digitalIndex.getStatistics().iterator();
+            index = 0;
+            float sumAvg = 0;
+            while (statisticsItr.hasNext()) {
+                Statistics st = statisticsItr.next();
+                if(!Float.isNaN(st.getAvg())) {
+                    out.write(((index+1) +". letnik: opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".").getBytes());
+                    out.write(NEW_LINE.getBytes(CHARSET));
+                    sumAvg += st.getAvg();
+                    index++;
+                } else {
+                    break;
+                }
+            }
+
+            if(index > 0) {
+                out.write(("Skupna povprečna ocena je "+ (float)Math.round(sumAvg/index*100d)/100d).getBytes());
+            }
 
             baos.flush();
             baos.close();
@@ -942,6 +1122,20 @@ public class DataExporterBean {
         }
     }
 
+    private void addTableHeader(PdfPTable table, Font font, List<String> names) {
+        Iterator<String> namesIt = names.iterator();
+        int i = 0;
+        while (namesIt.hasNext()) {
+            PdfPCell header = new PdfPCell();
+            header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            String name = namesIt.next();
+            String phrase = name;
+            header.setPhrase(new Phrase(phrase, font));
+            table.addCell(header);
+            i++;
+        }
+    }
+
     private void addTableHeaderNoBorder(PdfPTable table, Font font, List<String> names, boolean lastColSpan2) {
         int i = 0;
         Iterator<String> namesIt = names.iterator();
@@ -978,6 +1172,43 @@ public class DataExporterBean {
                 if(i > 0 && !inLegend.get(i-1)) {
                     widths[i] = coloumnName.length();
                 }
+            }
+            i++;
+        }
+
+        Iterator<List<String>> rowIt = rows.iterator();
+        while (rowIt.hasNext()) {
+            i = 0;
+            Iterator<String> cellIt = rowIt.next().iterator();
+            while (cellIt.hasNext()) {
+                String cell = cellIt.next();
+                if(cell.length() > widths[i]) {
+                    widths[i] = cell.length();
+                }
+                i++;
+            }
+        }
+
+        float sum = 0;
+        for (i = 0; i < widths.length; i++) {
+            sum += widths[i];
+        }
+        if(widths[0]/sum < 0.5f) {
+            widths[0] = sum*5/100;
+        }
+
+        return widths;
+    }
+
+    private float[] getOptimizedTableWidths(List<String> coloumnNames, List<List<String>> rows) {
+        float[] widths = new float[coloumnNames.size()];
+
+        int i = 0;
+        Iterator<String> coloumnNamesIt = coloumnNames.iterator();
+        while (coloumnNamesIt.hasNext()) {
+            String coloumnName = coloumnNamesIt.next();
+            if(coloumnName.length() > widths[i]) {
+                widths[i] = coloumnName.length();
             }
             i++;
         }

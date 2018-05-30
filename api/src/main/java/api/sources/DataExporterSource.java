@@ -189,15 +189,29 @@ public class DataExporterSource {
 
     @Path("courses/pdf/{studentId}")
     @GET
-    public Response getDigitalIndexPdf(@QueryParam("studentId") int studentId){
-        return Response.ok(dataExporterBean.generateDigitalIndexPdf(studentId)).build();
+    public Response getDigitalIndexPdf(@PathParam("studentId") int studentId){
+        ByteArrayInputStream bais = dataExporterBean.generateDigitalIndexPdf(studentId);
+        String filename = String.format("digitalIndex_%d.pdf", studentId);
+        return Response
+                .ok(bais)
+                .type("application/pdf")
+                .header("Content-Disposition", "attachment; filename=" + filename)
+                .header("X-Export-Filename", filename)
+                .build();
     }
 
     @Path("courses/csv/{studentId}")
     @GET
     @Produces("text/csv")
-    public Response getDigitalIndexCsv(@QueryParam("studentId") int studentId){
-        return Response.ok(dataExporterBean.generateDigitalIndexCsv(studentId)).build();
+    public Response getDigitalIndexCsv(@PathParam("studentId") int studentId){
+        ByteArrayInputStream bais = dataExporterBean.generateDigitalIndexCsv(studentId);
+        String filename = String.format("digitalIndex_%d.csv", studentId);
+        return Response
+                .ok(bais)
+                .type("text/csv")
+                .header("Content-Disposition", "attachment; filename=" + filename)
+                .header("X-Export-Filename", filename)
+                .build();
     }
 
 }
