@@ -4,7 +4,6 @@ import entities.Professor;
 import entities.StudyYear;
 
 import javax.persistence.*;
-import javax.print.DocFlavor;
 
 /* Represents the metadata about who are the organizers of a course in a particular study year */
 @Entity(name = "course_organization")

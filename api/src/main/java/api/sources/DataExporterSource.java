@@ -2,22 +2,21 @@ package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
 import beans.crud.EnrolmentConfirmationRequestBean;
+import beans.logic.DataExporterBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import entities.EnrolmentConfirmationRequest;
+import entities.logic.TableData;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.headers.Header;
-import pojo.ResponseError;
-import beans.logic.DataExporterBean;
-import entities.logic.TableData;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -152,28 +151,31 @@ public class DataExporterSource {
     }
 
     @Operation(description = "Puts new request for enrolment confirmation for student", summary = "Put new enrolment confirmation request")
-    @Path("requests/{studentId}/{copies}")
+    @Path("requests/{studentId}")
     @PUT
-    public Response putEnrolmentConfirmationRequest(@PathParam("studentId") int studentId, @PathParam("copies") int copies) {
-        ecrB.insertNewEnrolmentConfirmationRequest(studentId,copies);
+    public Response putEnrolmentConfirmationRequest(@PathParam("studentId") int studentId,
+                                                    @QueryParam("copies") int copies,
+                                                    @QueryParam("type") String type) {
+        ecrB.insertNewRequest(studentId, copies, type);
         return Response.ok().build();
     }
 
-    @Operation(description = "Gets all requests (for enrolment confirmation)", summary = "Gets all requests")
+    @Operation(description = "Gets all requests for type", summary = "Gets all requests")
     @Parameters({
             @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
             @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
             @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
-            @Parameter(name = "search", description = "Search", in = ParameterIn.QUERY)
+            @Parameter(name = "search", description = "Search", in = ParameterIn.QUERY),
+            @Parameter(name = "type", description = "can be enrolment or course", in = ParameterIn.QUERY)
     })
     @Path("requests")
     @GET
     @Produces("application/json")
-    public Response getAllRequests() {
+    public Response getAllRequests(@QueryParam("type") String type) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         return Response
-                .ok(ecrB.getAllRequests(query))
-                .header("X-Total-Count", ecrB.getAllRequests().size())
+                .ok(ecrB.getAllRequestsByType(query,type))
+                .header("X-Total-Count", ecrB.getAllRequestsByType(type).size())
                 .build();
     }
 
@@ -183,6 +185,19 @@ public class DataExporterSource {
     public Response deleteEnrolmentConfirmationRequest(@PathParam("requestId") int requestId) {
         ecrB.deleteRequest(requestId);
         return Response.ok().build();
+    }
+
+    @Path("courses/pdf/{studentId}")
+    @GET
+    public Response getDigitalIndexPdf(@QueryParam("studentId") int studentId){
+        return Response.ok(dataExporterBean.generateDigitalIndexPdf(studentId)).build();
+    }
+
+    @Path("courses/csv/{studentId}")
+    @GET
+    @Produces("text/csv")
+    public Response getDigitalIndexCsv(@QueryParam("studentId") int studentId){
+        return Response.ok(dataExporterBean.generateDigitalIndexCsv(studentId)).build();
     }
 
 }

@@ -2,8 +2,10 @@ package api.sources;
 
 import api.interceptors.annotations.LogApiCalls;
 import beans.logic.ExamSignUpLogicBean;
+import beans.logic.StudentCoursesLogicBean;
 import pojo.ResponseError;
 import beans.crud.StudentCoursesBean;
+import beans.logic.ExamSignUpLogicBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.curriculum.StudentCourses;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import pojo.ResponseError;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -42,6 +45,8 @@ public class StudentCoursesSource {
     private StudentCoursesBean scB;
     @Inject
     private ExamSignUpLogicBean esulB;
+    @Inject
+    private StudentCoursesLogicBean sclB;
 
     @Operation(description = "Returns a list of student's courses.", summary = "Get list of student's courses", responses = {
             @ApiResponse(responseCode = "200",
@@ -91,6 +96,24 @@ public class StudentCoursesSource {
 
         return res == null? Response.status(Response.Status.NOT_FOUND).entity(ResponseError.error404()).build():
                 Response.status(Response.Status.OK).entity(res).build();
+    }
+
+    @Operation(description = "Returns student's courses with positive grade", summary = "Get passed courses", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Student's courses with positive grade",
+                    content = @Content(
+                            schema = @Schema(implementation = StudentCourses.class))
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "No student with given id",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseError.class))
+            )
+    })
+    @GET
+    @Path("passed/{studentId}")
+    public Response getStudentCourseWithGrades(@PathParam("studentId") int studentId){
+        return Response.ok(sclB.getPassedCourses(studentId)).build();
     }
 
 }

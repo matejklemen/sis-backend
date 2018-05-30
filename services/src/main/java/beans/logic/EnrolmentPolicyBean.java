@@ -1,7 +1,10 @@
 package beans.logic;
 
 import beans.crud.*;
-import entities.*;
+import entities.Enrolment;
+import entities.EnrolmentToken;
+import entities.KlasiusSrv;
+import entities.Student;
 import entities.address.Country;
 import entities.address.Municipality;
 import entities.curriculum.Curriculum;
