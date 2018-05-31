@@ -200,7 +200,7 @@ Opravljeni izpiti se izpišejo v kronološkem vrstnem redu. Na koncu se izpišej
 
 - [x] Preveri za študenta z opravljenimi izpiti v enem samem študijskem letu. (Janez Novak, 63130001, opravljena dva izpita v 2017/2018)
 - [x] Preveri za študenta z opravljenimi izpiti v več študijskih letih (vmes naj bo tudi študijsko leto, ko ni opravil nobenega izpita). (Alenka Peternel, 63180024, 2x drugi letnik, prvič brez opravljenih izpitov) 
-- [ ] Preveri za študenta, ki ni opravil nobenega izpita.
+- [x] Preveri za študenta, ki ni opravil nobenega izpita. (Cene Lukavčič, 63180011, brez opravljenih izpitov)
 - [ ] Preveri izvoz v PDF in CSV.
 
 
