@@ -33,25 +33,25 @@ Examples on how to use filters, offsets and limits are availiable at [kumuluzee-
 ## Sample users
 |     Role     | Role id |         Username        | Password | Enrolments | Study program |
 |:------------:|:-------:|:-----------------------:|:--------:|:-------------:|:-------------:|
-|  Skrbnik/ca  |    1    |          joze1          |    123   |       /       |       /       |
-|  Študent/ka  |    2    |       blazkablatnik@gmail.com      |    123   |       none (no data)      |      whatever      |
-|  Študent/ka  |    2    |    peter@kopljem.net    |    123   |       none (but with data)      |      whatever      |
-|  Študent/ka  |    2    |       janez@nov.ak      |    123   |      1     |      BUN      |
-|  Študent/ka  |    2    |     marta@pod.streho    |    123   |       1,2,2       |      BUN      |
-|  Študent/ka  |    2    |       steff@stef.anio      |    123   |       1,2       |      BUN      |
-| Profesor/ica |    3    | prof@fri.uni-lj.si |    123   |       /       |       /       |
-|  Referent/ka |    4    |    ref@fri.uni-lj.si    |    123   |       /       |       /       |
-|  Študent/ka  |    2    | sz8003@student.uni-lj.si | sz_63180003 | 1, 2, 3 |       BUN     |
-|  Študent/ka  |    2    | jd8004@student.uni-lj.si | jd_63180004 | 1, 1 |     BUN     |
-|  Študent/ka  |    2    | mj8005@student.uni-lj.si | mj_63180005 | 1, 2 | BUN |
-|  Študent/ka  |    2    | lh8006@student.uni-lj.si | lh_63180006 | 1, 2 | BUN |
-|  Študent/ka  |    2    | žr8007@student.uni-lj.si | žr_63180007 | 1, 2, 2 | BUN |
-|  Študent/ka  |    2    | tz8008@student.uni-lj.si | tz_63180008 | 1, 2, 3, 3 | BUN |
-|  Študent/ka  |    2    | rb8009@student.uni-lj.si | rb_63180009 | 1 | BUN |
-|  Študent/ka  |    2    | nk8010@student.uni-lj.si | nk_63180010 | 1, 1, 2 | BUN |
-|  Študent/ka  |    2    | cl8011@student.uni-lj.si | cl_63180011 | 1, 1 | BUN |
-|  Študent/ka  |    2    | ip8012@student.uni-lj.si | ip_63180012 | 1, 2, 2, 3 | BUN |
-|  Študent/ka  |    2    | jj8013@student.uni-lj.si | jj_63180013 | 1 | BUN |
+|  Skrbnik/ca  |    1    |          `joze1`          |    123   |       /       |       /       |
+|  Študent/ka  |    2    |       `blazkablatnik@gmail.com`      |    123   |       none (no data)      |      whatever      |
+|  Študent/ka  |    2    |    `peter@kopljem.net`    |    123   |       none (but with data)      |      whatever      |
+|  Študent/ka  |    2    |       `janez@nov.ak`      |    123   |      1     |      BUN      |
+|  Študent/ka  |    2    |     `marta@pod.streho`    |    123   |       1,2,2       |      BUN      |
+|  Študent/ka  |    2    |       `steff@stef.anio`      |    123   |       1,2       |      BUN      |
+| Profesor/ica |    3    | `prof@fri.uni-lj.si` |    123   |       /       |       /       |
+|  Referent/ka |    4    |    `ref@fri.uni-lj.si`    |    123   |       /       |       /       |
+|  Študent/ka  |    2    | `sz8003@student.uni-lj.si` | sz_63180003 | 1, 2, 3 |       BUN     |
+|  Študent/ka  |    2    | `jd8004@student.uni-lj.si` | jd_63180004 | 1, 1 |     BUN     |
+|  Študent/ka  |    2    | `mj8005@student.uni-lj.si` | mj_63180005 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `lh8006@student.uni-lj.si` | lh_63180006 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `žr8007@student.uni-lj.si` | žr_63180007 | 1, 2, 2 | BUN |
+|  Študent/ka  |    2    | `tz8008@student.uni-lj.si` | tz_63180008 | 1, 2, 3, 3 | BUN |
+|  Študent/ka  |    2    | `rb8009@student.uni-lj.si` | rb_63180009 | 1 | BUN |
+|  Študent/ka  |    2    | `nk8010@student.uni-lj.si` | nk_63180010 | 1, 1, 2 | BUN |
+|  Študent/ka  |    2    | `cl8011@student.uni-lj.si` | cl_63180011 | 1, 1 | BUN |
+|  Študent/ka  |    2    | `ip8012@student.uni-lj.si` | ip_63180012 | 1, 2, 2, 3 | BUN |
+|  Študent/ka  |    2    | `jj8013@student.uni-lj.si` | jj_63180013 | 1 | BUN |
 
 ## Pregled študentov
 |#|Vpisna številka|Ime|Priimek|Notes|
