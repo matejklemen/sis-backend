@@ -6,23 +6,13 @@ import java.util.List;
 
 public class DigitalIndex {
 
-    private List<StudentCourses> passedCourses;
+    public List<DigitalIndexByProgram> indexList;
 
-    private List<Statistics> statistics;
-
-    public List<StudentCourses> getPassedCourses() {
-        return passedCourses;
+    public List<DigitalIndexByProgram> getIndexList() {
+        return indexList;
     }
 
-    public void setPassedCourses(List<StudentCourses> passedCourses) {
-        this.passedCourses = passedCourses;
-    }
-
-    public List<Statistics> getStatistics() {
-        return statistics;
-    }
-
-    public void setStatistics(List<Statistics> statistics) {
-        this.statistics = statistics;
+    public void setIndexList(List<DigitalIndexByProgram> indexList) {
+        this.indexList = indexList;
     }
 }

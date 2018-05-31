@@ -12,6 +12,7 @@ import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
 import entities.logic.TableData;
 import pojo.DigitalIndex;
+import pojo.DigitalIndexByProgram;
 import pojo.Statistics;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -788,9 +789,8 @@ public class DataExporterBean {
 
     public ByteArrayInputStream generateDigitalIndexPdf(int studentId){
         try{
-            DigitalIndex digitalIndex = sclB.getPassedCourses(studentId);
+            DigitalIndex digitalIndexFull = sclB.getPassedCourses(studentId);
             Student student = sB.getStudent(studentId);
-            Enrolment lastEnrolment = eB.getLastEnrolmentByStudentId(studentId);
             Document document = new Document();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfWriter writer = PdfWriter.getInstance(document, baos);
@@ -832,59 +832,67 @@ public class DataExporterBean {
             document.add(para);
             para = new Paragraph("Vpisna številka: "+ student.getRegisterNumber(), font3);
             document.add(para);
-            para = new Paragraph("Potrjujemo, da je študent opravil naslednje študijske obveznosti na študijskem programu: "+ lastEnrolment.getStudyProgram().getName().toUpperCase() +"-"+ lastEnrolment.getStudyProgram().getStudyDegree().getName()+"\n\n", font4);
-            document.add(para);
 
-            List<String> header = new ArrayList<>();
-            header.add("#");
-            header.add("Predmet");
-            header.add("Letnik");
-            header.add("KT");
-            header.add("Datum");
-            header.add("Ocena");
+            int counter = 0;
+            for(DigitalIndexByProgram digitalIndex : digitalIndexFull.getIndexList()){
 
-            List<List<String>> rows = new ArrayList<>();
-            Iterator<StudentCourses> studentCoursesItr = digitalIndex.getPassedCourses().iterator();
-            int index = 1;
-            while (studentCoursesItr.hasNext()) {
-                List<String> row = new ArrayList<>();
-                StudentCourses student_course = studentCoursesItr.next();
-                row.add(String.valueOf(index));
-                row.add(student_course.getCourse().getName());
-                row.add(String.valueOf(student_course.getYear()));
-                row.add(String.valueOf(student_course.getCourse().getCreditPoints()));
-                row.add(student_course.getDateOfGrade().toString());
-                row.add(String.valueOf(student_course.getGrade()));
-                rows.add(row);
-                index++;
-            }
-
-            table = new PdfPTable(6);
-            table.setWidthPercentage(100);
-            float[] columnWidths = getOptimizedTableWidths(header, rows);
-            table.setWidths(columnWidths);
-            addTableHeader(table, font3, header);
-            addRows(table, font3, rows);
-            document.add(table);
-
-            Iterator<Statistics> statisticsItr = digitalIndex.getStatistics().iterator();
-            index = 0;
-            float sumAvg = 0;
-            while (statisticsItr.hasNext()) {
-                Statistics st = statisticsItr.next();
-                if(!Float.isNaN(st.getAvg())) {
-                    para = new Paragraph(st.getYear() +". letnik (" + st.getSchoolYear() + "): opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".", font3);
-                    document.add(para);
-                    sumAvg += st.getAvg();
-                    index++;
-                } else {
-                    break;
-                }
-            }
-
-            if(index > 0) {
-                para = new Paragraph("Skupna povprečna ocena je "+ (float)Math.round(sumAvg/index*100d)/100d, font3);
+                para = new Paragraph("Potrjujemo, da je študent opravil naslednje študijske obveznosti na študijskem programu: "+ digitalIndex.getStudyProgram() +"\n\n", font4);
+                if(counter > 0)
+                    para.setSpacingBefore(30);
+                counter++;
                 document.add(para);
+
+                List<String> header = new ArrayList<>();
+                header.add("#");
+                header.add("Predmet");
+                header.add("Letnik");
+                header.add("KT");
+                header.add("Datum");
+                header.add("Ocena");
+
+                List<List<String>> rows = new ArrayList<>();
+                Iterator<StudentCourses> studentCoursesItr = digitalIndex.getPassedCourses().iterator();
+                int index = 1;
+                while (studentCoursesItr.hasNext()) {
+                    List<String> row = new ArrayList<>();
+                    StudentCourses student_course = studentCoursesItr.next();
+                    row.add(String.valueOf(index));
+                    row.add(student_course.getCourse().getName());
+                    row.add(String.valueOf(student_course.getYear()));
+                    row.add(String.valueOf(student_course.getCourse().getCreditPoints()));
+                    row.add(student_course.getDateOfGrade().toString());
+                    row.add(String.valueOf(student_course.getGrade()));
+                    rows.add(row);
+                    index++;
+                }
+
+                table = new PdfPTable(6);
+                table.setWidthPercentage(100);
+                float[] columnWidths = getOptimizedTableWidths(header, rows);
+                table.setWidths(columnWidths);
+                addTableHeader(table, font3, header);
+                addRows(table, font3, rows);
+                document.add(table);
+
+                Iterator<Statistics> statisticsItr = digitalIndex.getStatistics().iterator();
+                index = 0;
+                float sumAvg = 0;
+                while (statisticsItr.hasNext()) {
+                    Statistics st = statisticsItr.next();
+                    if(!Float.isNaN(st.getAvg())) {
+                        para = new Paragraph(st.getYear() +". letnik (" + st.getSchoolYear() + "): opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".", font3);
+                        document.add(para);
+                        sumAvg += st.getAvg();
+                        index++;
+                    } else {
+                        break;
+                    }
+                }
+
+                if(index > 0) {
+                    para = new Paragraph("Skupna povprečna ocena je "+ (float)Math.round(sumAvg/index*100d)/100d, font3);
+                    document.add(para);
+                }
             }
 
             document.close();
@@ -918,9 +926,8 @@ public class DataExporterBean {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(baos);
 
-            DigitalIndex digitalIndex = sclB.getPassedCourses(studentId);
+            DigitalIndex digitalIndexFull = sclB.getPassedCourses(studentId);
             Student student = sB.getStudent(studentId);
-            Enrolment lastEnrolment = eB.getLastEnrolmentByStudentId(studentId);
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
             Date date = new Date();
@@ -932,59 +939,63 @@ public class DataExporterBean {
             out.write(NEW_LINE.getBytes(CHARSET));
             out.write(("Vpisna številka: "+ student.getRegisterNumber()).getBytes());
             out.write(NEW_LINE.getBytes(CHARSET));
-            out.write(("Potrjujemo, da je študent opravil naslednje študijske obveznosti na študijskem programu: "+ lastEnrolment.getStudyProgram().getName().toUpperCase() +"-"+ lastEnrolment.getStudyProgram().getStudyDegree().getName()).getBytes());
-            out.write(NEW_LINE.getBytes(CHARSET));
 
-            out.write("#".getBytes());
-            out.write(DELIMETER.getBytes(CHARSET));
-            out.write("Predmet".getBytes());
-            out.write(DELIMETER.getBytes(CHARSET));
-            out.write("Letnik".getBytes());
-            out.write(DELIMETER.getBytes(CHARSET));
-            out.write("KT".getBytes());
-            out.write(DELIMETER.getBytes(CHARSET));
-            out.write("Datum".getBytes());
-            out.write(DELIMETER.getBytes(CHARSET));
-            out.write("Ocena".getBytes());
-            out.write(NEW_LINE.getBytes(CHARSET));
+            for(DigitalIndexByProgram digitalIndex : digitalIndexFull.getIndexList()) {
 
-            Iterator<StudentCourses> studentCoursesItr = digitalIndex.getPassedCourses().iterator();
-            int index = 1;
-            while (studentCoursesItr.hasNext()) {
-                List<String> row = new ArrayList<>();
-                StudentCourses student_course = studentCoursesItr.next();
-                out.write(String.valueOf(index).getBytes());
-                out.write(DELIMETER.getBytes(CHARSET));
-                out.write(student_course.getCourse().getName().getBytes());
-                out.write(DELIMETER.getBytes(CHARSET));
-                out.write(String.valueOf(student_course.getYear()).getBytes());
-                out.write(DELIMETER.getBytes(CHARSET));
-                out.write(String.valueOf(student_course.getCourse().getCreditPoints()).getBytes());
-                out.write(DELIMETER.getBytes(CHARSET));
-                out.write(student_course.getDateOfGrade().toString().getBytes());
-                out.write(DELIMETER.getBytes(CHARSET));
-                out.write(String.valueOf(student_course.getGrade()).getBytes());
-                index++;
+                out.write(("Potrjujemo, da je študent opravil naslednje študijske obveznosti na študijskem programu: "+ digitalIndex.getStudyProgram()).getBytes());
                 out.write(NEW_LINE.getBytes(CHARSET));
-            }
 
-            Iterator<Statistics> statisticsItr = digitalIndex.getStatistics().iterator();
-            index = 0;
-            float sumAvg = 0;
-            while (statisticsItr.hasNext()) {
-                Statistics st = statisticsItr.next();
-                if(!Float.isNaN(st.getAvg())) {
-                    out.write(((index+1) +". letnik: opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".").getBytes());
-                    out.write(NEW_LINE.getBytes(CHARSET));
-                    sumAvg += st.getAvg();
+                out.write("#".getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write("Predmet".getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write("Letnik".getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write("KT".getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write("Datum".getBytes());
+                out.write(DELIMETER.getBytes(CHARSET));
+                out.write("Ocena".getBytes());
+                out.write(NEW_LINE.getBytes(CHARSET));
+
+                Iterator<StudentCourses> studentCoursesItr = digitalIndex.getPassedCourses().iterator();
+                int index = 1;
+                while (studentCoursesItr.hasNext()) {
+                    List<String> row = new ArrayList<>();
+                    StudentCourses student_course = studentCoursesItr.next();
+                    out.write(String.valueOf(index).getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+                    out.write(student_course.getCourse().getName().getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+                    out.write(String.valueOf(student_course.getYear()).getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+                    out.write(String.valueOf(student_course.getCourse().getCreditPoints()).getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+                    out.write(student_course.getDateOfGrade().toString().getBytes());
+                    out.write(DELIMETER.getBytes(CHARSET));
+                    out.write(String.valueOf(student_course.getGrade()).getBytes());
                     index++;
-                } else {
-                    break;
+                    out.write(NEW_LINE.getBytes(CHARSET));
                 }
-            }
 
-            if(index > 0) {
-                out.write(("Skupna povprečna ocena je "+ (float)Math.round(sumAvg/index*100d)/100d).getBytes());
+                Iterator<Statistics> statisticsItr = digitalIndex.getStatistics().iterator();
+                index = 0;
+                float sumAvg = 0;
+                while (statisticsItr.hasNext()) {
+                    Statistics st = statisticsItr.next();
+                    if(!Float.isNaN(st.getAvg())) {
+                        out.write(((index+1) +". letnik: opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".").getBytes());
+                        out.write(NEW_LINE.getBytes(CHARSET));
+                        sumAvg += st.getAvg();
+                        index++;
+                    } else {
+                        break;
+                    }
+                }
+
+                if(index > 0) {
+                    out.write(("Skupna povprečna ocena je "+ (float)Math.round(sumAvg/index*100d)/100d).getBytes());
+                }
             }
 
             baos.flush();
