@@ -198,9 +198,9 @@ Referentka lahko izpiše potrdila o vpisu, ki so jih naročili študenti.
 Študent lahko izpiše elektronski indeks samo zase, referentka in učitelj pa lahko izpišeta elektronski indeks za kateregakoli študenta. 
 Opravljeni izpiti se izpišejo v kronološkem vrstnem redu. Na koncu se izpišejo število opravljenih izpitov, dosežene kreditne točke in povprečne ocene po posameznih študijskih letih ter sumarni podatki za celoten študij. 
 
-- [ ] Preveri za študenta z opravljenimi izpiti v enem samem študijskem letu. 
+- [x] Preveri za študenta z opravljenimi izpiti v enem samem študijskem letu. (Janez Novak, 63130001, opravljena dva izpita v 2017/2018)
 - [ ] Preveri za študenta z opravljenimi izpiti v več študijskih letih (vmes naj bo tudi študijsko leto, ko ni opravil nobenega izpita). 
-- [ ] Preveri za študenta, ki ni opravil nobenega izpita. 
+- [x] Preveri za študenta, ki ni opravil nobenega izpita. (Rok Berdnik, 63180009, brez opravljenih izpitov)
 - [ ] Preveri izvoz v PDF in CSV.
 
 
@@ -208,9 +208,9 @@ Opravljeni izpiti se izpišejo v kronološkem vrstnem redu. Na koncu se izpišej
 
 ###
 Študent lahko naroči potrdilo o opravljenih izpitih. Potrdila se zbirajo na posebni datoteki.
-- [ ] Preveri za vpisanega študenta. Za: `janez@nov.ak` `123` (Janez Novak)
-- [ ] Preveri za študenta brez statusa. Za: `jd8004@student.uni-lj.si` `jd_63180004` (John Doe)
-- [ ] Preveri za absolventa (dodatno leto). Za: `tz8008@student.uni-lj.si` `tz_63180008` (Teja Zupanc)
+- [x] Preveri za vpisanega študenta. Za: `janez@nov.ak` `123` (Janez Novak)
+- [x] Preveri za študenta brez statusa. Za: `jd8004@student.uni-lj.si` `jd_63180004` (John Doe)
+- [x] Preveri za absolventa (dodatno leto). Za: `tz8008@student.uni-lj.si` `tz_63180008` (Teja Zupanc)
 - [ ] Preveri za študenta, ki je bil vpisan v več študijskih programov. Za: `nima logina` (Rok Berdnik)  
 - [ ] Preveri za različna števila izvodov (spodnja in zgornja meja). [!] FE nima meje?!
 - [ ] Preveri vsebino datoteke z naročili.
@@ -222,5 +222,5 @@ Opravljeni izpiti se izpišejo v kronološkem vrstnem redu. Na koncu se izpišej
 Referentka lahko izpiše potrdila o opravljenih izpitih, ki so jih naročili študenti. 
 
 - [ ] Preveri, da se vsa potrdila ujemajo s stanjem v kartotečnem listu in elektronskem indeksu. 
-- [ ] Preveri, da se izpišejo vsa naročena potrdila. 
+- [ ] Preveri, da se izpišejo vsa naročena potrdila.
 - [ ] Preveri možnost ponovnega tiskanja v primeru, da se papir zatakne.
