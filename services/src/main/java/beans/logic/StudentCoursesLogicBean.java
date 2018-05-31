@@ -65,7 +65,8 @@ public class StudentCoursesLogicBean {
                 }
             }
             stat.setPassedCourses(passedCoursesCount);
-            stat.setAvg((float)sumOfGrades/(float)passedCoursesCount);
+            stat.setAvg(passedCoursesCount == 0? 0: (float)sumOfGrades/(float)passedCoursesCount);
+            stat.setSchoolYear(enrolment.getStudyYear().getName());
 
             statistics.add(stat);
         }
