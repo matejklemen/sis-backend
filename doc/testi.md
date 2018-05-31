@@ -198,9 +198,9 @@ Referentka lahko izpiše potrdila o vpisu, ki so jih naročili študenti.
 Študent lahko izpiše elektronski indeks samo zase, referentka in učitelj pa lahko izpišeta elektronski indeks za kateregakoli študenta. 
 Opravljeni izpiti se izpišejo v kronološkem vrstnem redu. Na koncu se izpišejo število opravljenih izpitov, dosežene kreditne točke in povprečne ocene po posameznih študijskih letih ter sumarni podatki za celoten študij. 
 
-- [ ] Preveri za študenta z opravljenimi izpiti v enem samem študijskem letu. 
+- [x] Preveri za študenta z opravljenimi izpiti v enem samem študijskem letu. (Janez Novak, 63130001, opravljena dva izpita v 2017/2018)
 - [ ] Preveri za študenta z opravljenimi izpiti v več študijskih letih (vmes naj bo tudi študijsko leto, ko ni opravil nobenega izpita). 
-- [ ] Preveri za študenta, ki ni opravil nobenega izpita. 
+- [x] Preveri za študenta, ki ni opravil nobenega izpita. (Rok Berdnik, 63180009, brez opravljenih izpitov)
 - [ ] Preveri izvoz v PDF in CSV.
 
 
