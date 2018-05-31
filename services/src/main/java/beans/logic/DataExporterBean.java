@@ -873,7 +873,7 @@ public class DataExporterBean {
             while (statisticsItr.hasNext()) {
                 Statistics st = statisticsItr.next();
                 if(!Float.isNaN(st.getAvg())) {
-                    para = new Paragraph((index+1) +". letnik: opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".", font3);
+                    para = new Paragraph(st.getYear() +". letnik (" + st.getSchoolYear() + "): opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".", font3);
                     document.add(para);
                     sumAvg += st.getAvg();
                     index++;

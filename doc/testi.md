@@ -199,8 +199,8 @@ Referentka lahko izpiše potrdila o vpisu, ki so jih naročili študenti.
 Opravljeni izpiti se izpišejo v kronološkem vrstnem redu. Na koncu se izpišejo število opravljenih izpitov, dosežene kreditne točke in povprečne ocene po posameznih študijskih letih ter sumarni podatki za celoten študij. 
 
 - [x] Preveri za študenta z opravljenimi izpiti v enem samem študijskem letu. (Janez Novak, 63130001, opravljena dva izpita v 2017/2018)
-- [ ] Preveri za študenta z opravljenimi izpiti v več študijskih letih (vmes naj bo tudi študijsko leto, ko ni opravil nobenega izpita). 
-- [x] Preveri za študenta, ki ni opravil nobenega izpita. (Rok Berdnik, 63180009, brez opravljenih izpitov)
+- [x] Preveri za študenta z opravljenimi izpiti v več študijskih letih (vmes naj bo tudi študijsko leto, ko ni opravil nobenega izpita). (Alenka Peternel, 63180024, 2x drugi letnik, prvič brez opravljenih izpitov) 
+- [x] Preveri za študenta, ki ni opravil nobenega izpita. (Cene Lukavčič, 63180011, brez opravljenih izpitov)
 - [ ] Preveri izvoz v PDF in CSV.
 
 
@@ -211,7 +211,7 @@ Opravljeni izpiti se izpišejo v kronološkem vrstnem redu. Na koncu se izpišej
 - [x] Preveri za vpisanega študenta. Za: `janez@nov.ak` `123` (Janez Novak)
 - [x] Preveri za študenta brez statusa. Za: `jd8004@student.uni-lj.si` `jd_63180004` (John Doe)
 - [x] Preveri za absolventa (dodatno leto). Za: `tz8008@student.uni-lj.si` `tz_63180008` (Teja Zupanc)
-- [ ] Preveri za študenta, ki je bil vpisan v več študijskih programov. Za: `nima logina` (Rok Berdnik)  
+- [x] Preveri za študenta, ki je bil vpisan v več študijskih programov. Za: `rb8009@student.uni-lj.si` `rb_63180009` (Rok Berdnik)  
 - [ ] Preveri za različna števila izvodov (spodnja in zgornja meja). [!] FE nima meje?!
 - [ ] Preveri vsebino datoteke z naročili.
 

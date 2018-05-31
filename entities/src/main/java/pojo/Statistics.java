@@ -10,6 +10,8 @@ public class Statistics {
 
     private float avg;
 
+    private String schoolYear;
+
     public int getYear() {
         return year;
     }
@@ -40,5 +42,13 @@ public class Statistics {
 
     public void setAvg(float avg) {
         this.avg = avg;
+    }
+
+    public String getSchoolYear() {
+        return schoolYear;
+    }
+
+    public void setSchoolYear(String schoolYear) {
+        this.schoolYear = schoolYear;
     }
 }
