@@ -111,6 +111,13 @@ public class AgreementSource {
         if(agreement == null)
             throw new NoRequestBodyException();
 
+        Date currDate = new Date();
+
+        // tmp fix
+        if(agreement.getIssueDateObject().after(currDate))
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400,
+                    "datum izdaje sklepa je za današnjim datumom")).build();
+
         if(!sanityCheckDates(agreement))
             return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "datum konca veljavnosti sklepa je pred " +
                     "datumom izdaje sklepa")).build();
@@ -124,6 +131,12 @@ public class AgreementSource {
     public Response createAgreement(@RequestBody Agreement agreement) {
         if(agreement == null)
             throw new NoRequestBodyException();
+
+        Date currDate = new Date();
+
+        if(agreement.getIssueDateObject().after(currDate))
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400,
+                    "datum izdaje sklepa je za današnjim datumom")).build();
 
         if(!sanityCheckDates(agreement))
             return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(400, "datum konca veljavnosti sklepa je pred " +
