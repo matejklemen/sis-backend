@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3.5
 
 import sys
 import os
@@ -56,9 +56,6 @@ for file in sorted(os.listdir(".")):
     print("Processing csv file " + file + "...")
     csv2sql(file)
     print("Processing csv file " + file + " done!")
-
-# open each sql file and append it
-for file in sorted(os.listdir(".")):
   if file == "generated.sql":
     continue
 

@@ -1,0 +1,2 @@
+-- address
+INSERT INTO address (id, line1, line2, id_country, id_post_address) VALUES (1, 'Generični kraj 9', null, 705, 1234), (2, 'Ulica zlatih jam 14', null, 705, 8000), (3, 'Pod orodjem 6b', null, 705, 8220), (4, 'Pod streho 45', null, 705, 5243), (5, 'Cesta poštenih padcev 11', null, 705, 1231), (6, 'Blejska cesta 123', null, 705, 4260), (7, 'lala', null, 705, 6280);
