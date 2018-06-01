@@ -879,13 +879,13 @@ public class DataExporterBean {
                 float sumAvg = 0;
                 while (statisticsItr.hasNext()) {
                     Statistics st = statisticsItr.next();
-                    if(!Float.isNaN(st.getAvg())) {
-                        para = new Paragraph(st.getYear() +". letnik (" + st.getSchoolYear() + "): opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".", font3);
-                        document.add(para);
+                    para = new Paragraph(st.getYear() +". letnik (" + st.getSchoolYear() + "): opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".", font3);
+                    document.add(para);
+                    if(!Float.isNaN(st.getAvg()) && st.getAvg() != 0) {
                         sumAvg += st.getAvg();
                         index++;
                     } else {
-                        break;
+                        continue;
                     }
                 }
 
@@ -983,13 +983,13 @@ public class DataExporterBean {
                 float sumAvg = 0;
                 while (statisticsItr.hasNext()) {
                     Statistics st = statisticsItr.next();
-                    if(!Float.isNaN(st.getAvg())) {
-                        out.write(((index+1) +". letnik: opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".").getBytes());
-                        out.write(NEW_LINE.getBytes(CHARSET));
+                    out.write(((index+1) +". letnik: opravljenih je "+ st.getPassedCourses() +" od "+ st.getTotalCourses() +" predmetov s povprečno oceno "+ st.getAvg() +".").getBytes());
+                    out.write(NEW_LINE.getBytes(CHARSET));
+                    if(!Float.isNaN(st.getAvg()) && st.getAvg() != 0) {
                         sumAvg += st.getAvg();
                         index++;
                     } else {
-                        break;
+                        continue;
                     }
                 }
 
