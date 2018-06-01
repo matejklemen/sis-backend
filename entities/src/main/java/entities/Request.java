@@ -8,6 +8,7 @@ import java.io.Serializable;
         value = {
                 @NamedQuery(name = "Request.getAllRequests", query = "SELECT r FROM requests r"),
                 @NamedQuery(name = "Request.getByType", query = "SELECT r FROM requests r WHERE r.type =:requesttype"),
+                @NamedQuery(name = "Request.getByTypeAndStudentId", query = "SELECT r FROM requests r WHERE r.type =:requesttype AND r.student.id =:studentId"),
         }
 )
 public class Request implements Serializable {

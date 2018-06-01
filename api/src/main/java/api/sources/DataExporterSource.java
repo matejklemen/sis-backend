@@ -4,6 +4,7 @@ import api.interceptors.annotations.LogApiCalls;
 import beans.crud.EnrolmentConfirmationRequestBean;
 import beans.logic.DataExporterBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import entities.Request;
 import entities.logic.TableData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -156,6 +158,14 @@ public class DataExporterSource {
     public Response putEnrolmentConfirmationRequest(@PathParam("studentId") int studentId,
                                                     @QueryParam("copies") int copies,
                                                     @QueryParam("type") String type) {
+        List<Request> requests = ecrB.getAllRequestsByStudentIdAndType(studentId, type);
+        int sum = 0;
+        for( Request req : requests){
+            sum += req.getNumberOfCopies();
+        }
+        if(sum >= 6){
+            return Response.status(Response.Status.BAD_REQUEST).entity("Preseženo število naročil. Dovoljeno št. naročil je: "+ String.valueOf(6 - sum)).build();
+        }
         ecrB.insertNewRequest(studentId, copies, type);
         return Response.ok().build();
     }
