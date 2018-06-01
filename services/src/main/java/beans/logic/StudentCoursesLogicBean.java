@@ -7,6 +7,7 @@ import entities.Enrolment;
 import entities.curriculum.ExamSignUp;
 import entities.curriculum.StudentCourses;
 import pojo.DigitalIndex;
+import pojo.DigitalIndexByProgram;
 import pojo.Statistics;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -25,12 +26,34 @@ public class StudentCoursesLogicBean {
     public DigitalIndex getPassedCourses(int studentId){
         List<StudentCourses> passedCourses = new ArrayList<>();
         List<Statistics> statistics = new ArrayList<>();
+        List<DigitalIndexByProgram> indexList = new ArrayList<>();
 
         // We get all enrolments for student
         List<Enrolment> allEnrolments = eB.getEnrolmentsByStudentId(studentId);
         allEnrolments.sort(Comparator.comparing(o -> o.getYear()));
+        allEnrolments.sort(Comparator.comparing(o -> Integer.parseInt(o.getStudyProgram().getId())));
 
+        Integer currProgramId = null;
+        DigitalIndexByProgram digitalIndexByProgram = null;
         for(Enrolment enrolment : allEnrolments){
+
+            // For each new program
+            if(currProgramId == null || currProgramId != Integer.parseInt(enrolment.getStudyProgram().getId())){
+
+                // Add record for prev. if any
+                if(digitalIndexByProgram != null) {
+                    passedCourses.sort(Comparator.comparing(o -> o.getDateOfGrade()));
+                    digitalIndexByProgram.setPassedCourses(passedCourses);
+                    digitalIndexByProgram.setStatistics(statistics);
+                    indexList.add(digitalIndexByProgram);
+                }
+                // Reset all states
+                digitalIndexByProgram = new DigitalIndexByProgram();
+                passedCourses = new ArrayList<>();
+                statistics = new ArrayList<>();
+                digitalIndexByProgram.setStudyProgram(enrolment.getStudyProgram().getName().toUpperCase() +" - "+enrolment.getStudyProgram().getStudyDegree().getName());
+                currProgramId = Integer.parseInt(enrolment.getStudyProgram().getId());
+            }
             Statistics stat = new Statistics();
             stat.setYear(enrolment.getYear());
 
@@ -65,15 +88,19 @@ public class StudentCoursesLogicBean {
                 }
             }
             stat.setPassedCourses(passedCoursesCount);
-            stat.setAvg((float)sumOfGrades/(float)passedCoursesCount);
+            stat.setAvg(passedCoursesCount == 0? 0: (float)sumOfGrades/(float)passedCoursesCount);
+            stat.setSchoolYear(enrolment.getStudyYear().getName());
 
             statistics.add(stat);
         }
+
         passedCourses.sort(Comparator.comparing(o -> o.getDateOfGrade()));
+        digitalIndexByProgram.setPassedCourses(passedCourses);
+        digitalIndexByProgram.setStatistics(statistics);
+        indexList.add(digitalIndexByProgram);
 
         DigitalIndex di = new DigitalIndex();
-        di.setPassedCourses(passedCourses);
-        di.setStatistics(statistics);
+        di.setIndexList(indexList);
         return di;
     }
 }
