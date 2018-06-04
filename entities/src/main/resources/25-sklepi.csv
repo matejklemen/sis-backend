@@ -1,0 +1,8 @@
+agreement
+id_agreement;content_eng;content_slo;deleted;issue_date;issuer;valid_until;student_id
+1;NULL;Pohvala za zgledno opravljene obveznosti.;false;2018-05-28;Dekanat FRI;NULL;4
+2;NULL;Pohvala za izjemno znanje CLI.;false;2018-05-23;Aleksandar Jurišić;2018-06-07;4
+3;Commendment for achieving above average grades in current study year.;Pohvala za zgledno opravljene obveznosti.;false;2018-05-31;Dekanat FRI;NULL;34
+4;NULL;Prešernova nagrada za diplomsko delo.;false;2017-12-03;Univerza v Ljubljani;NULL;45
+5;Delete this.;Briši to.;false;2018-05-01;Dummy izdajatelj;2018-05-30;88
+6;NULL;Pohvala za doseženo srebrno Vegovo priznanje.;false;2018-02-06;Dekanat FRI;NULL;76

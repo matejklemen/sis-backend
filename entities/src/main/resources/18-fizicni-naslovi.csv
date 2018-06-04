@@ -1,0 +1,9 @@
+address
+id;line1;line2;id_country;id_post_address
+1;Generični kraj 9;NULL;705;1234
+2;Ulica zlatih jam 14;NULL;705;8000
+3;Pod orodjem 6b;NULL;705;8220
+4;Pod streho 45;NULL;705;5243
+5;Cesta poštenih padcev 11;NULL;705;1231
+6;Blejska cesta 123;NULL;705;4260
+7;lala;NULL;705;6280
