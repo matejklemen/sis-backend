@@ -40,6 +40,12 @@ Examples on how to use filters, offsets and limits are availiable at [kumuluzee-
 |  Študent/ka  |    2    |     `marta@pod.streho`    |    123   |       1,2,2       |      BUN      |
 |  Študent/ka  |    2    |       `steff@stef.anio`      |    123   |       1,2       |      BUN      |
 | Profesor/ica |    3    | `prof@fri.uni-lj.si` |    123   |       /       |       /       |
+| Profesor/ica |    3    | `gasper.fijavz@budget-studis.si` |    123   |       /       |       /       |
+| Profesor/ica |    3    | `blaz.zupan@budget-studis.si` |    123   |       /       |       /       |
+| Profesor/ica |    3    | `aleksandar.jurisic@budget-studis.si` |    123   |       /       |       /       |
+| Profesor/ica |    3    | `miha.mraz@budget-studis.si` |    123   |       /       |       /       |
+| Profesor/ica |    3    | `neza.mramor-kosta@budget-studis.si` |    123   |       /       |       /       |
+| Profesor/ica |    3    | `bostjan.slivnik@budget-studis.si` |    123   |       /       |       /       |
 |  Referent/ka |    4    |    `ref@fri.uni-lj.si`    |    123   |       /       |       /       |
 |  Študent/ka  |    2    | `sz8003@student.uni-lj.si` | sz_63180003 | 1, 2, 3 |       BUN     |
 |  Študent/ka  |    2    | `jd8004@student.uni-lj.si` | jd_63180004 | 1, 1 |     BUN     |
