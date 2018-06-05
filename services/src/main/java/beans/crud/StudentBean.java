@@ -9,6 +9,7 @@ import entities.curriculum.Course;
 import entities.curriculum.Curriculum;
 import entities.curriculum.StudentCourses;
 import entities.logic.CourseWithNumberOfEnrolledStudents;
+import pojo.StudentSearchResult;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,8 +33,9 @@ public class StudentBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
-    @Inject
-    private CurriculumBean cb;
+    @Inject private CurriculumBean cb;
+    @Inject private EnrolmentTokenBean etb;
+    @Inject private EnrolmentBean enb;
 
     @Transactional
     public List<Student> getStudents(QueryParameters query) {
@@ -84,7 +87,7 @@ public class StudentBean {
 
     @Transactional
     public List searchStudents(QueryParameters paramQuery, String searchQuery) {
-        List<Student> queryResult = JPAUtils.queryEntities(em, Student.class, paramQuery, new CriteriaFilter<Student>() {
+        List<Student> students = JPAUtils.queryEntities(em, Student.class, paramQuery, new CriteriaFilter<Student>() {
             @Override
             public Predicate createPredicate(Predicate predicate, CriteriaBuilder cBuilder, Root<Student> root) {
                 // build LIKE statements
@@ -98,7 +101,28 @@ public class StudentBean {
                 return cBuilder.and(predicate, cBuilder.or(likes));
             }
         });
-        return queryResult;
+
+        List<StudentSearchResult> results = new ArrayList<>(students.size());
+        for(Student s : students) {
+            StudentSearchResult r = new StudentSearchResult();
+            r.setStudent(s);
+
+            try {
+                r.setEnrolment(enb.getLastEnrolmentByStudentId(s.getId()));
+            } catch (NotFoundException e) {
+                r.setEnrolment(null);
+            }
+
+            try {
+                r.setToken(etb.getLastEnrolmentTokenByStudentId(s.getId()));
+            } catch (NoResultException e) {
+                r.setToken(null);
+            }
+
+            results.add(r);
+        }
+
+        return results;
     }
 
     @Transactional

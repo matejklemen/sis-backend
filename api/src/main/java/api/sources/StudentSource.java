@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import pojo.ResponseError;
+import pojo.StudentSearchResult;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -114,7 +115,7 @@ public class StudentSource {
                     description = "List of students by search query",
                     content = @Content(
                             schema = @Schema(implementation
-                                    = Student.class))
+                                    = StudentSearchResult.class))
             )},
             parameters = {
                     @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
