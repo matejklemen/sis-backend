@@ -58,6 +58,21 @@ Examples on how to use filters, offsets and limits are availiable at [kumuluzee-
 |  Študent/ka  |    2    | `cl8011@student.uni-lj.si` | cl_63180011 | 1, 1 | BUN |
 |  Študent/ka  |    2    | `ip8012@student.uni-lj.si` | ip_63180012 | 1, 2, 2, 3 | BUN |
 |  Študent/ka  |    2    | `jj8013@student.uni-lj.si` | jj_63180013 | 1 | BUN |
+|:------------:|:-------:|:-----------------------:|:--------:|:-------------:|:-------------:|
+|  Študent/ka  |    2    | `sb8100@student.uni-lj.si` | sb_63180100 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `rb8101@student.uni-lj.si` | rb_63180101 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `tg8102@student.uni-lj.si` | tg_63180102 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `dk8103@student.uni-lj.si` | dk_63180103 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `zr8104@student.uni-lj.si` | žr_63180104 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `nz8105@student.uni-lj.si` | nz_63180105 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `ja8119@student.uni-lj.si` | ja_63180119 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `rc8120@student.uni-lj.si` | rc_63180120 | 1, 2 | BUN |
+|  Študent/ka  |    2    | `ld8121@student.uni-lj.si` | ld_63180121 | 1 | BUN |
+|  Študent/ka  |    2    | `if8122@student.uni-lj.si` | if_63180122 | 1 | BUN |
+|  Študent/ka  |    2    | `lf8123@student.uni-lj.si` | lf_63180123 | 1 | BUN |
+|  Študent/ka  |    2    | `zh8124@student.uni-lj.si` | zh_63180124 | 1 | BUN |
+|  Študent/ka  |    2    | `nj8125@student.uni-lj.si` | nj_63180125 | 1 | BUN |
+|  Študent/ka  |    2    | `zj8126@student.uni-lj.si` | žj_63180126 | 1 | BUN |
 
 ## Pregled študentov
 |#|Vpisna številka|Ime|Priimek|Notes|

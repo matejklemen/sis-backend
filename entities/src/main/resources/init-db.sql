@@ -13,11 +13,11 @@ UPDATE professor SET id_login = 102 WHERE professor.id = 1; -- Aleksandar Jurisi
 ALTER SEQUENCE address_id_seq RESTART WITH 8;
 ALTER SEQUENCE agreement_id_agreement_seq RESTART WITH 7;
 ALTER SEQUENCE course_exam_term_id_course_exam_term_seq RESTART WITH 300;
-ALTER SEQUENCE student_courses_id_student_courses_seq RESTART WITH 3000;
+ALTER SEQUENCE student_courses_id_student_courses_seq RESTART WITH 3250;
 ALTER SEQUENCE course_organization_id_course_organization_seq RESTART WITH 400;
-ALTER SEQUENCE exam_sign_up_id_seq RESTART WITH 4000;
-ALTER SEQUENCE enrolment_id_seq RESTART WITH 400;
-ALTER SEQUENCE enrolment_token_id_seq RESTART WITH 400;
+ALTER SEQUENCE exam_sign_up_id_seq RESTART WITH 4200;
+ALTER SEQUENCE enrolment_id_seq RESTART WITH 450;
+ALTER SEQUENCE enrolment_token_id_seq RESTART WITH 450;
 ALTER SEQUENCE professor_id_seq RESTART WITH 100;
 ALTER SEQUENCE student_id_seq RESTART WITH 200;
 ALTER SEQUENCE user_login_id_seq RESTART WITH 200;
