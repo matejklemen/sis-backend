@@ -185,31 +185,36 @@ public class ArtificialDataBean {
 
                 // unsuccessful attempts
                 for (int i = 0; i < numberOfTerms - 1; i++) {
+                    int obtainedPoints = (int) (Math.random() * 49);
+
                     ExamSignUp esu = new ExamSignUp();
                     esu.setCourseExamTerm(availableTerms.get(i));
                     esu.setStudentCourses(course);
                     esu.setSuggestedGrade(5);
+                    esu.setWrittenScore(obtainedPoints);
                     esu.setReturned(false);
                     esub.addExamSignUp(esu);
-                    log.info(String.format("Added an exam sign up for course %d %s with grade %d",
-                            course.getCourse().getId(), course.getCourse().getName(), 5));
+                    log.info(String.format("Added an exam sign up for course %d %s with grade %d (%d points)",
+                            course.getCourse().getId(), course.getCourse().getName(), 5, esu.getWrittenScore()));
                 }
 
                 int finalGrade = (int)(Math.random() * (maxSuccessfulGrade - minSuccessfulGrade) + minSuccessfulGrade);
+                int finalPoints = (int) (Math.random() * 10) + (finalGrade - 1) * 10;
 
                 // successful attempt
                 ExamSignUp esu = new ExamSignUp();
                 esu.setCourseExamTerm(availableTerms.get(numberOfTerms - 1));
                 esu.setStudentCourses(course);
                 esu.setSuggestedGrade(finalGrade);
+                esu.setWrittenScore(finalPoints);
                 esu.setReturned(false);
                 esub.addExamSignUp(esu);
 
                 // set final grade of the course as the last grade obtained from sign-ups
                 course.setGrade(finalGrade);
                 scb.updateCourse(course);
-                log.info(String.format("Added an exam sign up for course %d %s with grade %d [ = FINAL GRADE]",
-                        course.getCourse().getId(), course.getCourse().getName(), esu.getSuggestedGrade())); // TODO: check if that's what you want
+                log.info(String.format("Added an exam sign up for course %d %s with grade %d (%d points) [ = FINAL GRADE]",
+                        course.getCourse().getId(), course.getCourse().getName(), esu.getSuggestedGrade(), esu.getWrittenScore()));
             }
         }
     }
