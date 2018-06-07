@@ -57,7 +57,7 @@ Examples on how to use filters, offsets and limits are availiable at [kumuluzee-
 |  Študent/ka  |    2    | `nk8010@student.uni-lj.si` | nk_63180010 | 1, 1, 2 | BUN |
 |  Študent/ka  |    2    | `cl8011@student.uni-lj.si` | cl_63180011 | 1, 1 | BUN |
 |  Študent/ka  |    2    | `ip8012@student.uni-lj.si` | ip_63180012 | 1, 2, 2, 3 | BUN |
-|  Študent/ka  |    2    | `jj8013@student.uni-lj.si` | jj_63180013 | 1 | BUN |
+|  Študent/ka  |    2    | `jj8013@student.uni-lj.si` | jj_63180013 | 1, 2, 3 | BUN |
 | / | / | / | / | / | / |
 |  Študent/ka  |    2    | `sb8100@student.uni-lj.si` | sb_63180100 | 1, 2 | BUN |
 |  Študent/ka  |    2    | `rb8101@student.uni-lj.si` | rb_63180101 | 1, 2 | BUN |
