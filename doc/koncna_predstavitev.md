@@ -13,8 +13,8 @@
 
 ##### [2] Dijak Peter Šuštar, ki mu je bil odobren vpis v 1. letnik, se prijavi v sistem in izpolni vpisni list. [DONE]
 - Dijak Peter Šuštar se prijavi v sistem
-    - uporabniško ime: `pš8130@student.uni-lj.si`
-    - geslo: `pš_63180130`
+    - uporabniško ime: `pš8154@student.uni-lj.si`
+    - geslo: `pš_63180154`
 - Referentka se v drugem brskalniku prijavi v sistem
     - uporabniško ime: `ref@fri.uni-lj.si`
     - geslo: `123`
