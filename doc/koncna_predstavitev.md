@@ -48,8 +48,8 @@
     - iskanje študentov: `""`
     - študijsko leto zadnjega vpisa: `2017/2018`
     - študijski program zadnjega vpisa: `računalništvo in informatika (BUN)`
-    - letnik: `prvi`
--Referentka odpre zavihek "Študenti po predmetih" in poišče:
+    - letnik: `prvi`    
+- Referentka odpre zavihek "Študenti po predmetih" in poišče:
     - predmet: `63265 - Prevajalniki`
     - študijsko leto: `2017/2018`
     - študijski program: `""`
@@ -74,6 +74,7 @@
 - Študent "Jože Rop" se prijavi v sistem:
     - uporabniško ime: `jr8148@student.uni-lj.si`
     - geslo: `jr_63180148`
+- Jože dopolni SPOL
 - Jože izbere predmete:
     - matematično modeliranje in procesna avtomatika
 - Jože odda vpis
@@ -85,7 +86,7 @@
 - Nika izbere modula:
     - `medijske tehnologije`
     - `algoritmi in sistemski programi`
-    - peter izbere še `računalništvo v praksi 2`
+    - peter izbere še `principi programskih jezikov`
 - Nika odda vpis
 
 - Študent "Marko Birsa" se prijavi v sistem:
