@@ -221,7 +221,7 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
 
 ##### [18] X
 
-##### [19] Skrbnik doda med strokovne izbirne predmete 2. letnika še predmet Internet stvari. Njegova izvajalca naj bosta prof. Mraz in prof. Zimic (vsak predava del predmeta). [nepotrjeno]
+##### [19] Skrbnik doda med strokovne izbirne predmete 2. letnika še predmet Internet stvari. Njegova izvajalca naj bosta prof. Mraz in prof. Zimic (vsak predava del predmeta). [DONE]
 - Skrbnik se prijavi v sistem
     - uporabniško ime: `joze1`
     - geslo: `123`
@@ -229,7 +229,7 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
 - Izbere "Premeti"
 - Izbere "Dodaj vnos v: Predmeti":
     - id : `61234`
-    - name: Internet `stvari`
+    - name: `Internet stvari`
     - creditPoints: `6`
     - semester: `zimski`
     - Shrani
@@ -247,17 +247,19 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
 - Izbere "Vzdrževanje izvajalcev":
     - Študijsko leto: `2017/2018`
     - Poišče predmet: `61234 - Internet stvari`
-    - Izbere "Uredi" [TODO]
+    - Izbere "Uredi"
         - 1. izvajalec : Miha Mraz
         - 2. izvajalec : Nikolaj Zimic
  
-##### [20] Prof. Mraz in Zimic vneseta izpitni rok za ta predmet. [nepotrjeno]
+##### [20] Prof. Mraz in Zimic vneseta izpitni rok za ta predmet. [DONE]
 - Profesor Mraz se prijavi v sistem:
     - uporabniško ime: `miha.mraz@budget-studis.si`
     - geslo: `123`
-- Vnese izpitni rok: TODO
+- Vnese izpitni rok: 
+    - Predmet: `Internet stvari`
+    - Drugo: poljubno
 
 - Profesor Zimic se prijavi v sistem:
     - uporabniško ime: `nikolaj.zimic@budget-studis.si`
     - geslo: `123`
-- Vnese izpitni rok: TODO
+- Vnese nov izpitni rok, ali popravi starega
