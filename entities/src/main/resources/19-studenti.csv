@@ -108,3 +108,6 @@ id;date_of_birth;email;emso;gender;name;phone_number;place_of_birth;register_num
 106;NULL;zoran.hafner.fake@gmail.com;NULL;-;Zoran;NULL;NULL;63180124;1;Hafner;NULL;NULL;NULL;NULL;NULL;NULL;1000468;116
 107;NULL;nina.jaklic.fake@gmail.com;NULL;-;Nina;NULL;NULL;63180125;1;Jaklič;NULL;NULL;NULL;NULL;NULL;NULL;1000468;117
 108;NULL;ziva.jarc.fake@gmail.com;NULL;-;Živa;NULL;NULL;63180126;1;Jarc;NULL;NULL;NULL;NULL;NULL;NULL;1000468;118
+109;NULL;joze.rop.fake@gmail.com;NULL;-;Jože;NULL;NULL;63180148;1;Rop;NULL;NULL;NULL;NULL;NULL;NULL;1000468;119
+110;NULL;nika.bartol.fake@gmail.com;NULL;-;Nika;NULL;NULL;63180149;1;Bartol;NULL;NULL;NULL;NULL;NULL;NULL;1000468;120
+111;NULL;marko.birsa.fake@gmail.com;NULL;-;Marko;NULL;NULL;63180150;1;Birsa;NULL;NULL;NULL;NULL;NULL;NULL;1000468;121
