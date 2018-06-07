@@ -22,15 +22,18 @@ public class CurriculumBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    @Transactional
     public List<Curriculum> getEntireCurriculum(QueryParameters query) {
         return JPAUtils.queryEntities(em, Curriculum.class, query);
     }
 
+    @Transactional
     public List<Curriculum> getEntireCurriculum(QueryParameters query, String searchQuery) {
         if(searchQuery == null) return getEntireCurriculum(query);
         return JPAUtils.queryEntities(em, Curriculum.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
+    @Transactional
     public Curriculum getCurriculumByIdCurriculum(int idCurriculum) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByIdCurriculum", Curriculum.class);
         q.setParameter("id_curriculum", idCurriculum);
@@ -42,6 +45,7 @@ public class CurriculumBean {
         return c.size() > 0 ? c.get(0): null;
     }
 
+    @Transactional
     public List<Curriculum> getCurriculumByStudyProgramId(String studyProgramId) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByStudyProgramId", Curriculum.class);
         q.setParameter("id", studyProgramId);
@@ -49,6 +53,7 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    @Transactional
     public Curriculum getCourseMetadata(int idCourse, int yearOfProgram, String idStudyProgram, int idStudyYear) {
         TypedQuery<Curriculum> q = em.createQuery("SELECT cur FROM curriculum cur WHERE " +
                 "cur.idCourse.id = :id_course AND cur.yearOfProgram = :year_of_program AND " +
@@ -67,6 +72,7 @@ public class CurriculumBean {
         return null;
     }
 
+    @Transactional
     public List<Curriculum> getCurriculumByStudyProgramName(String studyProgramName) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByStudyProgramName", Curriculum.class);
         q.setParameter("name", studyProgramName);
@@ -74,6 +80,7 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<Curriculum> getCurriculumByStudyProgramDegreeName(String studyProgramDegreeName) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByStudyProgramDegreeName", Curriculum.class);
         q.setParameter("name", studyProgramDegreeName);
@@ -81,6 +88,7 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<Curriculum> getFirstYearCourses(String studyYear, String idStudyProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getFirstYear", Curriculum.class);
         q.setParameter("name_study_year", studyYear);
@@ -89,6 +97,7 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<Curriculum> getByStudyProgramStudyYearYearOfProgram(int idStudyYear, String idStudyProgram, int yearOfProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getByStudyProgramStudyYearYearOfProgram", Curriculum.class);
         q.setParameter("id_study_year", idStudyYear);
@@ -102,6 +111,7 @@ public class CurriculumBean {
         NOTE: 4 almost same methods created for getting courses, could be merged into 1 method, but they're not because
         encoding for type of course is determined ad-hoc and would probably need to be looked up everytime.
     */
+    @Transactional
     public List<Curriculum> getModuleCourses(String studyYear, String idStudyProgram, int yearOfProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getAllModuleCourses", Curriculum.class);
         q.setParameter("name_study_year", studyYear);
@@ -111,6 +121,7 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<Curriculum> getCurriculumByPOC(int idPOC, String studyYear, String studyProgram, int yearOfProgram) {
         TypedQuery<Curriculum>  q = em.createNamedQuery("Curriculum.getCurriculumByPOC", Curriculum.class);
         q.setParameter("id_poc", idPOC);
@@ -121,6 +132,7 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<Curriculum> getMandatoryCourses(String studyYear, String idStudyProgram, int yearOfProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getMandatoryCourses", Curriculum.class);
         q.setParameter("name_study_year", studyYear);
@@ -130,6 +142,7 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<Curriculum> getSpecialistElectiveCourses(String studyYear, String idStudyProgram, int yearOfProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getSpecialistElectiveCourses", Curriculum.class);
         q.setParameter("name_study_year", studyYear);
@@ -139,6 +152,7 @@ public class CurriculumBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<Curriculum> getGeneralElectiveCourses(String studyYear, String idStudyProgram, int yearOfProgram) {
         TypedQuery<Curriculum> q = em.createNamedQuery("Curriculum.getGeneralElectiveCourses", Curriculum.class);
         q.setParameter("name_study_year", studyYear);

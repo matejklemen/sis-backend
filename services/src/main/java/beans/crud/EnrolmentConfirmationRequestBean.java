@@ -37,6 +37,7 @@ public class EnrolmentConfirmationRequestBean {
         em.flush();
     }
 
+    @Transactional
     public List<Request> getAllRequestsByStudentIdAndType(int studentId, String type){
         return em.createNamedQuery("Request.getByTypeAndStudentId", Request.class)
                 .setParameter("requesttype",type)
@@ -44,10 +45,12 @@ public class EnrolmentConfirmationRequestBean {
                 .getResultList();
     }
 
+    @Transactional
     public List<Request> getAllRequestsByType(QueryParameters query, String type){
         return JPAUtils.queryEntities(em, Request.class, query, new SearchAllCriteriaFilter<>(type));
     }
 
+    @Transactional
     public List<Request> getAllRequestsByType(String type){
         return em.createNamedQuery("Request.getByType", Request.class)
                 .setParameter("requesttype",type)

@@ -29,7 +29,7 @@ public class ExamSignUpBean {
     @Inject private StudyYearBean syb;
     @Inject private ExamSignUpLogicBean signUpLogicBean;
 
-
+    @Transactional
     public List<ExamSignUp> getExamSignUpsForCourse(int idCourse) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
                 "esu.studentCourses.course.id = :id_course AND esu.returned = false", ExamSignUp.class);
@@ -39,11 +39,13 @@ public class ExamSignUpBean {
         return q.getResultList();
     }
 
+    @Transactional
     public Integer getNumberOfExamTakingsInLatestEnrolment(int studentCoursesId) {
         int num = ((Number)em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInLatestEnrolment", Integer.class).setParameter("student_courses_id", studentCoursesId).getSingleResult()).intValue();
         return num;
     }
 
+    @Transactional
     public Integer getNumberOfExamTakingsBeforeDatetime(int studentCoursesId, Timestamp dt) {
         // includes the current taking of exam!
         TypedQuery<Integer> q = em.createQuery("SELECT COUNT(es) FROM exam_sign_up es WHERE " +
@@ -59,6 +61,7 @@ public class ExamSignUpBean {
         return res;
     }
 
+    @Transactional
     public Integer getNumberOfExamTakingsBeforeStudyYear(int studentId, int courseId, int studyYearId){
         TypedQuery<Integer> q = em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsBeforeStudyYear", Integer.class)
                 .setParameter("student_id", studentId)
@@ -68,6 +71,7 @@ public class ExamSignUpBean {
         return ((Number)q.getSingleResult()).intValue();
     }
 
+    @Transactional
     public Integer getNumberOfExamTakingsInAllEnrolments(int studentId, int courseId) {
         Enrolment originalYearOfRetryYearEnrolment = eb.getOriginalYearOfRetryYearEnrolment(studentId);
         int num = ((Number)em.createNamedQuery("ExamSignUp.getNumberOfExamTakingsInAllEnrolments", Integer.class).setParameter("student_id", studentId).setParameter("course_id", courseId).setParameter("enrolment_id", originalYearOfRetryYearEnrolment == null ? -1 : originalYearOfRetryYearEnrolment.getId()).getSingleResult()).intValue();
@@ -75,6 +79,7 @@ public class ExamSignUpBean {
         return num;
     }
 
+    @Transactional
     public ExamSignUp getLastSignUp(int courseId, int studentId) {
         List<ExamSignUp> e = em.createNamedQuery("ExamSignUp.getLastSignUp", ExamSignUp.class)
                 .setParameter("course_id", courseId)
@@ -88,6 +93,7 @@ public class ExamSignUpBean {
         return e.get(0);
     }
 
+    @Transactional
     public boolean checkIfAlreadySignedUpAndNotReturned(int courseExamTermId, int studentCourseId) {
         TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.checkIfAlreadySignedUpAndNotReturned", ExamSignUp.class);
         q.setParameter("course_exam_term_id", courseExamTermId);
@@ -101,6 +107,7 @@ public class ExamSignUpBean {
         }
     }
 
+    @Transactional
     public ExamSignUp getLastSignUpForStudentCourse(int studentCourseId) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
                 "esu.studentCourses.idStudentCourses = :id_student_course AND esu.returned = false " +
@@ -190,6 +197,7 @@ public class ExamSignUpBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<ExamSignUp> getExamSignUpsOnCourseForStudent(int courseId, int studentId) {
         TypedQuery<ExamSignUp> q = em.createNamedQuery("ExamSignUp.getByCourseIdAndStudentId", ExamSignUp.class);
 
@@ -214,6 +222,7 @@ public class ExamSignUpBean {
         }
     }
 
+    @Transactional
     public List<ExamSignUp> getExamSignUpsForStudentCourse(int idStudentCourse) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
                 "esu.studentCourses.idStudentCourses = :id_student_course AND esu.returned = false " +
@@ -224,6 +233,7 @@ public class ExamSignUpBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<ExamSignUp> getExamSignUpsForStudentCourseWithPositiveGrade(int idStudentCourse) {
         TypedQuery<ExamSignUp> q = em.createQuery("SELECT esu FROM exam_sign_up esu WHERE " +
                 "esu.studentCourses.idStudentCourses = :id_student_course AND esu.returned = false AND esu.suggestedGrade > 5 " +

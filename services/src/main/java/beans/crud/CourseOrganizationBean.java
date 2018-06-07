@@ -21,6 +21,7 @@ public class CourseOrganizationBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    @Transactional
     public List<CourseOrganization> getCourseOrganizations(QueryParameters query) {
         try {
             List<CourseOrganization> courseOrganizations = JPAUtils.queryEntities(em, CourseOrganization.class, query);
@@ -32,6 +33,7 @@ public class CourseOrganizationBean {
         }
     }
 
+    @Transactional
     public List<CourseOrganization> getCourseOrganizationsByCourseId(int courseId) {
         TypedQuery<CourseOrganization> q = em.createNamedQuery("CourseOrganization.getByCourseId", CourseOrganization.class);
         q.setParameter("idCourse", courseId);
@@ -39,6 +41,7 @@ public class CourseOrganizationBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<CourseOrganization> getCourseOrganizationByProfessorId(int professorId) {
         TypedQuery<CourseOrganization> q = em.createNamedQuery("CourseOrganization.getByProfessorId", CourseOrganization.class);
         q.setParameter("profId", professorId);
@@ -47,6 +50,7 @@ public class CourseOrganizationBean {
     }
 
     /* Note: studyYear needs to be in format "XXXX/XXXX", for example "2017/2018" */
+    @Transactional
     public List<CourseOrganization> getCourseOrganizationByStudyYear(String studyYear) {
         TypedQuery<CourseOrganization> q = em.createNamedQuery("CourseOrganization.getByStudyYear", CourseOrganization.class);
         q.setParameter("studyYear", studyYear);
@@ -54,6 +58,7 @@ public class CourseOrganizationBean {
         return q.getResultList();
     }
 
+    @Transactional
     public CourseOrganization getCourseOrganizationsByCourseIdAndYear(int courseId, int studyYearId) {
         TypedQuery<CourseOrganization> q = em.createNamedQuery("CourseOrganization.getByCourseIdAndStudyYearId", CourseOrganization.class);
         q.setParameter("idCourse", courseId);

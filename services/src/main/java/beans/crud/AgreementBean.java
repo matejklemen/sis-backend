@@ -21,10 +21,12 @@ public class AgreementBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    @Transactional
     public List<Agreement> getAgreements(QueryParameters query) {
         return JPAUtils.queryEntities(em, Agreement.class, query);
     }
 
+    @Transactional
     public Agreement getAgreementById(int idAgreement) {
         TypedQuery<Agreement> q = em.createQuery("SELECT a FROM agreement a WHERE a.idAgreement = :id_agreement",
                 Agreement.class);
@@ -39,6 +41,7 @@ public class AgreementBean {
         return agreements.get(0);
     }
 
+    @Transactional
     public List<Agreement> getAgreementsForStudent(int idStudent) {
         TypedQuery<Agreement> q = em.createQuery("SELECT a FROM agreement a WHERE a.student.id = :id_student AND " +
                 "a.deleted = false " +

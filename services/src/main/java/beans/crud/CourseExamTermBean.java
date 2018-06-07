@@ -33,6 +33,7 @@ public class CourseExamTermBean {
         return examTerms;
     }
 
+    @Transactional
     public CourseExamTerm getExamTermById(int idCourseExamTerm) {
         TypedQuery<CourseExamTerm> q = em.createQuery("SELECT cet FROM course_exam_term cet WHERE " +
                 "cet.id = :id_course_exam_term AND cet.deleted = false", CourseExamTerm.class);
@@ -51,6 +52,7 @@ public class CourseExamTermBean {
         }
     }
 
+    @Transactional
     public List<CourseExamTerm> getExamTermsByCourse(int idCourseOrganization) {
         TypedQuery<CourseExamTerm> q = em.createQuery("SELECT cet FROM course_exam_term cet WHERE " +
                 "cet.courseOrganization.id = :id_course_organization AND cet.deleted = false",

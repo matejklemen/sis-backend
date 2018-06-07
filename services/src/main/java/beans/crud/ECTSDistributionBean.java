@@ -6,6 +6,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,6 +18,7 @@ public class ECTSDistributionBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    @Transactional
     public ECTSDistribution getECTSDistribution(int idStudyYear, int yearOfProgram, String idStudyProgram) {
         TypedQuery<ECTSDistribution> q = em.createQuery("SELECT ed FROM ects_distribution ed WHERE " +
                 "ed.studyYear.id = :id_study_year AND ed.yearOfProgram = :year_of_program AND " +

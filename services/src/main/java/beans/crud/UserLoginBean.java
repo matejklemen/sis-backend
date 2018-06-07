@@ -50,6 +50,7 @@ public class UserLoginBean {
         return sr;
     }
 
+    @Transactional
     public List<UserLogin> getAllUserLoginInfo() {
         try {
             TypedQuery<UserLogin> q = em.createNamedQuery("UserLogin.getAll", UserLogin.class);
@@ -67,6 +68,7 @@ public class UserLoginBean {
         return em.find(UserLogin.class, id);
     }
 
+    @Transactional
     public List<UserLogin> getUserLoginInfoByUsername(String username) {
         TypedQuery<UserLogin> q = em.createNamedQuery("UserLogin.getUserLoginInfoByUsername", UserLogin.class);
         q.setParameter("username", username);
@@ -74,6 +76,7 @@ public class UserLoginBean {
         return q.getResultList();
     }
 
+    @Transactional
     public UserLogin getUserLoginInfoByUserLoginId(int userLoginId) {
         UserLogin ul = em.find(UserLogin.class, userLoginId);
         return ul;

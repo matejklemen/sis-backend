@@ -21,21 +21,25 @@ public class ProfessorBean {
     @PersistenceContext(unitName = "sis-jpa")
     private EntityManager em;
 
+    @Transactional
     public List<Professor> getProfessors(QueryParameters query) {
         return JPAUtils.queryEntities(em, Professor.class, query);
     }
 
+    @Transactional
     public List<Professor> getProfessors(QueryParameters query, String searchQuery) {
         if(searchQuery == null) return getProfessors(query);
         return JPAUtils.queryEntities(em, Professor.class, query, new SearchAllCriteriaFilter<>(searchQuery));
     }
 
+    @Transactional
     public Professor getProfessor(int id) {
         Professor p = em.find(Professor.class, id);
         if(p == null) throw new NoResultException("No professor by this id");
         return p;
     }
 
+    @Transactional
     public List<Professor> getProfessorByFirstAndLastName(String fName, String lName) {
         TypedQuery<Professor> q = em.createNamedQuery("Professor.getByFirstAndLastName", Professor.class);
         q.setParameter("fname", fName);
@@ -44,6 +48,7 @@ public class ProfessorBean {
         return q.getResultList();
     }
 
+    @Transactional
     public List<Professor> getProfessorByFirstAndLastName2(String fName, String lName1, String lName2) {
         TypedQuery<Professor> q = em.createNamedQuery("Professor.getByFirstAndLastName2", Professor.class);
 
@@ -84,6 +89,7 @@ public class ProfessorBean {
         return c;
     }
 
+    @Transactional
     public Professor getProfessorByLoginId(int loginId) {
         try {
             return em.createNamedQuery("Professor.getByLoginId", Professor.class).setParameter("loginId", loginId).getSingleResult();
