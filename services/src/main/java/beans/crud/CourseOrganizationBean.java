@@ -73,6 +73,13 @@ public class CourseOrganizationBean {
     }
 
     @Transactional
+    public CourseOrganization insertCourseOrganization(CourseOrganization c) {
+        em.persist(c);
+        em.flush();
+        return c;
+    }
+
+    @Transactional
     public CourseOrganization updateCourseOrganization(CourseOrganization co) {
         em.merge(co);
         em.flush();

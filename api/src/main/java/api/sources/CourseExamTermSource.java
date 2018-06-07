@@ -5,10 +5,8 @@ import beans.crud.*;
 import beans.logic.CourseExamTermValidationBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import entities.Enrolment;
-import entities.curriculum.CourseExamTerm;
-import entities.curriculum.CourseOrganization;
-import entities.curriculum.ExamSignUp;
-import entities.curriculum.StudentCourses;
+import entities.Professor;
+import entities.curriculum.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -29,6 +27,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -62,10 +61,11 @@ public class CourseExamTermSource {
                     @Parameter(name = "offset", description = "Starting point",in = ParameterIn.QUERY),
                     @Parameter(name = "limit", description = "Number of returned entities", in = ParameterIn.QUERY),
                     @Parameter(name = "order", description = "Order", in = ParameterIn.QUERY),
-                    @Parameter(name = "filter", description = "Filter the returned results, more info at https://github.com/kumuluz/kumuluzee-rest#examples", in = ParameterIn.QUERY)
+                    @Parameter(name = "filter", description = "Filter the returned results, more info at https://github.com/kumuluz/kumuluzee-rest#examples", in = ParameterIn.QUERY),
+                    @Parameter(name = "organizerId", description = "Organizer id to filter by")
             })
     @GET
-    public Response getAllExamTerms() {
+    public Response getAllExamTerms(@QueryParam("organizerId") Integer organizerId) {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
 
         // clone the query, but remove the 'offset' and 'limit' part, so we get the actual count
@@ -75,10 +75,57 @@ public class CourseExamTermSource {
         QueryParameters q2 = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         q2.setLimit(defaultQuery.getLimit());
         q2.setOffset(defaultQuery.getOffset());
+
+        List<CourseExamTerm> examTerms = cetb.getAllExamTerms(query);
+        List<CourseExamTerm> examTermsTotal = cetb.getAllExamTerms(q2);
+
+        // TODO: f
+
+        if(organizerId != null && organizerId != 0) {
+            //removeCourseExamsNotOrganizedBy(examTerms, organizerId);
+            removeCourseExamsNotOrganizedBy(examTermsTotal, organizerId);
+            examTerms = new ArrayList<>(20);
+            Long offset = query.getOffset();
+            Long limit = query.getLimit();
+            ListIterator<CourseExamTerm> iter = examTermsTotal.listIterator();
+            while(iter.hasNext()) {
+                if(offset != null && offset > 0) {
+                    offset--;
+                    continue;
+                } else {
+                    examTerms.add(iter.next());
+                    if(limit != null) limit--;
+                }
+                if(limit != null && limit <= 0) {
+                    break;
+                }
+            }
+        }
+
         return Response
-                .ok(cetb.getAllExamTerms(query))
-                .header("X-Total-Count", cetb.getAllExamTerms(q2).size())
+                .ok(examTerms)
+                .header("X-Total-Count", examTermsTotal.size())
                 .build();
+    }
+
+    private void removeCourseExamsNotOrganizedBy(List<CourseExamTerm> courseExamTerms, Integer organizerId) {
+        ListIterator<CourseExamTerm> iter = courseExamTerms.listIterator();
+        while(iter.hasNext()) {
+            CourseExamTerm ce = iter.next();
+            Professor organizer1 = ce.getCourseOrganization().getOrganizer1();
+            Professor organizer2 = ce.getCourseOrganization().getOrganizer2();
+            Professor organizer3 = ce.getCourseOrganization().getOrganizer3();
+
+            boolean isOrganizer = false;
+
+            if(organizer1 != null && organizerId.equals(organizer1.getId())) isOrganizer = true;
+            if(organizer2 != null && organizerId.equals(organizer2.getId())) isOrganizer = true;
+            if(organizer3 != null && organizerId.equals(organizer3.getId())) isOrganizer = true;
+
+            if(!isOrganizer) {
+                iter.remove();
+            }
+        }
     }
 
     @Operation(description = "Returns a list of all exam terms for given student (for last enrolment).", summary = "Get list of exam terms for student",

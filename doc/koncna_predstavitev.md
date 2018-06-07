@@ -1,5 +1,8 @@
 ## Scenarij zaključne predstavitve projektov pri predmetu TPO 2017/18
 
+### Predpogoji:
+- [x]  Vsaj 5 študentov 2. letnika naj ima v trenutnem študijskem letu že vpisan izbirni predmet Matematično modeliranje
+- [x]  vsaj 5 študentov 3. letnika pa izbirni predmet Prevajalniki
 
 ##### [1] Skrbnik se prijavi v sistem in uvozi podatke o sprejetih kandidatih. Za uvoz uporabite datoteko SeznamSprejetih.txt, ki je objavljena v spletni učilnici. [DONE]
 - Skrbnik se prijavi v sistem
@@ -141,7 +144,6 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
     - ura: `9:00`
     - vrsta izpita: `pisni`
     - čas trajanja: `60`
-[!!!] Profesor naj vidi samo osebne podatke
     
 ##### [11] Študenta, ki sta vpisala predmet Prevajalniki, se prijavita na pravkar razpisan rok. [nepotrjeno]
 - Študent "Peter Kramp" se prijavi v sistem:
@@ -162,7 +164,7 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
         - datum: `2018-06-12`
 - Doc. Slivnik potrdi spremembo s klikom na "Posodobi izpitni rok"
 
-##### [13] Na ta rok se prijavijo še 3 študenti, ki so vpisali predmet Prevajalniki (podatki za te študente morajo biti pripravljeni vnaprej). [nepotrjeno]
+##### [13] Na ta rok se prijavijo še 3 študenti, ki so vpisali predmet Prevajalniki (podatki za te študente morajo biti pripravljeni vnaprej). [DONE]
 - Študent "Jaka Jakomin" se prijavi v sistem:
     - uporabniško ime: `jj8013@student.uni-lj.si`
     - geslo: `jj_63180013`
@@ -177,8 +179,6 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
     - uporabniško ime: `if8059@student.uni-lj.si`
     - geslo: `if_63180059`
 - Iza se pod vidnimi izpiti prijavi na izpitni rok: 12.6.2018 ob 09:00, Prevajalniki, Boštjan Slivnik, pisni, 60 minut
-
-[!!!] -> manjkajo podatki o izvajalcih!!
 
 
 ##### [14] Eden od študentov iz točke 11 se odjavi. [nepotrjeno]
@@ -225,15 +225,31 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
 - Skrbnik se prijavi v sistem
     - uporabniško ime: `joze1`
     - geslo: `123`
-- Izbere zavihek "Vzdrževanje predmetnika"
+- Izbere "Šifranti"
+- Izbere "Premeti"
+- Izbere "Dodaj vnos v: Predmeti":
+    - id : `61234`
+    - name: Internet `stvari`
+    - creditPoints: `6`
+    - semester: `zimski`
+    - Shrani
+    
+- Izbere "Nadzorna plošča" -> "Vzdrževanje predmetnika"
 - V izpolni vnosna polja:
     - Študijsko leto: `2017/2018`
     - Študijski program: `Računalništvo in informatika (BUN)`
     - Letnik: `2`
- - Poišče predmet: Internet stvari [!!!!!]
- - Izbere vrsto predmeta: `Strokovno-izbirni predmet`
- - IZVAJALCI [!!!]
- - Izbere opcijo "Dodaj"
+    - Izbere"Odpri predmetnik"
+    - Poišče predmet: `61234 - Internet stvari`
+    - Vrsta predmeta: `Strokovno-izbirni predmet`
+    - Dodaj
+
+- Izbere "Vzdrževanje izvajalcev":
+    - Študijsko leto: `2017/2018`
+    - Poišče predmet: `61234 - Internet stvari`
+    - Izbere "Uredi" [TODO]
+        - 1. izvajalec : Miha Mraz
+        - 2. izvajalec : Nikolaj Zimic
  
 ##### [20] Prof. Mraz in Zimic vneseta izpitni rok za ta predmet. [nepotrjeno]
 - Profesor Mraz se prijavi v sistem:
