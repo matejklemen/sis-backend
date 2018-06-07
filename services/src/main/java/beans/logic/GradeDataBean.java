@@ -37,10 +37,10 @@ public class GradeDataBean {
             Integer examGrade = null;
             if(!esu.isEmpty()){
                 esu.sort(Comparator.comparingInt(ExamSignUp::getId));
-                if(esu.get(0).getWrittenScore() != null){
-                    examGrade = esu.get(0).getWrittenScore();
+                if(esu.get(esu.size() - 1).getWrittenScore() != null){
+                    examGrade = esu.get(esu.size() - 1).getWrittenScore();
                 }else if(esu.size() > 1){
-                    examGrade = esu.get(1).getWrittenScore();
+                    examGrade = esu.get(esu.size() - 1 - 1).getWrittenScore();
                 }
             }
 
