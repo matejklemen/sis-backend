@@ -55,8 +55,8 @@
 ##### [5] Referentka generira žeton za vpis v 2. letnik enemu od študentov, ki so bili prejšnje študijsko leto vpisani v 1. letnik. [nepotrjeno]
 - Referentka najde študenta "Janez Novak" in mu generira žeton za vpis
 - Referentka preveri žeton in nastavi (po potrebi):
-    - letnik: 2
- [!!] Janez je to študijsko leto vpisan v 2 letnik
+    - letnik: 2  
+[!!] Janez je to študijsko leto vpisan v 2 letnik
     
 ##### [6] Referentka generira žeton za vpis v 3. letnik dvema študentoma, ki sta bila prejšnje študijsko leto vpisana v 2. letnik. Prvi naj prosto izbira predmete, drugi pa mora obvezno izbrati dva modula. [nepotrjeno]
 - Referentka najde študenta "Peter Kramp" in mu generira žeton za vpis
@@ -66,8 +66,8 @@
 - Referentka najde študentko "Marta Strešnik" in ji generira žeton za vpis
 - Referentka uredi žeton in nastavi:
     - letnik: `3`
-    - prosta izbira predmetov: `da`
-[!!] Peter kramp prejšnje leto ni bil vpisan v 2 letnik
+    - prosta izbira predmetov: `da`  
+[!!] Peter kramp prejšnje leto ni bil vpisan v 2 letnik  
 [!!] Marta je to leto vpisana v 2 letnik
 
 ##### [7] Študent, ki je dobil žeton za vpis v 2. letnik, izpolni vpisni list. Za strokovni izbirni predmet izbere Matematično modeliranje. [nepotrjeno]
