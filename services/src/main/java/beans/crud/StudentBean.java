@@ -86,21 +86,26 @@ public class StudentBean {
     }
 
     @Transactional
-    public List searchStudents(QueryParameters paramQuery, String searchQuery) {
-        List<Student> students = JPAUtils.queryEntities(em, Student.class, paramQuery, new CriteriaFilter<Student>() {
-            @Override
-            public Predicate createPredicate(Predicate predicate, CriteriaBuilder cBuilder, Root<Student> root) {
-                // build LIKE statements
-                String searchQueryL = searchQuery.toLowerCase() + "%";
-                Predicate[] likes = {
-                        cBuilder.like(cBuilder.lower(root.get("name")), searchQueryL),
-                        cBuilder.like(cBuilder.lower(root.get("surname")), searchQueryL),
-                        cBuilder.like(cBuilder.lower(root.get("registerNumber")), searchQueryL),
-                };
-                // join LIKE statements with OR and add them to existing criterias with AND
-                return cBuilder.and(predicate, cBuilder.or(likes));
-            }
-        });
+    public List searchStudents(QueryParameters paramQuery, String searchQuery, Integer studyYearId, String studyProgramId, Integer year) {
+        List<Student> students;
+        if(!searchQuery.equals("no_search")) {
+             students = JPAUtils.queryEntities(em, Student.class, paramQuery, new CriteriaFilter<Student>() {
+                @Override
+                public Predicate createPredicate(Predicate predicate, CriteriaBuilder cBuilder, Root<Student> root) {
+                    // build LIKE statements
+                    String searchQueryL = searchQuery.toLowerCase() + "%";
+                    Predicate[] likes = {
+                            cBuilder.like(cBuilder.lower(root.get("name")), searchQueryL),
+                            cBuilder.like(cBuilder.lower(root.get("surname")), searchQueryL),
+                            cBuilder.like(cBuilder.lower(root.get("registerNumber")), searchQueryL),
+                    };
+                    // join LIKE statements with OR and add them to existing criterias with AND
+                    return cBuilder.and(predicate, cBuilder.or(likes));
+                }
+            });
+        } else {
+            students = em.createQuery("Select s from student s", Student.class).getResultList();
+        }
 
         List<StudentSearchResult> results = new ArrayList<>(students.size());
         for(Student s : students) {
@@ -119,7 +124,30 @@ public class StudentBean {
                 r.setToken(null);
             }
 
-            results.add(r);
+            boolean viable = true;
+            if(studyYearId != null && r.getEnrolment() != null) {
+                if(r.getEnrolment().getStudyYear().getId() != studyYearId) {
+                    viable = false;
+                }
+            }
+            if(studyProgramId != null && r.getEnrolment() != null) {
+                if(!r.getEnrolment().getStudyProgram().getId().equals(studyProgramId)) {
+                    viable = false;
+                }
+            }
+            if(year != null && r.getEnrolment() != null) {
+                if(r.getEnrolment().getYear() != year) {
+                    viable = false;
+                }
+            }
+
+            if((studyYearId != null || studyProgramId != null || year != null) && r.getEnrolment() == null) {
+                viable = false;
+            }
+
+            if(viable) {
+                results.add(r);
+            }
         }
 
         return results;

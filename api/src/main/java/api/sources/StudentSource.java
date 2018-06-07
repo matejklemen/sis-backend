@@ -124,12 +124,12 @@ public class StudentSource {
             })
     @Path("search/{query}")
     @GET
-    public Response searchStudents(@PathParam("query") String searchQuery) {
+    public Response searchStudents(@PathParam("query") String searchQuery, @QueryParam("study_year") Integer studyYearId, @QueryParam("study_program") String studyProgramId, @QueryParam("year") Integer year) {
         QueryParameters paramQuery = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        List sdl = sdB.searchStudents(paramQuery, searchQuery);
+        List sdl = sdB.searchStudents(paramQuery, searchQuery, studyYearId, studyProgramId, year);
         return Response
                 .ok(sdl)
-                .header("X-Total-Count", sdB.searchStudents(new QueryParameters(), searchQuery))
+                .header("X-Total-Count", sdB.searchStudents(new QueryParameters(), searchQuery, studyYearId, studyProgramId, year))
                 .build();
     }
 
