@@ -40,11 +40,11 @@ public class StudentImportBean {
 
             // Create new student
             Student stu = new Student();
-            stu.setName(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
-            stu.setSurname(studentData.substring(pos, (pos = pos+30)).replaceAll("\\s+",""));
+            stu.setName(studentData.substring(pos, (pos = pos+30)).trim());
+            stu.setSurname(studentData.substring(pos, (pos = pos+30)).trim());
             stu.setStudyProgram(spb.getStudyProgram(studentData.substring(pos, (pos = pos+7))));
             stu.setRegisterNumber(GenerateNewStudentId());
-            stu.setEmail(studentData.substring(pos, (pos = pos+60)).replaceAll("\\s+",""));
+            stu.setEmail(studentData.substring(pos, (pos = pos+60)).trim());
             // Check if Student with this data already exists
 
             pos += System.lineSeparator().length();
