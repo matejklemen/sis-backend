@@ -1,91 +1,95 @@
 ## Scenarij zaključne predstavitve projektov pri predmetu TPO 2017/18
 
 
-##### [1] Skrbnik se prijavi v sistem in uvozi podatke o sprejetih kandidatih. Za uvoz uporabite datoteko SeznamSprejetih.txt, ki je objavljena v spletni učilnici. [nepotrjeno]
+##### [1] Skrbnik se prijavi v sistem in uvozi podatke o sprejetih kandidatih. Za uvoz uporabite datoteko SeznamSprejetih.txt, ki je objavljena v spletni učilnici. [DONE]
 - Skrbnik se prijavi v sistem
-    - uporabniško ime: joze1
-    - geslo: 123
+    - uporabniško ime: `joze1`
+    - geslo: `123`
 - Gre pod zavihek "Uvoz podatkov"
 - Uvozi datoteko "SeznamSprejetih.txt"
 
-##### [2] Dijak Peter Šuštar, ki mu je bil odobren vpis v 1. letnik, se prijavi v sistem in izpolni vpisni list. [nepotrjeno]
+##### [2] Dijak Peter Šuštar, ki mu je bil odobren vpis v 1. letnik, se prijavi v sistem in izpolni vpisni list. [DONE]
 - Dijak Peter Šuštar se prijavi v sistem
-    - uporabniško ime: pš8130@student.uni-lj.si
-    - geslo: pš_63180130
-- Referentka se prijavi v sistem
-    - uporabniško ime: ref@fri.uni-lj.si
-    - geslo: 123
+    - uporabniško ime: `pš8130@student.uni-lj.si`
+    - geslo: `pš_63180130`
+- Referentka se v drugem brskalniku prijavi v sistem
+    - uporabniško ime: `ref@fri.uni-lj.si`
+    - geslo: `123`
 - V zavihku "Upravljanje študentov" poišče Petra in mu generira žeton
-- Peter osveži stran in vidi, da lahko izpolne žeton
-- Peter izpolne žeton:
-    - datum rojstva: 1995-11-10
-    - kraj rojstva: Ljubljana
-    - občina rojstva: Ljubljana
-    - država rojstva: Slovenija
-    - državljanstvo: Slovenija
-    - spol: Moški
-    - emšo: 1011995500081
-    - davčna številka: 12345678
-    - prenosni telefon: 031 111 111
+- Peter osveži stran in vidi, da lahko izpolne vpisni list
+- Peter izpolne vpisni list:
+    - datum rojstva: `1995-11-10`
+    - kraj rojstva: `Ljubljana`
+    - občina rojstva: `Ljubljana`
+    - država rojstva: `Slovenija`
+    - državljanstvo: `Slovenija`
+    - spol: `Moški`
+    - emšo: `1011995500081`
+    - davčna številka: `12345678`
+    - prenosni telefon: `031 111 111`
     - stalno bivališče:
-        - naslov: Dunajska cesta 1
-        - pošta: 1000 Ljubljana
-        - država: Slovenija
-    - naslov vročanja: Stalno bivališče
-- Peter odda vpis
+        - naslov: `Dunajska cesta 1`
+        - pošta: `1000 Ljubljana`
+        - država: `Slovenija`
+    - naslov vročanja: `Stalno bivališče`
+- Peter zaključi vpis
 
-##### [3] Peter Šuštar natisne svoj vpisni list [nepotrjeno]
+##### [3] Peter Šuštar natisne svoj vpisni list [DONE]
 - Po oddanem vpisu Peter pritisne na "Natisni vpisni list"
 - Odpre pdf, ga natisne, podpiše in pošlje po pošti na matični naslov fakultete
 
-##### [4] Referentka se prijavi v sistem, potrdi njegov vpis in izpiše potrdila o vpisu. Nato izpiše seznam vpisanih v 1. letnik in seznam vpisanih v predmet Prevajalniki. [nepotrjeno]
+##### [4] Referentka se prijavi v sistem, potrdi njegov vpis in izpiše potrdila o vpisu. Nato izpiše seznam vpisanih v 1. letnik in seznam vpisanih v predmet Prevajalniki. [DONE]
 - Referentka osveži stran in Petru potrdi vpis. Odpre se nov zavihek kjer pregleda, če je vse vredu in nato pritisne "shrani in potrdi".
-- Referentka lahko nato pritisne na "potrdilo" in natisne potrdilo, kjer ga lahko natisne
+- Referentka lahko nato pritisne na "potrdilo" in odpre potrdilo, ki ga lahko natisne
 - Referentka odpre zavihek "Upravljanje študentov" in poišče:
-    - iskanje študentov: ""
-    - študijsko leto zadnjega vpisa: 2017/2018
-    - študijski program zadnjega vpisa: računalništvo in informatika (BUN)
-    - letnik: prvi
+    - iskanje študentov: `""`
+    - študijsko leto zadnjega vpisa: `2017/2018`
+    - študijski program zadnjega vpisa: `računalništvo in informatika (BUN)`
+    - letnik: `prvi`
 -Referentka odpre zavihek "Študenti po predmetih" in poišče:
-    - predmet: 63265 - Prevajalniki
-    - študijsko leto: 2017/2018
-    - študijski program: ""
-    - letnik: ""
+    - predmet: `63265 - Prevajalniki`
+    - študijsko leto: `2017/2018`
+    - študijski program: `""`
+    - letnik: `""`
 
 ##### [5] Referentka generira žeton za vpis v 2. letnik enemu od študentov, ki so bili prejšnje študijsko leto vpisani v 1. letnik. [nepotrjeno]
 - Referentka najde študenta "Janez Novak" in mu generira žeton za vpis
-- Referentka uredi žeton in nastavi:
+- Referentka preveri žeton in nastavi (po potrebi):
     - letnik: 2
+ [!!] Janez je to študijsko leto vpisan v 2 letnik
     
 ##### [6] Referentka generira žeton za vpis v 3. letnik dvema študentoma, ki sta bila prejšnje študijsko leto vpisana v 2. letnik. Prvi naj prosto izbira predmete, drugi pa mora obvezno izbrati dva modula. [nepotrjeno]
 - Referentka najde študenta "Peter Kramp" in mu generira žeton za vpis
 - Referentka uredi žeton in nastavi:
-    - letnik: 3
-    - prosta izbira predmetov: ne
+    - letnik: `3`
+    - prosta izbira predmetov: `ne`
 - Referentka najde študentko "Marta Strešnik" in ji generira žeton za vpis
 - Referentka uredi žeton in nastavi:
-    - letnik: 3
-    - prosta izbira predmetov: da
+    - letnik: `3`
+    - prosta izbira predmetov: `da`
+[!!] Peter kramp prejšnje leto ni bil vpisan v 2 letnik
+[!!] Marta je to leto vpisana v 2 letnik
 
 ##### [7] Študent, ki je dobil žeton za vpis v 2. letnik, izpolni vpisni list. Za strokovni izbirni predmet izbere Matematično modeliranje. [nepotrjeno]
 - Študent "Janez Novak" se prijavi v sistem:
-    - uporabniško ime: janez@nov.ak
-    - geslo: 123
+    - uporabniško ime: `janez@nov.ak`
+    - geslo: `123`
 - Janez izbere predmete:
-    - matematično modeliranjeprocesna avtomatika
+    - matematično modeliranje in procesna avtomatika
 - Janez odda vpis
 
 ##### [8] Študenta, ki sta dobila žeton za vpis v 3. letnik, izpolnita vpisni list. Oba izbereta predmete tako, da je v njunem predmetniku tudi predmet Prevajalniki. [nepotrjeno]
 - Študent "Peter Kramp" se prijavi v sistem:
-    - uporabniško ime: peter@kopljem.net
-    - geslo: 123
+    - uporabniško ime: `peter@kopljem.net`
+    - geslo: `123`
 - Peter izbere modula:
     - medijske tehnologije
     - algoritmi in sistemski programi
 - Peter odda vpis
+
 - Študentka "Marta Strešnik" se prijavi v sistem:
-    - uporabniško ime: marta@pod.streho
-    - geslo: 123
+    - uporabniško ime: `marta@pod.streho`
+    - geslo: `123`
 - Marta izbere predmete:
     - osnove oblikovanja
     - računalniška grafika in tehnologija iger
