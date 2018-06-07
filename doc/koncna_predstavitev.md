@@ -56,7 +56,7 @@
 - Referentka najde študenta "Janez Novak" in mu generira žeton za vpis
 - Referentka preveri žeton in nastavi (po potrebi):
     - letnik: 2  
-[!!] Janez je to študijsko leto vpisan v 2 letnik
+[!!] Janez je to študijsko leto vpisan v 2 letnik -> predlog Luka Hribar in izbris 2 letnika
     
 ##### [6] Referentka generira žeton za vpis v 3. letnik dvema študentoma, ki sta bila prejšnje študijsko leto vpisana v 2. letnik. Prvi naj prosto izbira predmete, drugi pa mora obvezno izbrati dva modula. [nepotrjeno]
 - Referentka najde študenta "Peter Kramp" in mu generira žeton za vpis
@@ -69,6 +69,7 @@
     - prosta izbira predmetov: `da`  
 [!!] Peter kramp prejšnje leto ni bil vpisan v 2 letnik  
 [!!] Marta je to leto vpisana v 2 letnik
+Predlog: Simon	Zore in izbris 3 letnika + še nekdo
 
 ##### [7] Študent, ki je dobil žeton za vpis v 2. letnik, izpolni vpisni list. Za strokovni izbirni predmet izbere Matematično modeliranje. [nepotrjeno]
 - Študent "Janez Novak" se prijavi v sistem:
@@ -83,21 +84,22 @@
     - uporabniško ime: `peter@kopljem.net`
     - geslo: `123`
 - Peter izbere modula:
-    - medijske tehnologije
-    - algoritmi in sistemski programi
+    - `medijske tehnologije`
+    - `algoritmi in sistemski programi`
+    - peter izbere še `računalništvo v praksi 2`
 - Peter odda vpis
 
 - Študentka "Marta Strešnik" se prijavi v sistem:
     - uporabniško ime: `marta@pod.streho`
     - geslo: `123`
 - Marta izbere predmete:
-    - osnove oblikovanja
-    - računalniška grafika in tehnologija iger
-    - umetno zaznavanje
-    - inteligentni sistemi
-    - prevajalniki
-    - sistemska programska oprema
-    - računska zahtevnost in hevristično programiranje
+    - `osnove oblikovanja`
+    - `računalniška grafika in tehnologija iger`
+    - `umetno zaznavanje`
+    - `inteligentni sistemi`
+    - `prevajalniki`
+    - `sistemska programska oprema`
+    - `računska zahtevnost in hevristično programiranje`
 - Marta odda vpis
 
 ##### [9] Referentka potrdi vpis vsem trem študentom. Nato izpiše
@@ -109,75 +111,152 @@
 - Referentka študentu "Peter Kramp" potrdi vpis. Odpre se nov zavihek kjer pregleda, če je vse vredu in nato pritisne "shrani in potrdi".
 - Referentka študentki "Marta Strešnik" potrdi vpis. Odpre se nov zavihek kjer pregleda, če je vse vredu in nato pritisne "shrani in potrdi".
 - Referentka odpre zavihek "Študenti po predmetih" in poišče:
-    - predmet: 63219 - Matematično modeliranje
-    - študijsko leto: 2017/2018
-    - študijski program: ""
-    - letnik: ""
+    - predmet: `63219 - Matematično modeliranje`
+    - študijsko leto: `2017/2018`
+    - študijski program: `""`
+    - letnik: `""`
 - Referentka poišče:
-    - predmet: 63265 - Prevajalniki
-    - študijsko leto: 2017/2018
-    - študijski program: ""
-    - letnik: ""
+    - predmet: `63265 - Prevajalniki`
+    - študijsko leto: `2017/2018`
+    - študijski program: `""`
+    - letnik: `""`
 - Referentka poišče:
-    - iskanje študentov: ""
-    - študijsko leto zadnjega vpisa: 2017/2018
-    - študijski program zadnjega vpisa: računalništvo in informatika (BUN)
-    - letnik: drugi(matematično modeliranje)/tretji(prevajalniki)
+    - iskanje študentov: `""`
+    - študijsko leto zadnjega vpisa: `2017/2018`
+    - študijski program zadnjega vpisa: `računalništvo in informatika (BUN)`
+    - letnik: `drugi(matematično modeliranje)/tretji(prevajalniki)`
 
 ##### [10] Doc. Slivnik se prijavi v sistem in izpiše osebne podatke študentov, ki sta v okviru točke 8 vpisala predmet Prevajalniki. Nato za ta predmet vnese nov izpitni rok. [nepotrjeno]
+- Doc. Slivnik se prijavi:
+    - Uporabniško ime: `bostjan.slivnik@budget-studis.si`
+    - Geslo: `123`
 - Doc. Slivnik odpre zavihek "Študenti po predmetih" in poišče:
-    - predmet: 63265 - Prevajalniki
-    - študijsko leto: 2017/2018
-    - študijski program: ""
-    - letnik: ""
+    - predmet: `63265 - Prevajalniki`
+    - študijsko leto: `2017/2018`
+    - študijski program: `""`
+    - letnik: `""`
 - Doc. Slivnik odpre zavihek "Izpitni roki" in pritisne na gumb "dodaj izpit":
-    - predmet: Prevajalniki - 63265(2017/2018)
-    - datum: 2018-06-11
-    - ura: 9:00
-    - vrsta izpita: pisni
-    - čas trajanja: 60
+    - predmet: `Prevajalniki - 63265(2017/2018)`
+    - datum: `2018-06-11`
+    - ura: `9:00`
+    - vrsta izpita: `pisni`
+    - čas trajanja: `60`
     
 ##### [11] Študenta, ki sta vpisala predmet Prevajalniki, se prijavita na pravkar razpisan rok. [nepotrjeno]
 - Študent "Peter Kramp" se prijavi v sistem:
-    - uporabniško ime: peter@kopljem.net
-    - geslo: 123
+    - uporabniško ime: `peter@kopljem.net`
+    - geslo: `123`
 - Peter se pod vidnimi izpiti prijavi na izpitni rok: 11.6.2018 ob 09:00, Prevajalniki, Boštjan Slivnik, pisni, 60 minut
 - Študentka "Marta Strešnik" se prijavi v sistem:
-    - uporabniško ime: marta@pod.streho
-    - geslo: 123
+    - uporabniško ime: `marta@pod.streho`
+    - geslo: `123`
 - Marta se pod vidnimi izpiti prijavi na izpitni rok: 11.6.2018 ob 09:00, Prevajalniki, Boštjan Slivnik, pisni, 60 minut
 
 ##### [12] Doc. Slivnik spremeni datum izpitnega roka. [nepotrjeno]
+- Doc. Slivnik se prijavi:
+    - Uporabniško ime: `bostjan.slivnik@budget-studis.si`
+    - Geslo: `123`
 - Doc. Slivnik odpre zavihek "Izpitni roki" in pritisne na gumb "uredi" pri izpitu: 11.6.2018 ob 09:00, Prevajalniki, 60, pisni, Boštjan Slivnik
 - Doc. Slivnik spremeni polje:
-        - datum: 2018-06-12
+        - datum: `2018-06-12`
 - Doc. Slivnik potrdi spremembo s klikom na "Posodobi izpitni rok"
 
 ##### [13] Na ta rok se prijavijo še 3 študenti, ki so vpisali predmet Prevajalniki (podatki za te študente morajo biti pripravljeni vnaprej). [nepotrjeno]
 - Študent "Jaka Jakomin" se prijavi v sistem:
-    - uporabniško ime: jj8013@student.uni-lj.si
-    - geslo: jj_63180013
+    - uporabniško ime: `jj8013@student.uni-lj.si`
+    - geslo: `jj_63180013`
 - Jaka se pod vidnimi izpiti prijavi na izpitni rok: 12.6.2018 ob 09:00, Prevajalniki, Boštjan Slivnik, pisni, 60 minut
 
-**//TODO dodaj še dva študenta, ki se bosta prijavila na ta izpitni rok enako kot zgoraj**
+- Študent "Jan Pavlin" se prijavi v sistem:
+    - uporabniško ime: `jp8066@student.uni-lj.si`
+    - geslo: `jp_63180066`
+- Jan se pod vidnimi izpiti prijavi na izpitni rok: 12.6.2018 ob 09:00, Prevajalniki, Boštjan Slivnik, pisni, 60 minut
+
+- Študent "Iza Fabinc" se prijavi v sistem:
+    - uporabniško ime: `if8059@student.uni-lj.si`
+    - geslo: `if_63180059`
+- Iza se pod vidnimi izpiti prijavi na izpitni rok: 12.6.2018 ob 09:00, Prevajalniki, Boštjan Slivnik, pisni, 60 minut
+
+[!!!] -> manjkajo podatki o izvajalcih!!
+
 
 ##### [14] Eden od študentov iz točke 11 se odjavi. [nepotrjeno]
 - Študent "Peter Kramp" se prijavi v sistem:
-    - uporabniško ime: peter@kopljem.net
-    - geslo: 123
+    - uporabniško ime: `peter@kopljem.net`
+    - geslo: `123`
 - Peter se pod vidnimi izpiti odjavi od izpitnega roka: 12.6.2018 ob 09:00, Prevajalniki, Boštjan Slivnik, pisni, 60 minut
 
 ##### [15] Referentka izpiše seznam prijavljenih kandidatov. [nepotrjeno]
 
-- Referentka odpre zavihek "Izpitni roki" in poišče izpit: 12.6.2018 ob 09:00, Prevajalniki, 60, pisni, Boštjan Slivnik (na šesti strani, drugi)
+- Referentka odpre zavihek "Izpitni roki" in poišče izpit: 12.6.2018 ob 09:00, Prevajalniki, 60, pisni, Boštjan Slivnik (na 4 strani, drugi)
 - Referentka pritisne na "Seznam prijavljenih(4)"
 
-##### [16] Doc. Slivnik vnese najprej ocene pisnega dela, nato pa še končne ocene izpita.3 Pri tem enemu od študentov iz točke 13 vrne prijavo. [nepotrjeno]
+##### [16] Doc. Slivnik vnese najprej ocene pisnega dela, nato pa še končne ocene izpita. Pri tem enemu od študentov iz točke 13 vrne prijavo. [nepotrjeno]
+- Doc. Slivnik se prijavi:
+    - Uporabniško ime: `bostjan.slivnik@budget-studis.si`
+    - Geslo: `123`
+- Odpre zavihek "Izpitni roki"
+- Poišče izpit: 12.6.2018 ob 09:00, Prevajalniki, 60, pisni, Boštjan Slivnik (4)
+- Izbere opcijo "Vnos ocen"
+- Vnese ocene pisnega dela: (po vrsti)
+    - 66
+    - 77
+    - X
+    - Vrne prijavo (Jan Pavlin)
+    - 99
+- Vnese končne ocene: (po vrsti)
+    - 7
+    - 8
+    - X
+    - X
+    - 10
 
 ##### [17] Študent iz točke 8, ki je opravljal izpit iz prevajalnikov, izpiše svoj kartotečni list. [nepotrjeno]
+- Študentka "Marta Strešnik" se prijavi v sistem:
+    - uporabniško ime: `marta@pod.streho`
+    - geslo: `123`
+- Marta izpiše svoj kartotečni list
+[!!!] DODAJ PODATKE O IZVAJALCIH
 
 ##### [18] X
 
 ##### [19] Skrbnik doda med strokovne izbirne predmete 2. letnika še predmet Internet stvari. Njegova izvajalca naj bosta prof. Mraz in prof. Zimic (vsak predava del predmeta). [nepotrjeno]
+- Skrbnik se prijavi v sistem
+    - uporabniško ime: `joze1`
+    - geslo: `123`
+- Izbere "Šifranti"
+- Izbere "Premeti"
+- Izbere "Dodaj vnos v: Predmeti":
+    - id : `61234`
+    - name: Internet `stvari`
+    - creditPoints: `6`
+    - semester: `zimski`
+    - Shrani
+    
+- Izbere "Nadzorna plošča" -> "Vzdrževanje predmetnika"
+- V izpolni vnosna polja:
+    - Študijsko leto: `2017/2018`
+    - Študijski program: `Računalništvo in informatika (BUN)`
+    - Letnik: `2`
+    - Izbere"Odpri predmetnik"
+    - Poišče predmet: `61234 - Internet stvari`
+    - Vrsta predmeta: `Strokovno-izbirni predmet`
+    - Dodaj
 
+- Izbere "Vzdrževanje izvajalcev":
+    - Študijsko leto: `2017/2018`
+    - Poišče predmet: `61234 - Internet stvari`
+    - Izbere "Uredi" [TODO]
+        - 1. izvajalec : Miha Mraz
+        - 2. izvajalec : Nikolaj Zimic
+ 
 ##### [20] Prof. Mraz in Zimic vneseta izpitni rok za ta predmet. [nepotrjeno]
+- Profesor Mraz se prijavi v sistem:
+    - uporabniško ime: `miha.mraz@budget-studis.si`
+    - geslo: `123`
+- Vnese izpitni rok: TODO
+
+- Profesor Zimic se prijavi v sistem:
+    - uporabniško ime: `nikolaj.zimic@budget-studis.si`
+    - geslo: `123`
+- Vnese izpitni rok: TODO
