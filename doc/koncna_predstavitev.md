@@ -1,5 +1,8 @@
 ## Scenarij zaključne predstavitve projektov pri predmetu TPO 2017/18
 
+### Predpogoji:
+- [x]  Vsaj 5 študentov 2. letnika naj ima v trenutnem študijskem letu že vpisan izbirni predmet Matematično modeliranje
+- [x]  vsaj 5 študentov 3. letnika pa izbirni predmet Prevajalniki
 
 ##### [1] Skrbnik se prijavi v sistem in uvozi podatke o sprejetih kandidatih. Za uvoz uporabite datoteko SeznamSprejetih.txt, ki je objavljena v spletni učilnici. [DONE]
 - Skrbnik se prijavi v sistem
@@ -161,7 +164,7 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
         - datum: `2018-06-12`
 - Doc. Slivnik potrdi spremembo s klikom na "Posodobi izpitni rok"
 
-##### [13] Na ta rok se prijavijo še 3 študenti, ki so vpisali predmet Prevajalniki (podatki za te študente morajo biti pripravljeni vnaprej). [nepotrjeno]
+##### [13] Na ta rok se prijavijo še 3 študenti, ki so vpisali predmet Prevajalniki (podatki za te študente morajo biti pripravljeni vnaprej). [DONE]
 - Študent "Jaka Jakomin" se prijavi v sistem:
     - uporabniško ime: `jj8013@student.uni-lj.si`
     - geslo: `jj_63180013`
@@ -176,8 +179,6 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
     - uporabniško ime: `if8059@student.uni-lj.si`
     - geslo: `if_63180059`
 - Iza se pod vidnimi izpiti prijavi na izpitni rok: 12.6.2018 ob 09:00, Prevajalniki, Boštjan Slivnik, pisni, 60 minut
-
-[!!!] -> manjkajo podatki o izvajalcih!!
 
 
 ##### [14] Eden od študentov iz točke 11 se odjavi. [nepotrjeno]
