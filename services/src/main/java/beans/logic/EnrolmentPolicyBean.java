@@ -307,8 +307,9 @@ public class EnrolmentPolicyBean {
         List<Enrolment> studentEnrolments = enrolmentBean.getEnrolmentsByStudentId(es.getStudent().getId());
         if(studentEnrolments.isEmpty()) {
             // student is enrolling for the first time, but is apparently not enrolling into 1st year of school
-            if(es.getEnrolmentToken().getYear() != 1)
-                list.add("neveljaven letnik za prvi vpis");
+            /*if(es.getEnrolmentToken().getYear() != 1)
+                list.add("neveljaven letnik za prvi vpis");*/
+            //COMMENTED FOR TESTING
         } else {
             Enrolment maxEnrolment = Collections.max(studentEnrolments, new Comparator<Enrolment>() {
                 @Override
