@@ -10,7 +10,7 @@ UPDATE professor SET id_login = 100 WHERE professor.id = 24; -- Miha Mraz
 UPDATE professor SET id_login = 101 WHERE professor.id = 33; -- Nikolaj Zimic
 UPDATE professor SET id_login = 102 WHERE professor.id = 1; -- Aleksandar Jurisic
 
-ALTER SEQUENCE address_id_seq RESTART WITH 8;
+ALTER SEQUENCE address_id_seq RESTART WITH 100;
 ALTER SEQUENCE agreement_id_agreement_seq RESTART WITH 7;
 ALTER SEQUENCE course_exam_term_id_course_exam_term_seq RESTART WITH 300;
 ALTER SEQUENCE student_courses_id_student_courses_seq RESTART WITH 3300;
