@@ -16,7 +16,7 @@
 - V zavihku "Upravljanje študentov" poišče Petra in mu generira žeton
 - Peter osveži stran in vidi, da lahko izpolne žeton
 - Peter izpolne žeton:
-    - datum rojstva: 10.11.1995
+    - datum rojstva: 1995-11-10
     - kraj rojstva: Ljubljana
     - občina rojstva: Ljubljana
     - država rojstva: Slovenija

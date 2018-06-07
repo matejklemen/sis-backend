@@ -211,7 +211,7 @@ public class DataExporterBean {
             table.addCell(getCell("Davčna številka:", enrolment.getStudent().getTaxNumber(), PdfPCell.ALIGN_RIGHT, font1, font2));
 
             table.addCell(getCell("e-pošta:", enrolment.getStudent().getEmail(), PdfPCell.ALIGN_LEFT, font1, font2));
-            table.addCell(getCell("Telefonska številka:", enrolment.getStudent().getPhoneNumber(), PdfPCell.ALIGN_CENTER, font1, font2));
+            table.addCell(getCell("Telefonska številka:", enrolment.getStudent().getPhoneNumber() != null ? enrolment.getStudent().getPhoneNumber() : "/", PdfPCell.ALIGN_CENTER, font1, font2));
             table.addCell(cell);
             document.add(table);
 

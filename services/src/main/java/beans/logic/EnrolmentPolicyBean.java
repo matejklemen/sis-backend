@@ -405,7 +405,6 @@ public class EnrolmentPolicyBean {
                 student.getTaxNumber() == null || student.getTaxNumber().isEmpty() ||
 
                 student.getEmail() == null || student.getEmail().isEmpty() ||
-                student.getPhoneNumber() == null || student.getPhoneNumber().isEmpty() ||
 
                 student.getAddress1() == null) {
             list.add("vnesite vse osebne podatke");
