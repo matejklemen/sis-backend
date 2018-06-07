@@ -25,7 +25,7 @@ public class CourseOrganization {
     private StudyYear studyYear;
 
     @ManyToOne
-    @JoinColumn(name = "id_professor1", nullable = false)
+    @JoinColumn(name = "id_professor1") //, nullable = false)
     private Professor organizer1;
 
     @ManyToOne

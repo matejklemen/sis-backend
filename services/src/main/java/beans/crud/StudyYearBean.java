@@ -41,6 +41,11 @@ public class StudyYearBean {
     }
 
     @Transactional
+    public List<StudyYear> getStudyYears() {
+        return JPAUtils.queryEntities(em, StudyYear.class);
+    }
+
+    @Transactional
     public List<StudyYear> getStudyYears(QueryParameters query) {
         return JPAUtils.queryEntities(em, StudyYear.class, query);
     }

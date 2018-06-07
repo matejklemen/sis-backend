@@ -3,9 +3,13 @@ package api.sources;
 import api.exceptions.NoRequestBodyException;
 import api.interceptors.annotations.LogApiCalls;
 import beans.crud.CourseBean;
+import beans.crud.CourseOrganizationBean;
 import beans.crud.StudentCoursesBean;
+import beans.crud.StudyYearBean;
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import entities.StudyYear;
 import entities.curriculum.Course;
+import entities.curriculum.CourseOrganization;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -40,8 +44,9 @@ public class CourseSource {
     @Context
     protected UriInfo uriInfo;
 
-    @Inject
-    private CourseBean cB;
+    @Inject private CourseBean cB;
+    @Inject private CourseOrganizationBean coB;
+    @Inject private StudyYearBean syB;
 
     @Inject
     StudentCoursesBean scB;
@@ -109,6 +114,12 @@ public class CourseSource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ResponseError.errorIdAlreadyExists()).build();
         }
         c = cB.insertCourse(c);
+        for(StudyYear year : syB.getStudyYears()) {
+            CourseOrganization co = new CourseOrganization();
+            co.setCourse(c);
+            co.setStudyYear(year);
+            coB.insertCourseOrganization(co);
+        }
         return Response.ok().entity(c).build();
     }
 
