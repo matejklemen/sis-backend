@@ -234,14 +234,14 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
  - Izbere vrsto predmeta: `Strokovno-izbirni predmet`
  - IZVAJALCI [!!!]
  - Izbere opcijo "Dodaj"
-    - 
+ 
 ##### [20] Prof. Mraz in Zimic vneseta izpitni rok za ta predmet. [nepotrjeno]
 - Profesor Mraz se prijavi v sistem:
     - uporabniško ime: `miha.mraz@budget-studis.si`
     - geslo: `123`
 - Vnese izpitni rok: TODO
 
-- Profesor Mraz se prijavi v sistem:
-    - uporabniško ime: `miha.mraz@budget-studis.si`
+- Profesor Zimic se prijavi v sistem:
+    - uporabniško ime: `nikolaj.zimic@budget-studis.si`
     - geslo: `123`
 - Vnese izpitni rok: TODO
