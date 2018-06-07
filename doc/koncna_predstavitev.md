@@ -141,7 +141,6 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
     - ura: `9:00`
     - vrsta izpita: `pisni`
     - čas trajanja: `60`
-[!!!] Profesor naj vidi samo osebne podatke
     
 ##### [11] Študenta, ki sta vpisala predmet Prevajalniki, se prijavita na pravkar razpisan rok. [nepotrjeno]
 - Študent "Peter Kramp" se prijavi v sistem:
@@ -225,15 +224,31 @@ Predlog: Simon	Zore in izbris 3 letnika + še nekdo
 - Skrbnik se prijavi v sistem
     - uporabniško ime: `joze1`
     - geslo: `123`
-- Izbere zavihek "Vzdrževanje predmetnika"
+- Izbere "Šifranti"
+- Izbere "Premeti"
+- Izbere "Dodaj vnos v: Predmeti":
+    - id : `61234`
+    - name: Internet `stvari`
+    - creditPoints: `6`
+    - semester: `zimski`
+    - Shrani
+    
+- Izbere "Nadzorna plošča" -> "Vzdrževanje predmetnika"
 - V izpolni vnosna polja:
     - Študijsko leto: `2017/2018`
     - Študijski program: `Računalništvo in informatika (BUN)`
     - Letnik: `2`
- - Poišče predmet: Internet stvari [!!!!!]
- - Izbere vrsto predmeta: `Strokovno-izbirni predmet`
- - IZVAJALCI [!!!]
- - Izbere opcijo "Dodaj"
+    - Izbere"Odpri predmetnik"
+    - Poišče predmet: `61234 - Internet stvari`
+    - Vrsta predmeta: `Strokovno-izbirni predmet`
+    - Dodaj
+
+- Izbere "Vzdrževanje izvajalcev":
+    - Študijsko leto: `2017/2018`
+    - Poišče predmet: `61234 - Internet stvari`
+    - Izbere "Uredi" [TODO]
+        - 1. izvajalec : Miha Mraz
+        - 2. izvajalec : Nikolaj Zimic
  
 ##### [20] Prof. Mraz in Zimic vneseta izpitni rok za ta predmet. [nepotrjeno]
 - Profesor Mraz se prijavi v sistem:
