@@ -76,7 +76,7 @@
     - geslo: `jr_63180148`
 - Jože dopolni SPOL
 - Jože izbere predmete:
-    - matematično modeliranje in procesna avtomatika
+    - matematično modeliranje in principi programskih jezikov
 - Jože odda vpis
 
 ##### [8] Študenta, ki sta dobila žeton za vpis v 3. letnik, izpolnita vpisni list. Oba izbereta predmete tako, da je v njunem predmetniku tudi predmet Prevajalniki. [nepotrjeno]
