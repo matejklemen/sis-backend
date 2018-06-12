@@ -34,7 +34,6 @@ Examples on how to use filters, offsets and limits are availiable at [kumuluzee-
 |     Role     | Role id |         Username        | Password | Enrolments | Study program |
 |:------------:|:-------:|:-----------------------:|:--------:|:-------------:|:-------------:|
 |  Skrbnik/ca  |    1    |          `joze1`          |    123   |       /       |       /       |
-|  Študent/ka  |    2    |       `blazkablatnik@gmail.com`      |    123   |       none (no data)      |      whatever      |
 |  Študent/ka  |    2    |    `peter@kopljem.net`    |    123   |       none (but with data)      |      whatever      |
 |  Študent/ka  |    2    |       `janez@nov.ak`      |    123   |      1     |      BUN      |
 |  Študent/ka  |    2    |     `marta@pod.streho`    |    123   |       1,2,2       |      BUN      |
